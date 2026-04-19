@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>AX5-CitaFlow · Annexe 1 — Données périmètre</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap');
+
+@page {
+  size: A4;
+  margin: 10mm 12mm 12mm 12mm;
+  @bottom-center {
+    content: "Page " counter(page) " / " counter(pages);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    color: #555e6f;
+  }
+  @top-right {
+    content: string(doc-title);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    color: #00b8dc;
+    letter-spacing: 0.05em;
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 9pt;
+  line-height: 1.35;
+  color: #0a0e1a;
+}
+
+h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 20pt;
+  font-weight: 400;
+  line-height: 1.1;
+  color: #0a0e1a;
+  margin: 0 0 4pt 0;
+  padding-bottom: 3pt;
+  border-bottom: 2px solid #00b8dc;
+  string-set: doc-title content();
+  page-break-after: avoid;
+}
+
+h2 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 14pt;
+  font-weight: 400;
+  color: #0a0e1a;
+  margin: 10pt 0 4pt 0;
+  padding-bottom: 2pt;
+  border-bottom: 1px solid rgba(10, 14, 26, 0.12);
+  page-break-after: avoid;
+  break-inside: avoid;
+}
+
+h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 10.5pt;
+  font-weight: 600;
+  color: #0a0e1a;
+  margin: 7pt 0 3pt 0;
+  page-break-after: avoid;
+}
+
+h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5pt;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #00b8dc;
+  margin: 6pt 0 2pt 0;
+  page-break-after: avoid;
+}
+
+p {
+  margin: 0 0 4pt 0;
+  text-align: left;
+  orphans: 2;
+  widows: 2;
+}
+
+strong { color: #0a0e1a; font-weight: 600; }
+em { color: #555e6f; font-style: italic; }
+
+ul, ol {
+  margin: 0 0 4pt 16pt;
+  padding: 0;
+}
+
+li { margin-bottom: 1pt; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8pt;
+  margin: 4pt 0 6pt 0;
+  page-break-inside: auto;
+}
+
+th {
+  background: #0a0e1a;
+  color: #e8ecf0;
+  padding: 3pt 5pt;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7.5pt;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+td {
+  padding: 2.5pt 5pt;
+  border-bottom: 1px solid rgba(10, 14, 26, 0.1);
+  vertical-align: top;
+}
+
+tr:last-child td { border-bottom: none; }
+
+blockquote {
+  background: rgba(0, 184, 220, 0.08);
+  border-left: 3px solid #00b8dc;
+  padding: 5pt 8pt;
+  margin: 5pt 0 6pt 0;
+  font-family: 'Instrument Serif', serif;
+  font-size: 9.5pt;
+  line-height: 1.35;
+  color: #0a0e1a;
+  font-style: italic;
+  page-break-inside: avoid;
+}
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7.5pt;
+  background: rgba(0, 184, 220, 0.1);
+  color: #0a0e1a;
+  padding: 0.5pt 2pt;
+  border-radius: 2pt;
+}
+
+pre {
+  background: #0a0e1a;
+  color: #e8ecf0;
+  padding: 6pt 8pt;
+  border-radius: 3pt;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 6.5pt;
+  line-height: 1.3;
+  margin: 5pt 0 6pt 0;
+  overflow: hidden;
+  page-break-inside: avoid;
+}
+
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: 6.5pt;
+}
+
+hr {
+  border: none;
+  border-top: 1px dashed rgba(10, 14, 26, 0.15);
+  margin: 8pt 0;
+}
+
+.doc-header {
+  text-align: center;
+  margin-bottom: 8pt;
+  padding-bottom: 6pt;
+  border-bottom: 2px solid #00b8dc;
+}
+
+.doc-header .subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8pt;
+  color: #555e6f;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 2pt;
+}
+
+</style>
+</head>
+<body>
+<h1 id="ax5-citaflow-annexe-donnees-perimetre-laboratoire-centre-ville">AX5-CitaFlow · Annexe données — Périmètre Laboratoire centre-ville</h1>
+<p><strong>Document complémentaire au one-pager IVÉO Défi #5</strong>
+<strong>Version</strong> : 1.1 · 19 avril 2026 <em>(ajout §9 Scénarios PREDIAG-X5)</em>
+<strong>Soumissionnaire</strong> : Innoventera Inc. — AgenticX5</p>
+<hr />
+<h2 id="objet-du-document">Objet du document</h2>
+<p>Cette annexe détaille les <strong>schémas de données</strong> et <strong>flux d'intégration</strong> que AX5-CitaFlow consomme et produit sur le périmètre spécifique du <strong>Laboratoire centre-ville</strong> (3,7 km² délimité par Saint-Laurent, de la Commune, Guy, Sherbrooke).</p>
+<p>Elle répond à trois questions que le jury IVÉO peut légitimement poser :</p>
+<ol>
+<li><strong>Quelles données sont disponibles aujourd'hui</strong> sur ce périmètre ?</li>
+<li><strong>À quoi ressemblent concrètement les données</strong> que notre pipeline consomme et produit ?</li>
+<li><strong>Comment s'articulent les sources</strong> et les sorties dans l'architecture agentique ?</li>
+</ol>
+<p>Les exemples de payloads ci-dessous sont <strong>représentatifs</strong> : ils sont construits à partir de données publiques réelles du périmètre mais anonymisés et simplifiés pour la lisibilité. Les schémas complets et les spécifications d'API sont disponibles sur demande sous entente de confidentialité.</p>
+<hr />
+<h2 id="1-cartographie-du-perimetre-laboratoire-centre-ville">1. Cartographie du périmètre Laboratoire centre-ville</h2>
+<h3 id="11-delimitation-et-caracteristiques">1.1 Délimitation et caractéristiques</h3>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Superficie</strong></td>
+<td>3,7 km²</td>
+</tr>
+<tr>
+<td><strong>Limites</strong></td>
+<td>Nord : Sherbrooke · Sud : de la Commune · Est : Saint-Laurent · Ouest : Guy</td>
+</tr>
+<tr>
+<td><strong>Arrondissement</strong></td>
+<td>Ville-Marie (centre-ville de Montréal)</td>
+</tr>
+<tr>
+<td><strong>Population résidente estimée</strong></td>
+<td>~50 000 habitants</td>
+</tr>
+<tr>
+<td><strong>Flux quotidien estimé</strong></td>
+<td>200 000+ usagers (travailleurs, visiteurs, touristes)</td>
+</tr>
+<tr>
+<td><strong>Stations BIXI dans le périmètre</strong></td>
+<td>Environ 35 stations</td>
+</tr>
+<tr>
+<td><strong>Stations de métro</strong></td>
+<td>8 stations (lignes verte et orange)</td>
+</tr>
+<tr>
+<td><strong>Grands axes de circulation</strong></td>
+<td>Saint-Laurent · Sainte-Catherine · René-Lévesque · Université · Peel · Crescent</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-intersections-critiques-identifiees-exemples">1.2 Intersections critiques identifiées (exemples)</h3>
+<p>Les intersections suivantes sont classées <strong>critiques</strong> pour notre pipeline en raison de la densité de flux et de l'historique d'incidents :</p>
+<ol>
+<li>Saint-Laurent × Sainte-Catherine</li>
+<li>Saint-Laurent × René-Lévesque</li>
+<li>Université × Sainte-Catherine</li>
+<li>Peel × Sherbrooke</li>
+<li>Guy × Sherbrooke</li>
+<li>Crescent × Sainte-Catherine</li>
+</ol>
+<p>Ces intersections servent de <strong>points d'ancrage</strong> pour l'instrumentation Phase 0 (caméras + compteurs IoT).</p>
+<hr />
+<h2 id="2-categorie-a-donnees-ouvertes-consommees">2. Catégorie A — Données ouvertes consommées</h2>
+<h3 id="21-permis-agir-ville-de-montreal">2.1 Permis AGIR (Ville de Montréal)</h3>
+<p><strong>Source</strong> : <code>donnees.montreal.ca/dataset/travaux-publics-agir</code> (ou API interne AGIR selon confirmation webinaire IVÉO)
+<strong>Fréquence</strong> : mise à jour quotidienne (données publiques) ou temps réel (API interne)
+<strong>Volumétrie sur périmètre</strong> : estimation 150 à 300 permis actifs simultanément</p>
+<p><strong>Exemple de payload simplifié</strong> :</p>
+<pre><code class="language-json">{
+  &quot;permis_id&quot;: &quot;AGIR-2026-XXXXX&quot;,
+  &quot;adresse&quot;: &quot;Saint-Laurent entre Sainte-Catherine et de la Gauchetière&quot;,
+  &quot;geom&quot;: {
+    &quot;type&quot;: &quot;LineString&quot;,
+    &quot;coordinates&quot;: [[-73.568, 45.506], [-73.566, 45.508]]
+  },
+  &quot;date_debut&quot;: &quot;2026-06-12&quot;,
+  &quot;date_fin&quot;: &quot;2026-06-25&quot;,
+  &quot;horaires&quot;: &quot;lun-ven 07h-18h&quot;,
+  &quot;type_travaux&quot;: &quot;réfection conduite pluviale&quot;,
+  &quot;emprise&quot;: &quot;voie droite + trottoir sud&quot;,
+  &quot;entrepreneur&quot;: &quot;XXX Construction Inc.&quot;,
+  &quot;maitre_oeuvre&quot;: &quot;Service de l'eau de Montréal&quot;,
+  &quot;coactivite_connue&quot;: false,
+  &quot;statut&quot;: &quot;émis&quot;
+}
+</code></pre>
+<p><strong>Champs consommés par AX5-CitaFlow</strong> : <code>geom</code>, <code>date_debut</code>, <code>date_fin</code>, <code>horaires</code>, <code>emprise</code>, <code>type_travaux</code>, <code>entrepreneur</code>.</p>
+<h3 id="22-donnees-ouvertes-saaq-accidents">2.2 Données ouvertes SAAQ — accidents</h3>
+<p><strong>Source</strong> : <code>saaq.gouv.qc.ca/donnees-ouvertes/</code> · fichier annuel des rapports d'accidents
+<strong>Fréquence</strong> : mise à jour annuelle (historique complet) · batch pour le pilote
+<strong>Volumétrie sur périmètre</strong> : estimation 1 500 à 2 500 accidents par an dans la zone centre-ville</p>
+<p><strong>Exemple de payload simplifié</strong> :</p>
+<pre><code class="language-json">{
+  &quot;accident_id&quot;: &quot;2024-XXXXX&quot;,
+  &quot;date&quot;: &quot;2024-08-15&quot;,
+  &quot;heure&quot;: &quot;17:32&quot;,
+  &quot;localisation&quot;: &quot;intersection Saint-Laurent / Sainte-Catherine&quot;,
+  &quot;geom&quot;: {&quot;type&quot;: &quot;Point&quot;, &quot;coordinates&quot;: [-73.568, 45.509]},
+  &quot;categorie&quot;: &quot;collision avec piéton&quot;,
+  &quot;gravite&quot;: &quot;avec blessures légères&quot;,
+  &quot;nb_vehicules&quot;: 1,
+  &quot;vulnerable&quot;: &quot;piéton&quot;,
+  &quot;condition_route&quot;: &quot;sèche&quot;,
+  &quot;eclairage&quot;: &quot;jour&quot;,
+  &quot;zone_travaux&quot;: true
+}
+</code></pre>
+<p><strong>Champs consommés par AX5-CitaFlow</strong> : <code>geom</code>, <code>categorie</code>, <code>gravite</code>, <code>vulnerable</code>, <code>zone_travaux</code>. Le champ <code>zone_travaux = true</code> est central pour le facteur <strong>A5</strong> (accès commerces/urgences) et <strong>B2</strong> (accidents travail).</p>
+<h3 id="23-cnesst-lesions-professionnelles">2.3 CNESST — lésions professionnelles</h3>
+<p><strong>Source</strong> : intégration SafetyGraph Neo4j (~300 K+ lésions historiques, 22 M+ nœuds au total)
+<strong>Fréquence</strong> : synchronisation mensuelle
+<strong>Volumétrie pertinente pour le pilote</strong> : lésions secteur construction (SCIAN 23) géolocalisées sur le périmètre CMM</p>
+<p><strong>Exemple de payload simplifié</strong> :</p>
+<pre><code class="language-json">{
+  &quot;lesion_id&quot;: &quot;CNESST-2024-XXXXX&quot;,
+  &quot;date&quot;: &quot;2024-07-22&quot;,
+  &quot;secteur_scian&quot;: &quot;236110&quot;,
+  &quot;nature&quot;: &quot;Construction de bâtiments résidentiels&quot;,
+  &quot;type_lesion&quot;: &quot;traumatisme&quot;,
+  &quot;gravite&quot;: &quot;arrêt travail &gt; 14 jours&quot;,
+  &quot;chantier_proximite_geom&quot;: null,
+  &quot;jours_arret_estimes&quot;: 45
+}
+</code></pre>
+<p><strong>Champs consommés</strong> : corrélation temporelle et sectorielle avec les permis AGIR actifs dans le périmètre. C'est ce croisement qui révèle la <strong>famille B</strong> des facteurs organiques — la clé du différenciateur AX5-CitaFlow.</p>
+<h3 id="24-pannes-hydro-quebec">2.4 Pannes Hydro-Québec</h3>
+<p><strong>Source</strong> : <code>info-pannes.hydroquebec.com</code> (carte publique) · API partenaire à négocier
+<strong>Fréquence</strong> : mise à jour toutes les 5 minutes (scraping) ou temps réel (API partenaire)
+<strong>Volumétrie sur périmètre</strong> : 0 à 15 événements par jour selon saison</p>
+<p><strong>Exemple de payload simplifié</strong> :</p>
+<pre><code class="language-json">{
+  &quot;panne_id&quot;: &quot;HQ-2026-XXXXXXX&quot;,
+  &quot;debut&quot;: &quot;2026-06-18T14:23:00-04:00&quot;,
+  &quot;duree_estimee_min&quot;: 90,
+  &quot;zone_affectee_geom&quot;: {&quot;type&quot;: &quot;Polygon&quot;, &quot;coordinates&quot;: [...]},
+  &quot;nb_clients&quot;: 423,
+  &quot;cause&quot;: &quot;équipement défectueux&quot;,
+  &quot;statut&quot;: &quot;en cours&quot;,
+  &quot;feux_circulation_impactes&quot;: [&quot;Saint-Laurent/René-Lévesque&quot;, &quot;Saint-Laurent/Ontario&quot;]
+}
+</code></pre>
+<p><strong>Champs consommés</strong> : <code>zone_affectee_geom</code> et <code>feux_circulation_impactes</code> pour déclencher la cause #4 (cascade feux → congestion).</p>
+<h3 id="25-velo-quebec-comptages-et-infrastructure">2.5 Vélo Québec — comptages et infrastructure</h3>
+<p><strong>Source</strong> : <code>velo.qc.ca</code> (données ouvertes) + partenariat direct institutionnel
+<strong>Fréquence</strong> : données annuelles (État du vélo au Québec) + temps réel (si partenariat)
+<strong>Volumétrie sur périmètre</strong> : 15 à 20 corridors cyclables recensés</p>
+<p><strong>Exemple de payload simplifié</strong> :</p>
+<pre><code class="language-json">{
+  &quot;corridor_id&quot;: &quot;VQ-MTL-XXX&quot;,
+  &quot;nom&quot;: &quot;Piste cyclable Saint-Laurent&quot;,
+  &quot;geom&quot;: {&quot;type&quot;: &quot;LineString&quot;, &quot;coordinates&quot;: [...]},
+  &quot;volume_journalier_moyen&quot;: 1823,
+  &quot;peak_saison&quot;: &quot;juin-septembre&quot;,
+  &quot;type_protection&quot;: &quot;bidirectionnelle séparée&quot;,
+  &quot;accidents_5ans&quot;: 12,
+  &quot;taux_incident_pour_10000&quot;: 0.18
+}
+</code></pre>
+<p><strong>Champs consommés</strong> : <code>volume_journalier_moyen</code> et <code>accidents_5ans</code> pour le facteur <strong>A4</strong> (flux vulnérables) et le bénéfice piétons/cyclistes.</p>
+<hr />
+<h2 id="3-categorie-b-sources-terrain-a-instrumenter-en-phase-0">3. Catégorie B — Sources terrain à instrumenter en Phase 0</h2>
+<h3 id="31-cameras-de-circulation-onvif-rtsp">3.1 Caméras de circulation (ONVIF / RTSP)</h3>
+<p><strong>Statut</strong> : volumétrie et accès à confirmer au webinaire IVÉO du 21 avril.</p>
+<p><strong>Approche proposée</strong> :</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Détail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre visé</td>
+<td>6 à 10 caméras sur les intersections critiques (voir §1.2)</td>
+</tr>
+<tr>
+<td>Protocoles cibles</td>
+<td>ONVIF Profile S (streaming) et RTSP (flux brut)</td>
+</tr>
+<tr>
+<td>Traitement</td>
+<td>Détection d'objets par vision par ordinateur · comptage de véhicules/piétons/vélos · détection d'incidents</td>
+</tr>
+<tr>
+<td>Anonymisation</td>
+<td>Traitement local sans stockage d'images identifiables (EFVP Loi 25)</td>
+</tr>
+<tr>
+<td>Fréquence de publication</td>
+<td>Métriques agrégées toutes les 60 secondes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exemple de métrique agrégée publiée</strong> :</p>
+<pre><code class="language-json">{
+  &quot;camera_id&quot;: &quot;CAM-STLAURENT-001&quot;,
+  &quot;intersection&quot;: &quot;Saint-Laurent / Sainte-Catherine&quot;,
+  &quot;geom&quot;: {&quot;type&quot;: &quot;Point&quot;, &quot;coordinates&quot;: [-73.568, 45.509]},
+  &quot;timestamp&quot;: &quot;2026-06-18T09:15:00-04:00&quot;,
+  &quot;fenetre_seconds&quot;: 60,
+  &quot;flux&quot;: {
+    &quot;vehicules_NS&quot;: 42,
+    &quot;vehicules_SN&quot;: 38,
+    &quot;pietons&quot;: 127,
+    &quot;cyclistes&quot;: 14
+  },
+  &quot;incidents_detectes&quot;: [],
+  &quot;confiance_moyenne&quot;: 0.91
+}
+</code></pre>
+<h3 id="32-compteurs-pietons-velos-iot-lorawan-mqtt">3.2 Compteurs piétons-vélos IoT (LoRaWAN / MQTT)</h3>
+<p><strong>Statut</strong> : à déployer en Phase 0.</p>
+<p><strong>Approche proposée</strong> :</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Détail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre visé</td>
+<td>12 à 16 compteurs sur corridors cyclables et accès BIXI</td>
+</tr>
+<tr>
+<td>Technologie</td>
+<td>Capteurs infrarouges passifs + LoRaWAN (faible consommation)</td>
+</tr>
+<tr>
+<td>Fréquence de transmission</td>
+<td>MQTT toutes les 5 minutes</td>
+</tr>
+<tr>
+<td>Durée de vie</td>
+<td>Batterie 3-5 ans, maintenance annuelle</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exemple de payload</strong> :</p>
+<pre><code class="language-json">{
+  &quot;compteur_id&quot;: &quot;PV-SHERBROOKE-003&quot;,
+  &quot;localisation&quot;: &quot;Sherbrooke au coin de Peel&quot;,
+  &quot;timestamp&quot;: &quot;2026-06-18T09:15:00-04:00&quot;,
+  &quot;fenetre_minutes&quot;: 5,
+  &quot;pietons_O_E&quot;: 23,
+  &quot;pietons_E_O&quot;: 19,
+  &quot;cyclistes_O_E&quot;: 8,
+  &quot;cyclistes_E_O&quot;: 6,
+  &quot;batterie_pct&quot;: 87
+}
+</code></pre>
+<h3 id="33-api-cad-spvm-sim-a-confirmer">3.3 API CAD SPVM / SIM (à confirmer)</h3>
+<p><strong>Statut</strong> : accès à confirmer au webinaire IVÉO.</p>
+<p><strong>Approche de repli</strong> (si accès refusé) :
+- Alertes publiques via Twitter/X @SPVM et @SIM_Mtl
+- Notifications officielles de la Ville
+- Latence dégradée (~15 min au lieu de temps réel)</p>
+<h3 id="34-systeme-centralise-de-gestion-des-feux-scg">3.4 Système Centralisé de Gestion des feux (SCG)</h3>
+<p><strong>Statut</strong> : accès à confirmer au webinaire IVÉO.</p>
+<p><strong>Approche de repli</strong> : inventaire géomatique public des feux + détection indirecte par patterns de circulation anormaux (caméras + compteurs).</p>
+<hr />
+<h2 id="4-sorties-4-ecosystemes-cibles">4. Sorties — 4 écosystèmes cibles</h2>
+<h3 id="41-waze-connected-citizens-program-ccp">4.1 Waze Connected Citizens Program (CCP)</h3>
+<p><strong>Format</strong> : Waze CIFS (Closure and Incident Feed Specification) — XML ou JSON
+<strong>Fréquence</strong> : temps réel (latence cible &lt; 10 secondes)</p>
+<p><strong>Exemple de payload sortant</strong> :</p>
+<pre><code class="language-xml">&lt;incidents&gt;
+  &lt;incident id=&quot;AX5-2026-001&quot; type=&quot;ROAD_CLOSED&quot;&gt;
+    &lt;location&gt;
+      &lt;street&gt;Saint-Laurent&lt;/street&gt;
+      &lt;cross_street&gt;Sainte-Catherine&lt;/cross_street&gt;
+      &lt;direction&gt;NORTH&lt;/direction&gt;
+    &lt;/location&gt;
+    &lt;description&gt;Travaux de réfection conduite pluviale — voie droite fermée&lt;/description&gt;
+    &lt;start_time&gt;2026-06-12T07:00:00-04:00&lt;/start_time&gt;
+    &lt;end_time&gt;2026-06-25T18:00:00-04:00&lt;/end_time&gt;
+    &lt;source&gt;Ville de Montréal · AX5-CitaFlow&lt;/source&gt;
+  &lt;/incident&gt;
+&lt;/incidents&gt;
+</code></pre>
+<h3 id="42-gtfs-rt-transport-collectif-artm">4.2 GTFS-RT (transport collectif ARTM)</h3>
+<p><strong>Format</strong> : GTFS Realtime (Google Transit Feed Specification Real-Time)
+<strong>Cible</strong> : Transit, Chrono, Moovit, Google Maps Transit
+<strong>Usage</strong> : alertes de service pour les lignes impactées par fermetures routières</p>
+<h3 id="43-gbfs-mobilite-active">4.3 GBFS (mobilité active)</h3>
+<p><strong>Format</strong> : GBFS (General Bikeshare Feed Specification)
+<strong>Cible</strong> : BIXI, Transit multimodal
+<strong>Usage</strong> : signalement des stations BIXI inaccessibles en raison de travaux</p>
+<h3 id="44-portails-municipaux">4.4 Portails municipaux</h3>
+<p><strong>Format</strong> : Open511 (standard québécois) + formats internes MTL
+<strong>Cible</strong> : <code>montreal.ca/info-entraves</code>, Mobilité Montréal (MTQ), interface AGIR
+<strong>Usage</strong> : mise à jour des fermetures officielles et des plans de déviation</p>
+<hr />
+<h2 id="5-matrice-couverture-intersections-categories-de-sources">5. Matrice couverture — intersections × catégories de sources</h2>
+<table>
+<thead>
+<tr>
+<th>Intersection</th>
+<th style="text-align: center;">Permis AGIR</th>
+<th style="text-align: center;">SAAQ historique</th>
+<th style="text-align: center;">CNESST</th>
+<th style="text-align: center;">Hydro-Québec</th>
+<th style="text-align: center;">Vélo Québec</th>
+<th style="text-align: center;">Caméra (P0)</th>
+<th style="text-align: center;">Compteur (P0)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Saint-Laurent × Sainte-Catherine</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🔶</td>
+</tr>
+<tr>
+<td>Saint-Laurent × René-Lévesque</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Université × Sainte-Catherine</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🔶</td>
+</tr>
+<tr>
+<td>Peel × Sherbrooke</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🔶</td>
+</tr>
+<tr>
+<td>Guy × Sherbrooke</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">🔶</td>
+<td style="text-align: center;">🔶</td>
+</tr>
+<tr>
+<td>Crescent × Sainte-Catherine</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">🔶</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Légende</strong> : ✅ = disponible immédiatement · 🔶 = à instrumenter Phase 0 · — = non pertinent</p>
+<hr />
+<h2 id="6-flux-de-donnees-vue-synthetique">6. Flux de données — vue synthétique</h2>
+<pre><code>[Catégorie A · consommée]                [Catégorie B · instrumentée Phase 0]
+   │                                        │
+   ├─ Permis AGIR ───────────────┐          ├─ Caméras ONVIF/RTSP ────┐
+   ├─ SAAQ accidents ────────────┤          ├─ Compteurs IoT LoRaWAN ─┤
+   ├─ CNESST SafetyGraph ────────┤          ├─ API CAD SPVM/SIM ──────┤
+   ├─ Hydro-Québec pannes ───────┤          └─ SCG feux MTL ──────────┤
+   ├─ Vélo Québec ───────────────┤                                    │
+   └─ Environnement Canada ──────┤                                    │
+                                 │                                    │
+                                 ▼                                    ▼
+                   ╔══════════════════════════════════════════════════════╗
+                   ║          AX5-CitaFlow · pipeline agentique           ║
+                   ║  (6 connecteurs · 14 facteurs · PREDIAG-X5)          ║
+                   ╚══════════════════════════════════════════════════════╝
+                                                │
+                    ┌──────────────┬────────────┼────────────┬──────────────┐
+                    ▼              ▼            ▼            ▼              ▼
+              [Waze CIFS]    [GTFS-RT]    [GBFS]       [Open511]    [Portails MTL]
+              &lt; 10 s         &lt; 60 s       &lt; 60 s       &lt; 60 s       &lt; 60 s
+</code></pre>
+<hr />
+<h2 id="7-engagements-en-matiere-de-donnees">7. Engagements en matière de données</h2>
+<p><strong>Anonymisation à la source</strong> : aucune donnée identifiable n'est conservée. Les images des caméras sont traitées localement, seules les métriques agrégées sont transmises.</p>
+<p><strong>Hébergement souverain</strong> : toutes les données sont hébergées au Québec et au Canada, sans transfert hors juridiction canadienne.</p>
+<p><strong>EFVP (Loi 25)</strong> : une Évaluation des facteurs relatifs à la vie privée sera menée avant le déploiement pilote de juin 2026, couvrant l'ensemble des flux décrits dans cette annexe.</p>
+<p><strong>Traçabilité PROV-O</strong> : chaque transformation de donnée est traçable selon la norme W3C PROV-O, permettant un audit complet de la chaîne décisionnelle.</p>
+<hr />
+<h2 id="8-points-a-valider-au-webinaire-iveo-21-avril">8. Points à valider au webinaire IVÉO (21 avril)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Question</th>
+<th>Impact sur cette annexe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Accès API CAD SPVM/SIM</td>
+<td>Confirme ou non la section §3.3</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Format de sortie prioritaire (CIFS, GTFS-RT, etc.)</td>
+<td>Priorise la section §4</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Plateformes cibles privilégiées par la Ville</td>
+<td>Ajuste les cibles §4</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Endpoint Hydro-Québec</td>
+<td>Confirme ou non §2.4</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Accès SCG feux</td>
+<td>Confirme ou non §3.4</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Protocole caméras MTL</td>
+<td>Précise §3.1</td>
+</tr>
+</tbody>
+</table>
+<p>Les réponses obtenues lors du webinaire seront intégrées dans la version 2.0 de cette annexe avant la soumission finale du 1er mai 2026.</p>
+<hr />
+<h2 id="9-scenarios-prediag-x5-simulation-emergente-et-transposition-alphaville">9. Scénarios PREDIAG-X5 — simulation émergente et transposition Alphaville</h2>
+<p>Cette section détaille le scénario prototypé dans PREDIAG-X5 pour démontrer les capacités de simulation multi-agents et de transposition Alphaville. Elle illustre concrètement comment une situation urbaine à multiples parties prenantes est convertie en recommandation actionnable, puis normalisée pour les 75 villes du réseau IVÉO.</p>
+<h3 id="91-scenario-prototype-bris-de-conduite-saint-laurent-coactivite-grue-tour">9.1 Scénario prototypé — bris de conduite Saint-Laurent × coactivité grue tour</h3>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Détail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Contexte simulé</strong></td>
+<td>Bris de conduite pluviale sur Saint-Laurent entre de la Gauchetière et Sainte-Catherine, simultané à l'érection d'une grue tour pour un chantier de tour résidentielle à 200 m</td>
+</tr>
+<tr>
+<td><strong>Périmètre géographique</strong></td>
+<td>Saint-Laurent entre de la Gauchetière et Sainte-Catherine + périmètre chantier voisin (rayon 300 m)</td>
+</tr>
+<tr>
+<td><strong>Parties prenantes modélisées (11)</strong></td>
+<td>Ville (voirie, permis, communication) · résidents du secteur · commerçants corridor Sainte-Catherine · commerçants Saint-Laurent · SPVM · SIM · Urgences-santé · livreurs commerciaux · BIXI (2 stations impactées) · usagers Waze · piétons/cyclistes réguliers</td>
+</tr>
+<tr>
+<td><strong>Entrées PREDIAG-X5</strong></td>
+<td>14 facteurs synergiques (A1-A7 + B1-B7) · historique SAAQ sur le périmètre (2019-2024) · incidents CNESST secteur construction récents · calendrier événementiel MTL (3 mois roulants) · météo prévue 7 jours · activité réseaux sociaux quartier</td>
+</tr>
+<tr>
+<td><strong>Sorties générées</strong></td>
+<td>Probabilités par scénario décisionnel (statu quo vs fermeture coordonnée vs rerouting partiel vs report travaux) · recommandation d'action avec XAI · seuil HITL déclenché automatiquement · plan de communication multi-canaux pré-rédigé · matrice de risques par partie prenante</td>
+</tr>
+<tr>
+<td><strong>Valeur pour la Ville</strong></td>
+<td>Temps de décision du Bureau des permis réduit de jours à minutes · anticipation des appels citoyens 311 · coordination préemptive SPVM/SIM/voirie · réduction des plaintes a posteriori</td>
+</tr>
+</tbody>
+</table>
+<h3 id="92-cheminement-de-transposition-alphaville">9.2 Cheminement de transposition Alphaville</h3>
+<p>La sortie du scénario Montréal est ensuite <strong>normalisée vers la ville étalon IVÉO Alphaville</strong> (20 000 habitants, 65 km²) pour permettre aux autres villes du réseau d'évaluer la transposabilité.</p>
+<table>
+<thead>
+<tr>
+<th>Étape</th>
+<th>Traitement PREDIAG-X5</th>
+<th>Technologie mobilisée</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Extraction</td>
+<td>Récupération des métriques d'impact brut du scénario Montréal</td>
+<td>Pipeline ETL AgenticX5</td>
+</tr>
+<tr>
+<td>2. Normalisation démographique</td>
+<td>Réduction à l'échelle 20 K habitants</td>
+<td>Modèles de scaling bayésiens</td>
+</tr>
+<tr>
+<td>3. Normalisation géographique</td>
+<td>Réduction à l'échelle 65 km²</td>
+<td>Pondération par densité d'intersections</td>
+</tr>
+<tr>
+<td>4. Normalisation sectorielle</td>
+<td>Ajustement au profil SCIAN moyen Alphaville</td>
+<td>Appariement sectoriel ML</td>
+</tr>
+<tr>
+<td>5. Simulation contrefactuelle</td>
+<td>Rejouer le scénario dans Alphaville simulée</td>
+<td>Multi-agents + Monte Carlo</td>
+</tr>
+<tr>
+<td>6. Export IVÉO</td>
+<td>Rapport standardisé réseau IVÉO</td>
+<td>Format IVÉO Alphaville</td>
+</tr>
+</tbody>
+</table>
+<p>Cette chaîne de normalisation permet aux villes membres IVÉO (ex : Shawinigan, Saguenay, Sherbrooke, Drummondville) de <strong>projeter les gains attendus</strong> sur leur propre territoire à partir des résultats mesurés à Montréal, sans avoir à refaire le pilote.</p>
+<h3 id="93-scenarios-additionnels-cadres-pour-modelisation-en-phase-0">9.3 Scénarios additionnels cadrés pour modélisation en Phase 0</h3>
+<p>11 scénarios additionnels sont cadrés et prêts pour modélisation complète en Phase 0 (mai 2026) :</p>
+<ol>
+<li>Coactivité 3 chantiers simultanés en zone touristique Vieux-Montréal</li>
+<li>Panne électrique Hydro-Québec impactant 12 intersections + chantier actif</li>
+<li>Accident SST majeur (chute de grue) en zone scolaire</li>
+<li>Cascade saisonnière (dégel + nids-de-poule + réfections multiples)</li>
+<li>Coactivité chantier × événement majeur (Grand Prix, festival)</li>
+<li>Fermeture d'urgence bris de conduite gaz × coactivité SPVM</li>
+<li>Conflit syndical entrepreneur × retard cascade 5 chantiers</li>
+<li>Archéologie imprévue × impact transport collectif STM</li>
+<li>Intervention SIM zone confinée × coactivité mobilité active</li>
+<li>Dépassement cumulé d'échéancier × zone électorale sensible</li>
+<li>Événement climatique extrême (tempête) × chantiers en hauteur</li>
+</ol>
+<p><em>Structure détaillée de chaque scénario disponible sur demande NDA. Les 12 scénarios (prototypé + cadrés) constituent la base de tests de la Phase 0 du pilote.</em></p>
+<hr />
+<p><strong>© 2026 Innoventera Inc. — Tous droits réservés.</strong>
+<em>Document, logiciels et œuvres associées protégés en vertu de la Loi sur le droit d'auteur du Canada (L.R.C. (1985), ch. C-42).</em>
+<em>Exemples de payloads construits à partir de données publiques réelles du périmètre, simplifiés pour la lisibilité. Les schémas complets et les spécifications d'API sont disponibles sur demande sous entente de confidentialité (NDA).</em></p>
+</body>
+</html>

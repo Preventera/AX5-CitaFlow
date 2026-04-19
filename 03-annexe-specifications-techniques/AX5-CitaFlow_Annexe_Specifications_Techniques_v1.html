@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>AX5-CitaFlow · Annexe 2 — Spécifications techniques</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap');
+
+@page {
+  size: A4;
+  margin: 10mm 12mm 12mm 12mm;
+  @bottom-center {
+    content: "Page " counter(page) " / " counter(pages);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8pt;
+    color: #555e6f;
+  }
+  @top-right {
+    content: string(doc-title);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    color: #00b8dc;
+    letter-spacing: 0.05em;
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 9pt;
+  line-height: 1.35;
+  color: #0a0e1a;
+}
+
+h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 20pt;
+  font-weight: 400;
+  line-height: 1.1;
+  color: #0a0e1a;
+  margin: 0 0 4pt 0;
+  padding-bottom: 3pt;
+  border-bottom: 2px solid #00b8dc;
+  string-set: doc-title content();
+  page-break-after: avoid;
+}
+
+h2 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 14pt;
+  font-weight: 400;
+  color: #0a0e1a;
+  margin: 10pt 0 4pt 0;
+  padding-bottom: 2pt;
+  border-bottom: 1px solid rgba(10, 14, 26, 0.12);
+  page-break-after: avoid;
+  break-inside: avoid;
+}
+
+h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 10.5pt;
+  font-weight: 600;
+  color: #0a0e1a;
+  margin: 7pt 0 3pt 0;
+  page-break-after: avoid;
+}
+
+h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5pt;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #00b8dc;
+  margin: 6pt 0 2pt 0;
+  page-break-after: avoid;
+}
+
+p {
+  margin: 0 0 4pt 0;
+  text-align: left;
+  orphans: 2;
+  widows: 2;
+}
+
+strong { color: #0a0e1a; font-weight: 600; }
+em { color: #555e6f; font-style: italic; }
+
+ul, ol {
+  margin: 0 0 4pt 16pt;
+  padding: 0;
+}
+
+li { margin-bottom: 1pt; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8pt;
+  margin: 4pt 0 6pt 0;
+  page-break-inside: auto;
+}
+
+th {
+  background: #0a0e1a;
+  color: #e8ecf0;
+  padding: 3pt 5pt;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7.5pt;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+td {
+  padding: 2.5pt 5pt;
+  border-bottom: 1px solid rgba(10, 14, 26, 0.1);
+  vertical-align: top;
+}
+
+tr:last-child td { border-bottom: none; }
+
+blockquote {
+  background: rgba(0, 184, 220, 0.08);
+  border-left: 3px solid #00b8dc;
+  padding: 5pt 8pt;
+  margin: 5pt 0 6pt 0;
+  font-family: 'Instrument Serif', serif;
+  font-size: 9.5pt;
+  line-height: 1.35;
+  color: #0a0e1a;
+  font-style: italic;
+  page-break-inside: avoid;
+}
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7.5pt;
+  background: rgba(0, 184, 220, 0.1);
+  color: #0a0e1a;
+  padding: 0.5pt 2pt;
+  border-radius: 2pt;
+}
+
+pre {
+  background: #0a0e1a;
+  color: #e8ecf0;
+  padding: 6pt 8pt;
+  border-radius: 3pt;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 6.5pt;
+  line-height: 1.3;
+  margin: 5pt 0 6pt 0;
+  overflow: hidden;
+  page-break-inside: avoid;
+}
+
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: 6.5pt;
+}
+
+hr {
+  border: none;
+  border-top: 1px dashed rgba(10, 14, 26, 0.15);
+  margin: 8pt 0;
+}
+
+.doc-header {
+  text-align: center;
+  margin-bottom: 8pt;
+  padding-bottom: 6pt;
+  border-bottom: 2px solid #00b8dc;
+}
+
+.doc-header .subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8pt;
+  color: #555e6f;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 2pt;
+}
+
+</style>
+</head>
+<body>
+<h1 id="ax5-citaflow-annexe-2-specifications-techniques">AX5-CitaFlow · Annexe 2 — Spécifications techniques</h1>
+<p><strong>Document complémentaire au one-pager IVÉO Défi #5</strong>
+<strong>Version</strong> : 1.0 · 19 avril 2026
+<strong>Soumissionnaire</strong> : Innoventera Inc. — AgenticX5
+<strong>Classification</strong> : Disponible sous entente de confidentialité (NDA)</p>
+<hr />
+<h2 id="objet-du-document">Objet du document</h2>
+<p>Cette annexe détaille la <strong>stack technologique</strong>, le <strong>pipeline ML/DL</strong>, l'<strong>architecture en 5 niveaux</strong>, les <strong>métadonnées PROV-O</strong> et le <strong>blueprint d'intégration</strong> d'AX5-CitaFlow.</p>
+<p>Elle répond aux questions que des évaluateurs techniques du jury IVÉO ou de partenaires institutionnels pourraient légitimement poser sur la solidité technique de la solution.</p>
+<hr />
+<h2 id="1-stack-technologique">1. Stack technologique</h2>
+<h3 id="11-couche-dorchestration-agentique">1.1 Couche d'orchestration agentique</h3>
+<table>
+<thead>
+<tr>
+<th>Composant</th>
+<th>Technologie</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Orchestration</strong></td>
+<td>Framework agentique AgenticX5 propriétaire (sur base LangGraph + CrewAI)</td>
+<td>Coordination des 10 agents AX5-CitaFlow + 500 agents AgenticX5 mobilisables</td>
+</tr>
+<tr>
+<td><strong>Gouvernance</strong></td>
+<td>Charte éthique AgenticX5 (primauté de la vie, HITL ≥ orange, XAI, PROV-O)</td>
+<td>Règles non négociables appliquées à chaque décision</td>
+</tr>
+<tr>
+<td><strong>Human-in-the-Loop</strong></td>
+<td>Seuils automatisés orange/rouge · interface municipale dédiée</td>
+<td>Validation humaine systématique sur décisions à fort impact</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-couche-modeles-dia">1.2 Couche modèles d'IA</h3>
+<table>
+<thead>
+<tr>
+<th>Type de modèle</th>
+<th>Usage</th>
+<th>Technologie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LLM propriétaires</strong> (tâches non-sensibles)</td>
+<td>Synthèse, reformulation, communication citoyenne</td>
+<td>Claude (Anthropic), GPT (OpenAI) — données anonymisées uniquement</td>
+</tr>
+<tr>
+<td><strong>LLM open-source locaux</strong> (tâches sensibles)</td>
+<td>Analyse de données municipales sensibles, agents décisionnels internes</td>
+<td>Llama 3.3, Mistral Large — hébergés en infrastructure canadienne</td>
+</tr>
+<tr>
+<td><strong>Modèles prédictifs</strong></td>
+<td>Anticipation 24-72 h des incidents</td>
+<td>Réseaux bayésiens hiérarchiques + Gradient Boosting (XGBoost)</td>
+</tr>
+<tr>
+<td><strong>Modèles séries temporelles</strong></td>
+<td>Détection d'anomalies de trafic</td>
+<td>Prophet + LSTM pour les saisonnalités multi-échelles</td>
+</tr>
+<tr>
+<td><strong>Graph Neural Networks</strong></td>
+<td>Corrélation CNESST × SAAQ × AGIR sur SafetyGraph</td>
+<td>PyTorch Geometric + Neo4j GDS</td>
+</tr>
+<tr>
+<td><strong>Computer Vision</strong></td>
+<td>Analyse des caméras ONVIF/RTSP</td>
+<td>YOLO v8 + modèles customs anonymisation</td>
+</tr>
+<tr>
+<td><strong>Embeddings sectoriels</strong></td>
+<td>Appariement SCIAN pour transposition Alphaville</td>
+<td>Sentence Transformers + fine-tuning sur corpus SST/mobilité</td>
+</tr>
+</tbody>
+</table>
+<h3 id="13-couche-de-donnees">1.3 Couche de données</h3>
+<table>
+<thead>
+<tr>
+<th>Composant</th>
+<th>Technologie</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Graphe de connaissances</strong></td>
+<td>Neo4j Enterprise (22 M+ nœuds, 40+ normes unifiées)</td>
+<td>SafetyGraph AgenticX5 — cœur de la corrélation multi-source</td>
+</tr>
+<tr>
+<td><strong>Vector database</strong></td>
+<td>Weaviate + pgvector (PostgreSQL)</td>
+<td>Recherche sémantique sur 5 000+ scénarios archivés</td>
+</tr>
+<tr>
+<td><strong>Base transactionnelle</strong></td>
+<td>PostgreSQL 16 + TimescaleDB</td>
+<td>Événements temps réel, séries temporelles</td>
+</tr>
+<tr>
+<td><strong>Data lake</strong></td>
+<td>Parquet + Apache Iceberg</td>
+<td>Archive long terme, rejouabilité</td>
+</tr>
+<tr>
+<td><strong>Cache et queues</strong></td>
+<td>Redis + Apache Kafka</td>
+<td>Latence &lt; 10 s vers Waze CCP</td>
+</tr>
+</tbody>
+</table>
+<h3 id="14-couche-infrastructure">1.4 Couche infrastructure</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Choix technique</th>
+<th>Justification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Hébergement</strong></td>
+<td>Cloud canadien certifié (OVHcloud Montréal, AWS Canada Central)</td>
+<td>Souveraineté QC/CA, certification Centre canadien pour la cybersécurité</td>
+</tr>
+<tr>
+<td><strong>Conteneurisation</strong></td>
+<td>Docker + Kubernetes</td>
+<td>Scalabilité multi-tenant, déploiement reproductible</td>
+</tr>
+<tr>
+<td><strong>CI/CD</strong></td>
+<td>GitHub Actions + ArgoCD</td>
+<td>Déploiement continu avec gates de sécurité</td>
+</tr>
+<tr>
+<td><strong>Observabilité</strong></td>
+<td>Prometheus + Grafana + OpenTelemetry</td>
+<td>Métriques temps réel, audit de performance</td>
+</tr>
+<tr>
+<td><strong>Chiffrement</strong></td>
+<td>TLS 1.3 (transit) + AES-256 (repos) + KMS canadien</td>
+<td>Conformité ISO/IEC 27001</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-pipeline-ml-deep-learning">2. Pipeline ML / Deep Learning</h2>
+<h3 id="21-vue-densemble">2.1 Vue d'ensemble</h3>
+<pre><code>┌─ Collecte ─────────────────────────────────────────────────────────────┐
+│  Données ouvertes (Catégorie A) + Sources terrain (Catégorie B)        │
+│  + Voix citoyenne 311                                                  │
+└────────────────────────────┬────────────────────────────────────────────┘
+                             ▼
+┌─ Harmonisation ────────────────────────────────────────────────────────┐
+│  Normalisation multi-juridictionnelle · déduplication · enrichissement │
+│  géospatial · appariement SCIAN                                        │
+└────────────────────────────┬────────────────────────────────────────────┘
+                             ▼
+┌─ Graphe de connaissances ──────────────────────────────────────────────┐
+│  SafetyGraph Neo4j · corrélations multi-source · requêtes Cypher &lt; 50ms│
+└────────────────────────────┬────────────────────────────────────────────┘
+                             ▼
+┌─ Intelligence prédictive ──────────────────────────────────────────────┐
+│  14 facteurs synergiques (A1-A7 + B1-B7) · modèles bayésiens           │
+│  hiérarchiques · GNN sur SafetyGraph · détection d'anomalies           │
+└────────────────────────────┬────────────────────────────────────────────┘
+                             ▼
+┌─ Simulation émergente (PREDIAG-X5) ────────────────────────────────────┐
+│  Multi-agents · scénarios what-if · rehearsal stakeholder ·            │
+│  transposition Alphaville                                              │
+└────────────────────────────┬────────────────────────────────────────────┘
+                             ▼
+┌─ Décision et HITL ─────────────────────────────────────────────────────┐
+│  XAI (SHAP) · seuils orange/rouge · validation humaine · audit PROV-O  │
+└────────────────────────────┬────────────────────────────────────────────┘
+                             ▼
+┌─ Diffusion (4 écosystèmes cibles) ─────────────────────────────────────┐
+│  Waze CIFS · GTFS-RT · GBFS · Open511 · portails municipaux            │
+│  Latence : &lt; 10 s (Waze) · &lt; 60 s (municipal)                          │
+└────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="22-details-par-etape">2.2 Détails par étape</h3>
+<p><strong>Collecte</strong></p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Fréquence</th>
+<th>Format</th>
+<th>Volumétrie estimée périmètre</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Permis AGIR</td>
+<td>Quotidien (API interne) / batch (ouverte)</td>
+<td>JSON</td>
+<td>150-300 permis actifs</td>
+</tr>
+<tr>
+<td>SAAQ ouvertes</td>
+<td>Annuel</td>
+<td>CSV / GeoJSON</td>
+<td>2 000 accidents/an</td>
+</tr>
+<tr>
+<td>CNESST SafetyGraph</td>
+<td>Mensuel</td>
+<td>Neo4j import</td>
+<td>300 000+ lésions historiques</td>
+</tr>
+<tr>
+<td>Hydro-Québec pannes</td>
+<td>Toutes les 5 min</td>
+<td>Scraping HTML → JSON</td>
+<td>0-15 événements/jour</td>
+</tr>
+<tr>
+<td>311 MTL</td>
+<td>Temps réel (API)</td>
+<td>JSON</td>
+<td>50-200 requêtes/jour</td>
+</tr>
+<tr>
+<td>Vélo Québec</td>
+<td>Annuel + temps réel (si partenariat)</td>
+<td>CSV / GeoJSON</td>
+<td>15-20 corridors</td>
+</tr>
+<tr>
+<td>Environnement Canada</td>
+<td>Temps réel</td>
+<td>API REST</td>
+<td>1 point/h</td>
+</tr>
+<tr>
+<td>Caméras ONVIF/RTSP (P0)</td>
+<td>Temps réel</td>
+<td>Streams vidéo</td>
+<td>6-10 caméras</td>
+</tr>
+<tr>
+<td>Compteurs IoT LoRaWAN (P0)</td>
+<td>Toutes les 5 min</td>
+<td>MQTT</td>
+<td>12-16 compteurs</td>
+</tr>
+<tr>
+<td>API CAD SPVM/SIM (à confirmer)</td>
+<td>Temps réel</td>
+<td>REST authentifié</td>
+<td>10-50 événements/jour</td>
+</tr>
+<tr>
+<td>SCG feux (à confirmer)</td>
+<td>Temps réel</td>
+<td>Propriétaire MTL</td>
+<td>250+ feux sur périmètre</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Harmonisation</strong></p>
+<p>Cette étape convertit la diversité des sources en un <strong>modèle de données unifié AX5-CitaFlow</strong> :</p>
+<ol>
+<li><strong>Normalisation géospatiale</strong> : toutes les coordonnées sont converties en WGS84 (EPSG:4326) puis indexées par quadkey (Bing Maps) et H3 (Uber).</li>
+<li><strong>Appariement temporel</strong> : fuseau horaire unique (America/Montreal), horodatage ISO 8601 avec précision seconde.</li>
+<li><strong>Déduplication multi-source</strong> : un événement peut être signalé par plusieurs sources (ex. panne Hydro + 311 + caméra) — les clones sont résolus via un algorithme de matching (similitude géospatiale + temporelle + sémantique).</li>
+<li><strong>Enrichissement SCIAN</strong> : les permis et chantiers sont enrichis automatiquement avec leur code sectoriel pour le croisement CNESST.</li>
+</ol>
+<p><strong>Graphe de connaissances SafetyGraph</strong></p>
+<ul>
+<li><strong>22 M+ nœuds</strong> (incidents, normes, sources, acteurs)</li>
+<li><strong>40+ normes unifiées</strong> (ISO, OHSAS, CNESST, Tome V MTQ, LSST)</li>
+<li><strong>Requêtes Cypher optimisées</strong> &lt; 50 ms</li>
+<li><strong>Mises à jour incrémentales</strong> quotidiennes</li>
+<li><strong>Ontologie propriétaire AgenticX5</strong> alignée sur PROV-O</li>
+</ul>
+<p><strong>Intelligence prédictive — 14 facteurs synergiques</strong></p>
+<p>Le modèle prédictif combine trois approches :</p>
+<ol>
+<li><strong>Réseau bayésien hiérarchique</strong> qui encode les dépendances causales entre facteurs A (structurels) et facteurs B (organiques)</li>
+<li><strong>Graph Neural Network</strong> sur SafetyGraph qui identifie les patterns de coactivité à risque élevé par similarité avec les incidents historiques</li>
+<li><strong>Détection d'anomalies multivariée</strong> qui déclenche des alertes quand la combinaison de facteurs sort de l'enveloppe nominale</li>
+</ol>
+<p>La <strong>sortie</strong> est un vecteur de probabilités sur les 6 catégories d'événements avec :
+- Probabilité d'occurrence dans une fenêtre 24-72 h
+- Niveau de confiance (intervalle bayésien)
+- Explication XAI (SHAP values sur les facteurs contributeurs)
+- Seuil HITL déclenché si probabilité × impact &gt; seuil orange/rouge</p>
+<p><strong>Simulation émergente PREDIAG-X5</strong></p>
+<ul>
+<li><strong>Multi-agents</strong> : chaque partie prenante (11 rôles modélisés) est un agent autonome avec ses préférences, contraintes, réactions</li>
+<li><strong>Monte Carlo</strong> : 10 000+ simulations par scénario pour converger vers des distributions de résultats</li>
+<li><strong>Rehearsal</strong> : exploration des configurations possibles avant décision réelle</li>
+<li><strong>Transposition Alphaville</strong> : normalisation statistique vers la ville étalon IVÉO (détails en Annexe 1 §9.2)</li>
+</ul>
+<hr />
+<h2 id="3-architecture-en-5-niveaux-ssmm5">3. Architecture en 5 niveaux (SSMM5)</h2>
+<p>AX5-CitaFlow est structuré selon l'architecture de référence AgenticX5 en 5 niveaux :</p>
+<table>
+<thead>
+<tr>
+<th>Niveau</th>
+<th>Nom</th>
+<th>Responsabilité</th>
+<th>Composants AX5-CitaFlow</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>N1</strong></td>
+<td><strong>Interface</strong></td>
+<td>Dashboards, alertes multi-canaux, portails citoyen et élu</td>
+<td>7 maquettes click-through · portail municipal dédié</td>
+</tr>
+<tr>
+<td><strong>N2</strong></td>
+<td><strong>Coordination</strong></td>
+<td>Orchestration des workflows, résolution des conflits, HITL</td>
+<td>10 agents AX5-CitaFlow + 500 agents AgenticX5 mobilisables</td>
+</tr>
+<tr>
+<td><strong>N3</strong></td>
+<td><strong>Intelligence</strong></td>
+<td>ML prédictif, pattern detection, graphe de connaissances</td>
+<td>Réseaux bayésiens + GNN sur Neo4j (&lt; 50 ms)</td>
+</tr>
+<tr>
+<td><strong>N4</strong></td>
+<td><strong>Traitement</strong></td>
+<td>ETL, harmonisation multi-juridictionnelle, data quality</td>
+<td>Pipelines Apache Airflow + dbt + Great Expectations</td>
+</tr>
+<tr>
+<td><strong>N5</strong></td>
+<td><strong>Collecte</strong></td>
+<td>APIs, capteurs, IoT, wearables, caméras, permis, incidents</td>
+<td>6 connecteurs (Catégorie A + B) + voix citoyenne</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-metadonnees-prov-o-tracabilite-w3c">4. Métadonnées PROV-O (traçabilité W3C)</h2>
+<p>Chaque décision produite par AX5-CitaFlow est <strong>totalement traçable</strong> selon la norme W3C PROV-O.</p>
+<h3 id="41-triplets-prov-o-generes">4.1 Triplets PROV-O générés</h3>
+<p>Pour chaque événement de sortie (ex. fermeture pré-annoncée à Waze CCP), le système produit :</p>
+<table>
+<thead>
+<tr>
+<th>Triplet PROV-O</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prov:wasGeneratedBy</code></td>
+<td>Fermeture_2026_001 a été générée par Agent_CauseClassifier</td>
+</tr>
+<tr>
+<td><code>prov:used</code></td>
+<td 311="311" AGIR="AGIR" CNESST="CNESST" Incident="Incident" Permis="Permis" Requête="Requête" id="DEF">Agent_CauseClassifier a utilisé</td>
+</tr>
+<tr>
+<td><code>prov:wasDerivedFrom</code></td>
+<td>Fermeture_2026_001 dérive de Scénario PREDIAG-X5 #123</td>
+</tr>
+<tr>
+<td><code>prov:wasAttributedTo</code></td>
+<td>Fermeture_2026_001 est attribuée à AX5-CitaFlow v1.2</td>
+</tr>
+<tr>
+<td><code>prov:actedOnBehalfOf</code></td>
+<td>AX5-CitaFlow agit pour le compte de Ville de Montréal (Bureau des permis)</td>
+</tr>
+<tr>
+<td><code>prov:startedAtTime</code> / <code>prov:endedAtTime</code></td>
+<td>Timestamps ISO 8601 précis</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-stockage-et-interrogation">4.2 Stockage et interrogation</h3>
+<ul>
+<li>Les triplets PROV-O sont stockés dans Neo4j (extension de SafetyGraph) avec un namespace dédié</li>
+<li>Les requêtes d'audit peuvent reconstituer la <strong>chaîne causale complète</strong> d'une décision</li>
+<li>Conformité avec la <strong>Directive canadienne sur la prise de décisions automatisée</strong> (ÉIA intégrée)</li>
+<li>Conservation : 7 ans minimum (aligné avec les exigences d'audit municipales)</li>
+</ul>
+<h3 id="43-exemple-daudit">4.3 Exemple d'audit</h3>
+<p>Question typique d'un auditeur : <em>« Pourquoi AX5-CitaFlow a-t-il recommandé de fermer Saint-Laurent le 15 juin 2026 de 07h à 18h ? »</em></p>
+<p>Réponse traçable automatiquement :</p>
+<ol>
+<li><strong>Recommandation</strong> : Fermeture_2026_001 générée à 2026-06-13T08:42:15-04:00</li>
+<li><strong>Agent source</strong> : Agent_CauseClassifier v1.2 (CauseClassifierAgent)</li>
+<li><strong>Données d'entrée</strong> :</li>
+<li>Permis AGIR #12345 (réfection conduite pluviale, 12-25 juin)</li>
+<li>SAAQ historique : 8 accidents piétons sur Saint-Laurent × Sainte-Catherine (2019-2024)</li>
+<li>CNESST : 2 incidents construction secteur 236110 dans les 90 derniers jours</li>
+<li>311 : 23 requêtes citoyennes sur obstruction trottoir dans le quartier</li>
+<li><strong>Simulation PREDIAG-X5</strong> : Scénario #42 (3 options évaluées, fermeture coordonnée retenue)</li>
+<li><strong>XAI</strong> : SHAP values disponibles (facteur A1 Emprise = 0.32, facteur B2 Coactivité = 0.28, facteur A5 Accès commerces = 0.21)</li>
+<li><strong>Seuil HITL</strong> : validé par l'Agent_Teodoresco-Proxy à 2026-06-13T09:15:03-04:00</li>
+<li><strong>Diffusion</strong> : Waze CIFS à 2026-06-13T09:15:07-04:00 (latence 4 s)</li>
+</ol>
+<hr />
+<h2 id="5-blueprint-dintegration-defi-5-laboratoire-centre-ville">5. Blueprint d'intégration — Défi #5 Laboratoire centre-ville</h2>
+<h3 id="51-vue-synthetique">5.1 Vue synthétique</h3>
+<pre><code>┌───────────────────────────────────────────────────────────────────────┐
+│                   INTERFACES VILLE DE MONTRÉAL                        │
+│  Portail permis · Tableaux voirie · Dashboard SPVM/SIM · montreal.ca  │
+└──────────────────────────────────┬────────────────────────────────────┘
+                                   │ API municipales + Open511
+                                   ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│                      AX5-CitaFlow · Noyau agentique                   │
+│   10 agents dédiés + orchestration 500 agents AgenticX5 mobilisables  │
+│   Pipeline ML/DL + PREDIAG-X5 + SafetyGraph Neo4j                     │
+└────┬────────┬────────┬────────┬────────┬────────┬────────┬────────────┘
+     │        │        │        │        │        │        │
+     ▼        ▼        ▼        ▼        ▼        ▼        ▼
+  [AGIR] [CNESST] [SAAQ] [Hydro] [311] [Vélo QC] [Caméras P0]
+  Ville  Ouvertes Ouvertes Publiques MTL       IoT LoRaWAN
+
+                                        │
+                                        ▼ sorties
+  ┌──────┬──────────┬──────┬──────────┬──────────────┐
+  │ Waze │ GTFS-RT  │ GBFS │ Open511  │ Portails MTL │
+  │ CIFS │ (ARTM)   │(BIXI)│ (MTQ)    │              │
+  └──────┴──────────┴──────┴──────────┴──────────────┘
+</code></pre>
+<h3 id="52-phases-dintegration">5.2 Phases d'intégration</h3>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Livrable technique</th>
+<th>Validation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Phase 0 · Mai 2026</strong></td>
+<td>Blueprint d'architecture validé · environnements dev/staging/prod provisionnés · 4 connecteurs Catégorie A actifs · PREDIAG-X5 calibré sur 12 scénarios</td>
+<td>Review architecture avec équipe technique Ville</td>
+</tr>
+<tr>
+<td><strong>Préparation · 1-15 juin 2026</strong></td>
+<td>Connecteurs Catégorie B déployés (caméras + compteurs) · pipeline E2E testé · dashboard municipal déployé</td>
+<td>Tests d'acceptation utilisateur (UAT) avec Bureau des permis</td>
+</tr>
+<tr>
+<td><strong>Déploiement · 16-30 juin 2026</strong></td>
+<td>Pipeline en production · intégration Waze CCP active · rapports automatisés configurés</td>
+<td>Go-live avec plan de rollback</td>
+</tr>
+<tr>
+<td><strong>Opération · juillet-août 2026</strong></td>
+<td>Métriques de production collectées · rapports bi-mensuels · ajustements continus</td>
+<td>Comités de suivi bi-mensuels</td>
+</tr>
+<tr>
+<td><strong>Bilan · septembre 2026</strong></td>
+<td>Analyse comparative · transposition Alphaville · documentation complète · handover</td>
+<td>Présentation au Comité exécutif Ville</td>
+</tr>
+</tbody>
+</table>
+<h3 id="53-interfaces-avec-les-systemes-municipaux-existants">5.3 Interfaces avec les systèmes municipaux existants</h3>
+<table>
+<thead>
+<tr>
+<th>Système municipal</th>
+<th>Type d'interface</th>
+<th>Contrat de service</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AGIR</strong> (permis)</td>
+<td>API REST authentifiée ou accès batch quotidien</td>
+<td>Accès lecture seule, aucune modification</td>
+</tr>
+<tr>
+<td><strong>Infrastructure SPVM/SIM</strong></td>
+<td>API CAD ou veille différée</td>
+<td>À confirmer — plan B documenté</td>
+</tr>
+<tr>
+<td><strong>SCG feux MTL</strong></td>
+<td>Feed événementiel filtré (pas de contrôle)</td>
+<td>À confirmer — accès sécurisé</td>
+</tr>
+<tr>
+<td><strong>Portail montreal.ca</strong></td>
+<td>Webhook + API bidirectionnelle</td>
+<td>Contrat de publication automatisée</td>
+</tr>
+<tr>
+<td><strong>Mobilité Montréal (MTQ)</strong></td>
+<td>Open511 bidirectionnel</td>
+<td>Standard québécois en production</td>
+</tr>
+</tbody>
+</table>
+<h3 id="54-continuite-dactivite">5.4 Continuité d'activité</h3>
+<ul>
+<li><strong>SLA cible</strong> : 99.5 % de disponibilité (temps d'arrêt &lt; 44 h/an)</li>
+<li><strong>Plan de reprise</strong> : basculement automatique sur région AWS Canada Central en cas d'incident OVHcloud Montréal</li>
+<li><strong>Sauvegarde</strong> : snapshots quotidiens du graphe Neo4j + archives continues du data lake</li>
+<li><strong>Dégradation contrôlée</strong> : si un connecteur Catégorie B tombe, le système bascule sur les données Catégorie A sans interruption de service</li>
+</ul>
+<hr />
+<h2 id="6-securite-et-conformite">6. Sécurité et conformité</h2>
+<h3 id="61-cadre-de-conformite">6.1 Cadre de conformité</h3>
+<table>
+<thead>
+<tr>
+<th>Exigence</th>
+<th>Mise en œuvre technique</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Loi 25 Québec</strong></td>
+<td>Anonymisation à la source · EFVP avant Phase 0 · pas de données nominatives collectées</td>
+</tr>
+<tr>
+<td><strong>Directive canadienne sur la prise de décisions automatisée</strong></td>
+<td>ÉIA documentée · traçabilité PROV-O complète · HITL systématique</td>
+</tr>
+<tr>
+<td><strong>ISO/IEC 27001</strong></td>
+<td>Alignement technique dès aujourd'hui · certification 2027</td>
+</tr>
+<tr>
+<td><strong>ISO 45001</strong></td>
+<td>Alignement technique dès aujourd'hui · certification 2027</td>
+</tr>
+<tr>
+<td><strong>Énoncé de principes du MCN (déc. 2025)</strong></td>
+<td>10 principes appliqués à chaque agent AgenticX5</td>
+</tr>
+<tr>
+<td><strong>Déclaration de Montréal (2018)</strong></td>
+<td>10 principes encodés dans la charte éthique AgenticX5</td>
+</tr>
+<tr>
+<td><strong>Centre canadien pour la cybersécurité</strong></td>
+<td>Fournisseurs cloud certifiés · chiffrement conforme aux standards fédéraux</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-cycle-de-vie-des-donnees-sensibles">6.2 Cycle de vie des données sensibles</h3>
+<ol>
+<li><strong>Collecte</strong> — aucune donnée nominative stockée, anonymisation à la source (caméras traitées localement)</li>
+<li><strong>Traitement</strong> — uniquement sur infrastructure canadienne (OVHcloud Montréal + AWS Canada Central)</li>
+<li><strong>Modèles IA</strong> — LLM open-source locaux (Llama, Mistral) pour les tâches impliquant des données sensibles</li>
+<li><strong>Partage</strong> — limité aux systèmes municipaux autorisés, aucun transfert hors juridiction canadienne</li>
+<li><strong>Archivage</strong> — 7 ans minimum (PROV-O pour audit) puis destruction sécurisée</li>
+</ol>
+<hr />
+<h2 id="7-roadmap-technique-post-pilote">7. Roadmap technique post-pilote</h2>
+<table>
+<thead>
+<tr>
+<th>Horizon</th>
+<th>Évolution technique</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Q4 2026</strong></td>
+<td>Réplication multi-tenant pour CMM · onboarding Laval + Longueuil + Brossard · monitoring fédéré</td>
+</tr>
+<tr>
+<td><strong>Q1-Q2 2027</strong></td>
+<td>Ouverture API publique pour partenaires corporatifs · certification ISO 27001 en cours · audit de sécurité externe</td>
+</tr>
+<tr>
+<td><strong>Q3-Q4 2027</strong></td>
+<td>Déploiement 100 % local (option) pour clients avec exigences de souveraineté strictes · intégration réseau IVÉO 75 villes</td>
+</tr>
+<tr>
+<td><strong>2028</strong></td>
+<td>Architecture internationale · localisation pour marchés européens et américains · fédération des instances par région</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><strong>© 2026 Innoventera Inc. — Tous droits réservés.</strong>
+<em>Document, logiciels et œuvres associées protégés en vertu de la Loi sur le droit d'auteur du Canada (L.R.C. (1985), ch. C-42).</em>
+<em>Ce document contient des informations techniques sensibles et ne doit être partagé qu'avec les parties ayant signé une entente de confidentialité (NDA) avec Innoventera Inc.</em></p>
+</body>
+</html>

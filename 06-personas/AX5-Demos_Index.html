@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AX5-CitaFlow — Démos par persona (v2)</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0e1a;
+    --bg-elev: #121829;
+    --bg-card: #1a2138;
+    --border: rgba(232, 236, 240, 0.08);
+    --border-strong: rgba(232, 236, 240, 0.18);
+    --text: #e8ecf0;
+    --text-muted: #8b95a7;
+    --text-dim: #6b7688;
+    --accent: #00d4ff;
+    --accent-dim: rgba(0, 212, 255, 0.15);
+    --warn: #ff6b35;
+    --success: #4ade80;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  .container { max-width: 1280px; margin: 0 auto; }
+
+  .hero-section { text-align: center; margin-bottom: 60px; padding: 40px 20px; }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .hero-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 56px;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 16px;
+    font-weight: 400;
+  }
+
+  @media (max-width: 768px) {
+    .hero-title { font-size: 36px; }
+  }
+
+  .hero-title .accent { color: var(--accent); }
+
+  .hero-subtitle {
+    color: var(--text-muted);
+    font-size: 17px;
+    max-width: 720px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .stats-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 60px;
+    padding: 32px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  @media (max-width: 768px) { .stats-strip { grid-template-columns: repeat(2, 1fr); } }
+
+  .stat-item { text-align: center; }
+  .stat-item .stat-value {
+    font-family: 'Instrument Serif', serif;
+    font-size: 36px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-item .stat-label {
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .section-divider {
+    text-align: center;
+    margin: 40px 0 24px;
+  }
+
+  .section-divider .div-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+    margin-bottom: 16px;
+  }
+
+  .section-divider .div-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  .section-divider .div-title .div-count {
+    color: var(--accent);
+    margin-left: 8px;
+  }
+
+  .demos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 1100px) { .demos-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 700px) { .demos-grid { grid-template-columns: 1fr; } }
+
+  .demo-card {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+  }
+
+  .demo-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 212, 255, 0.12);
+  }
+
+  .demo-card.recommended::before {
+    content: '★ pitch IVÉO';
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: var(--success);
+    color: var(--bg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 9px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .demo-card.regulatory::before {
+    content: '⚖ critère #4';
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: var(--warn);
+    color: var(--bg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 9px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .demo-header { display: flex; align-items: center; gap: 10px; }
+
+  .demo-badge {
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .demo-format {
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+  }
+
+  .demo-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 24px;
+    color: var(--text);
+    line-height: 1.15;
+    font-weight: 400;
+  }
+
+  .demo-desc {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.55;
+    flex: 1;
+  }
+
+  .demo-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .demo-meta-item .meta-label {
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .demo-meta-item .meta-value {
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .demo-meta-item .meta-value.success { color: var(--success); }
+
+  .demo-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .demo-cta .cta-arrow {
+    font-size: 18px;
+    transition: transform 0.2s ease;
+  }
+
+  .demo-card:hover .cta-arrow { transform: translateX(4px); }
+
+  .info-section {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin: 60px 0 40px;
+  }
+
+  .info-section h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: var(--text);
+    margin-bottom: 16px;
+    line-height: 1.2;
+    font-weight: 400;
+  }
+
+  .info-section p {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 24px;
+  }
+
+  @media (max-width: 768px) { .info-grid { grid-template-columns: 1fr; } }
+
+  .info-item {
+    border-left: 2px solid var(--accent);
+    padding-left: 16px;
+  }
+
+  .info-item .info-label {
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .info-item .info-text {
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .criteria-section {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 40px;
+  }
+
+  .criteria-section h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 24px;
+    color: var(--text);
+    margin-bottom: 20px;
+    line-height: 1.2;
+    font-weight: 400;
+  }
+
+  .criteria-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .criteria-table th {
+    text-align: left;
+    padding: 10px 12px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .criteria-table td {
+    padding: 12px;
+    color: var(--text);
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .criteria-table .crit-num {
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+  }
+
+  .criteria-table .crit-personas {
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 32px 0;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="hero-section">
+    <div class="hero-eyebrow">AX5-CitaFlow · démonstrations utilisateur · v2</div>
+    <h1 class="hero-title">7 personas. 7 parcours. <span class="accent">Une intelligence.</span></h1>
+    <p class="hero-subtitle">
+      Maquettes click-through démontrant comment AX5-CitaFlow s'incarne au quotidien selon le rôle de l'utilisateur.
+      Chaque démo suit un workflow réel documenté, avec ses métriques ROI vérifiées.
+      Le package complet couvre les 5 critères IVÉO Défi #5.
+    </p>
+  </header>
+
+  <section class="stats-strip">
+    <div class="stat-item">
+      <div class="stat-value">26</div>
+      <div class="stat-label">Personas documentés</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">102</div>
+      <div class="stat-label">Workflows opérationnels</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">10</div>
+      <div class="stat-label">Agents AX5 spécialisés</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">266 k$</div>
+      <div class="stat-label">Économies/mois documentées</div>
+    </div>
+  </section>
+
+  <div class="section-divider">
+    <div class="div-line"></div>
+    <div class="div-title">— Vue municipale<span class="div-count">3 démos</span> —</div>
+  </div>
+
+  <div class="demos-grid">
+
+    <a href="AX5-CitaFlow_Mockup_B1_Coordonnateur_v1.html" class="demo-card recommended">
+      <div class="demo-header">
+        <span class="demo-badge">Persona B.1</span>
+        <span class="demo-format">desktop · 4 écrans</span>
+      </div>
+      <h2 class="demo-title">Coordonnateur ville</h2>
+      <p class="demo-desc">
+        Soumettre, évaluer et valider un permis en quelques secondes. Score composite multi-agents,
+        validation HITL, génération PDF audit-ready.
+      </p>
+      <div class="demo-meta">
+        <div class="demo-meta-item">
+          <div class="meta-label">Workflow</div>
+          <div class="meta-value">#1-15 PermitOptimizer</div>
+        </div>
+        <div class="demo-meta-item">
+          <div class="meta-label">ROI documenté</div>
+          <div class="meta-value success">12 s vs 2 h Excel</div>
+        </div>
+      </div>
+      <div class="demo-cta">
+        <span>Lancer la démo</span>
+        <span class="cta-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="AX5-CitaFlow_Mockup_B2_Directeur_v1.html" class="demo-card recommended">
+      <div class="demo-header">
+        <span class="demo-badge">Persona B.2</span>
+        <span class="demo-format">desktop · scrollable</span>
+      </div>
+      <h2 class="demo-title">Directeur Travaux Publics</h2>
+      <p class="demo-desc">
+        Vue stratégique C-Suite avec KPIs mensuels, comparaison de 4 scénarios what-if, et impact cascade
+        sur 3,7 km².
+      </p>
+      <div class="demo-meta">
+        <div class="demo-meta-item">
+          <div class="meta-label">Workflow</div>
+          <div class="meta-value">#45, #99, #35, #88</div>
+        </div>
+        <div class="demo-meta-item">
+          <div class="meta-label">ROI documenté</div>
+          <div class="meta-value success">266 k$/mois</div>
+        </div>
+      </div>
+      <div class="demo-cta">
+        <span>Lancer la démo</span>
+        <span class="cta-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="AX5-CitaFlow_Mockup_B3_Inspecteur_v1.html" class="demo-card">
+      <div class="demo-header">
+        <span class="demo-badge">Persona B.3</span>
+        <span class="demo-format">mobile iPhone · 3 écrans</span>
+      </div>
+      <h2 class="demo-title">Inspecteur terrain</h2>
+      <p class="demo-desc">
+        Push notification critique, carte coactivité ROUGE, scan QR du chantier source, validation terrain en 2 minutes.
+      </p>
+      <div class="demo-meta">
+        <div class="demo-meta-item">
+          <div class="meta-label">Workflow</div>
+          <div class="meta-value">#46-95 NudgeAgent</div>
+        </div>
+        <div class="demo-meta-item">
+          <div class="meta-label">ROI documenté</div>
+          <div class="meta-value success">push &lt; 2 s</div>
+        </div>
+      </div>
+      <div class="demo-cta">
+        <span>Lancer la démo</span>
+        <span class="cta-arrow">→</span>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="section-divider">
+    <div class="div-line"></div>
+    <div class="div-title">— Vue citoyenne<span class="div-count">1 démo</span> —</div>
+  </div>
+
+  <div class="demos-grid">
+
+    <a href="AX5-CitaFlow_Mockup_A4_Automobiliste_v1.html" class="demo-card recommended">
+      <div class="demo-header">
+        <span class="demo-badge">Persona A.4</span>
+        <span class="demo-format">Waze native + dashboard</span>
+      </div>
+      <h2 class="demo-title">Automobiliste · Waze API</h2>
+      <p class="demo-desc">
+        Intégration Waze CCP officielle. Pas une nouvelle app : l'alerte arrive directement dans l'app
+        que les automobilistes utilisent déjà.
+      </p>
+      <div class="demo-meta">
+        <div class="demo-meta-item">
+          <div class="meta-label">Workflow</div>
+          <div class="meta-value">#92 Waze CCP</div>
+        </div>
+        <div class="demo-meta-item">
+          <div class="meta-label">ROI documenté</div>
+          <div class="meta-value success">84 k automobilistes</div>
+        </div>
+      </div>
+      <div class="demo-cta">
+        <span>Lancer la démo</span>
+        <span class="cta-arrow">→</span>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="section-divider">
+    <div class="div-line"></div>
+    <div class="div-title">— Vue chaîne de responsabilité<span class="div-count">2 démos</span> —</div>
+  </div>
+
+  <div class="demos-grid">
+
+    <a href="AX5-CitaFlow_Mockup_C3_MaitreOeuvre_v1.html" class="demo-card regulatory">
+      <div class="demo-header">
+        <span class="demo-badge">Persona C.3</span>
+        <span class="demo-format">portail conformité · 3 écrans</span>
+      </div>
+      <h2 class="demo-title">Maître d'œuvre · LSST</h2>
+      <p class="demo-desc">
+        Surveillance automatique des obligations LSST art. 198. Alerte programme expirant,
+        pré-remplissage 1 clic, packs d'évidence audit-ready.
+      </p>
+      <div class="demo-meta">
+        <div class="demo-meta-item">
+          <div class="meta-label">Workflow</div>
+          <div class="meta-value">EvidenceBuilder</div>
+        </div>
+        <div class="demo-meta-item">
+          <div class="meta-label">ROI documenté</div>
+          <div class="meta-value success">600 k$ amende évitée</div>
+        </div>
+      </div>
+      <div class="demo-cta">
+        <span>Lancer la démo</span>
+        <span class="cta-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="AX5-CitaFlow_Mockup_C1_Entrepreneur_v1.html" class="demo-card">
+      <div class="demo-header">
+        <span class="demo-badge">Persona C.1</span>
+        <span class="demo-format">portail entrepreneur · 3 écrans</span>
+      </div>
+      <h2 class="demo-title">Entrepreneur général</h2>
+      <p class="demo-desc">
+        Pomerleau, Aecon, EBC. Simulez 4 scénarios temporels avant de déposer le permis,
+        optimisez livraisons, grues et coordination 8 parties prenantes.
+      </p>
+      <div class="demo-meta">
+        <div class="demo-meta-item">
+          <div class="meta-label">Workflow</div>
+          <div class="meta-value">#16-35 ImpactSimulator</div>
+        </div>
+        <div class="demo-meta-item">
+          <div class="meta-label">ROI documenté</div>
+          <div class="meta-value success">42 k$ report évité</div>
+        </div>
+      </div>
+      <div class="demo-cta">
+        <span>Lancer la démo</span>
+        <span class="cta-arrow">→</span>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="section-divider">
+    <div class="div-line"></div>
+    <div class="div-title">— Vue extension mobilité partagée<span class="div-count">1 démo</span> —</div>
+  </div>
+
+  <div class="demos-grid">
+
+    <a href="AX5-CitaFlow_Mockup_D1_BIXI_v1.html" class="demo-card">
+      <div class="demo-header">
+        <span class="demo-badge">Persona D.1</span>
+        <span class="demo-format">dashboard ops · 3 écrans</span>
+      </div>
+      <h2 class="demo-title">Opérateur BIXI</h2>
+      <p class="demo-desc">
+        Détection station critique, prédiction cascade ×3,2 accidents, plan de transfert nocturne.
+        Démontre la pérennité au-delà du périmètre municipal.
+      </p>
+      <div class="demo-meta">
+        <div class="demo-meta-item">
+          <div class="meta-label">Workflow</div>
+          <div class="meta-value">#102 BixiOptimizer</div>
+        </div>
+        <div class="demo-meta-item">
+          <div class="meta-label">ROI documenté</div>
+          <div class="meta-value success">×3,2 accidents évités</div>
+        </div>
+      </div>
+      <div class="demo-cta">
+        <span>Lancer la démo</span>
+        <span class="cta-arrow">→</span>
+      </div>
+    </a>
+
+  </div>
+
+  <section class="criteria-section">
+    <h2>Couverture des 5 critères IVÉO Défi #5</h2>
+    <table class="criteria-table">
+      <thead>
+        <tr>
+          <th>Critère IVÉO</th>
+          <th>Démontré par</th>
+          <th>Argument clé</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="crit-num">#1</span> Pertinence (6 causes)</td>
+          <td><span class="crit-personas">A.4 + B.1</span></td>
+          <td>Adresse les 6 causes de congestion + distribution Waze native</td>
+        </tr>
+        <tr>
+          <td><span class="crit-num">#2</span> Impacts</td>
+          <td><span class="crit-personas">B.2</span></td>
+          <td>266 k$/mois économies, -57 % incidents documentés</td>
+        </tr>
+        <tr>
+          <td><span class="crit-num">#3</span> Faisabilité / maturité</td>
+          <td><span class="crit-personas">B.3 + C.1</span></td>
+          <td>12 s vs 2 h Excel, déploiement multi-personas vérifié</td>
+        </tr>
+        <tr>
+          <td><span class="crit-num">#4</span> Conformité / sécurité</td>
+          <td><span class="crit-personas">C.3</span></td>
+          <td>LSST art. 198, Tome V MTQ, traçabilité PROV-O complète</td>
+        </tr>
+        <tr>
+          <td><span class="crit-num">#5</span> Pérennité / mise à l'échelle</td>
+          <td><span class="crit-personas">D.1 + C.1</span></td>
+          <td>Extensions natives BIXI + monétisation B2B entrepreneurs</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="info-section">
+    <h2>Comment lire ces démos</h2>
+    <p>
+      Chaque maquette est en stricte continuité du document <em>AX5-CitaFlow_Personas_Complets_v1</em> qui consolide
+      26 personas issus de l'écosystème urbain montréalais. Le format de chaque démo s'adapte au canal natif du persona :
+      dashboard web pour les coordonnateurs, mobile iPhone pour les inspecteurs, carte ops pour les opérateurs de flotte,
+      Waze native pour les automobilistes, portail conformité pour les maîtres d'œuvre.
+    </p>
+
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="info-label">Données</div>
+        <div class="info-text">
+          Données réalistes basées sur les sources réelles du projet (CNESST 54 k lésions, SAAQ 8 k accidents zones travaux, GBFS BIXI live, Waze CCP partenaire ville).
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Workflows</div>
+        <div class="info-text">
+          Numérotation référencée (#1-102) pointant vers la matrice 100+ workflows opérationnels documentée dans les fichiers projet.
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Métriques</div>
+        <div class="info-text">
+          ROI affichés issus du document personas v1, vérifiables et défendables devant un jury IVÉO ou un partenaire institutionnel.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    AX5-CitaFlow · démos personas v2 (7 maquettes) · 18 avril 2026
+    · maquettes click-through HTML autonomes
+    · <a href="https://github.com/Preventera/AX5-UrbanIA">github.com/Preventera/AX5-UrbanIA</a>
+  </div>
+
+</div>
+
+</body>
+</html>

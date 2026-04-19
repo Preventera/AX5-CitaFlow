@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AX5-CitaFlow — Inspecteur terrain (Persona B.3)</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0e1a;
+    --bg-elev: #121829;
+    --bg-card: #1a2138;
+    --bg-input: #0f1422;
+    --border: rgba(232, 236, 240, 0.08);
+    --border-strong: rgba(232, 236, 240, 0.18);
+    --text: #e8ecf0;
+    --text-muted: #8b95a7;
+    --text-dim: #6b7688;
+    --accent: #00d4ff;
+    --accent-dim: rgba(0, 212, 255, 0.15);
+    --warn: #ff6b35;
+    --warn-dim: rgba(255, 107, 53, 0.15);
+    --success: #4ade80;
+    --success-dim: rgba(74, 222, 128, 0.15);
+    --danger: #f87171;
+    --danger-dim: rgba(248, 113, 113, 0.15);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .container { max-width: 1400px; margin: 0 auto; }
+
+  .meta-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .meta-bar .meta-title { color: var(--accent); }
+  .meta-bar .meta-persona { color: var(--text); }
+  .meta-bar .meta-workflow { color: var(--warn); }
+
+  .nav-screens {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .nav-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-align: left;
+    transition: all 0.15s ease;
+    line-height: 1.4;
+  }
+
+  .nav-btn:hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+    background: var(--bg-card);
+  }
+
+  .nav-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .nav-btn .nav-num { display: block; font-size: 10px; margin-bottom: 4px; opacity: 0.7; }
+  .nav-btn .nav-label { display: block; font-weight: 500; }
+
+  .screen { display: none; animation: fadeIn 0.3s ease; }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .mobile-layout {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 32px;
+    align-items: start;
+  }
+
+  @media (max-width: 1100px) {
+    .mobile-layout { grid-template-columns: 1fr; align-items: stretch; }
+  }
+
+  .iphone-frame {
+    background: #1a1d2e;
+    border-radius: 38px;
+    padding: 12px;
+    width: 360px;
+    margin: 0 auto;
+    box-shadow:
+      0 0 0 1px var(--border-strong),
+      0 30px 80px rgba(0, 0, 0, 0.5);
+    position: relative;
+  }
+
+  .iphone-notch {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 28px;
+    background: #1a1d2e;
+    border-radius: 0 0 18px 18px;
+    z-index: 10;
+  }
+
+  .iphone-screen {
+    background: var(--bg);
+    border-radius: 28px;
+    overflow: hidden;
+    min-height: 720px;
+    position: relative;
+  }
+
+  .iphone-statusbar {
+    height: 44px;
+    padding: 14px 24px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text);
+    font-family: -apple-system, system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .iphone-statusbar .status-icons {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .iphone-content { padding: 16px; }
+
+  .lock-screen {
+    height: 720px;
+    background: linear-gradient(180deg, #0a0e1a 0%, #1a2138 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 80px;
+    position: relative;
+  }
+
+  .lock-time {
+    font-family: -apple-system, system-ui, sans-serif;
+    font-size: 72px;
+    font-weight: 200;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .lock-date {
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 60px;
+  }
+
+  .push-notif {
+    background: rgba(26, 33, 56, 0.85);
+    backdrop-filter: blur(20px);
+    border-radius: 18px;
+    padding: 14px 16px;
+    width: calc(100% - 32px);
+    margin: 0 16px 12px;
+    border-left: 3px solid var(--danger);
+    animation: pushSlide 0.5s ease;
+  }
+
+  @keyframes pushSlide {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .push-notif .push-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .push-notif .push-app {
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .push-notif .push-app::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    background: var(--accent);
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .push-notif .push-time {
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .push-notif .push-title {
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .push-notif .push-body {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .push-notif.severity-orange { border-left-color: var(--warn); }
+  .push-notif.severity-orange .push-app { color: var(--warn); }
+  .push-notif.severity-orange .push-app::before { background: var(--warn); }
+
+  .app-header {
+    background: var(--bg-elev);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .app-header h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .app-header .header-meta {
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-align: right;
+    line-height: 1.5;
+  }
+
+  .alert-banner {
+    background: var(--danger-dim);
+    border: 1px solid var(--danger);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .alert-banner .alert-pulse {
+    width: 12px;
+    height: 12px;
+    background: var(--danger);
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 var(--danger-dim); }
+    50% { box-shadow: 0 0 0 8px transparent; }
+  }
+
+  .alert-banner .alert-content { flex: 1; }
+  .alert-banner .alert-title { color: var(--danger); font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .alert-banner .alert-detail { color: var(--text); font-size: 12px; }
+
+  .map-mock-mobile {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .map-mock-mobile::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(45deg, transparent 49%, var(--border) 50%, transparent 51%),
+      linear-gradient(-45deg, transparent 49%, var(--border) 50%, transparent 51%);
+    background-size: 16px 16px;
+    opacity: 0.4;
+  }
+
+  .map-zone-rouge {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(248, 113, 113, 0.4) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: zoneRouge 2s ease-in-out infinite;
+  }
+
+  @keyframes zoneRouge {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  .map-marker-mobile {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: var(--danger);
+    border: 2px solid var(--bg);
+    border-radius: 50%;
+    z-index: 5;
+  }
+
+  .map-marker-mobile.user {
+    background: var(--accent);
+    width: 18px;
+    height: 18px;
+    box-shadow: 0 0 0 4px var(--accent-dim);
+  }
+
+  .info-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+
+  .info-card .info-label {
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+
+  .info-card .info-value {
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .info-card .info-detail {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .info-mini {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+
+  .info-mini .mini-label {
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .info-mini .mini-value {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .info-mini .mini-value.warn { color: var(--warn); }
+  .info-mini .mini-value.danger { color: var(--danger); }
+
+  .qr-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .qr-mock {
+    width: 60px;
+    height: 60px;
+    background:
+      linear-gradient(45deg, var(--text) 25%, transparent 25%, transparent 75%, var(--text) 75%),
+      linear-gradient(45deg, var(--text) 25%, transparent 25%, transparent 75%, var(--text) 75%);
+    background-size: 12px 12px;
+    background-position: 0 0, 6px 6px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    border: 2px solid var(--text);
+  }
+
+  .qr-info { flex: 1; }
+  .qr-info .qr-title { color: var(--text); font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .qr-info .qr-detail { color: var(--text-muted); font-size: 11px; font-family: 'JetBrains Mono', monospace; }
+
+  .actions-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .action-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 14px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+    transition: all 0.15s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .action-btn:hover { border-color: var(--accent); }
+
+  .action-btn.primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  .action-btn.danger {
+    background: var(--danger);
+    color: var(--bg);
+    border-color: var(--danger);
+  }
+
+  .action-btn .btn-arrow { font-family: 'JetBrains Mono', monospace; opacity: 0.7; }
+
+  .side-panel {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    align-self: start;
+    position: sticky;
+    top: 20px;
+  }
+
+  .side-panel-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .side-panel h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .side-panel p {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  .agent-list {
+    background: var(--bg-card);
+    border-left: 2px solid var(--accent);
+    padding: 12px 14px;
+    border-radius: 0 8px 8px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text);
+    margin-top: 14px;
+    line-height: 1.7;
+  }
+
+  .agent-list .agent-line { display: flex; justify-content: space-between; }
+  .agent-list .agent-name { color: var(--accent); }
+  .agent-list .agent-status { color: var(--text-muted); }
+
+  .footer-bar {
+    margin-top: 24px;
+    padding: 16px 20px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-align: center;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .footer-bar a { color: var(--accent); text-decoration: none; }
+  .footer-bar .roi-callout { color: var(--success); margin: 0 12px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="meta-bar">
+    <span><span class="meta-title">AX5-CitaFlow</span> · maquette persona mobile</span>
+    <span>Persona <span class="meta-persona">B.3 — Inspecteur terrain</span></span>
+    <span>Workflow <span class="meta-workflow">#46-95 UrbanFlow + Nudge + CoactivityAgent</span></span>
+  </div>
+
+  <nav class="nav-screens">
+    <button class="nav-btn active" data-screen="1">
+      <span class="nav-num">01 / 03 — workflow #93</span>
+      <span class="nav-label">Push notification ROUGE</span>
+    </button>
+    <button class="nav-btn" data-screen="2">
+      <span class="nav-num">02 / 03 — workflow #46-78</span>
+      <span class="nav-label">Carte chantier + scan QR</span>
+    </button>
+    <button class="nav-btn" data-screen="3">
+      <span class="nav-num">03 / 03 — workflow #93</span>
+      <span class="nav-label">Action terrain validée</span>
+    </button>
+  </nav>
+
+  <section class="screen active" id="screen-1">
+    <div class="mobile-layout">
+
+      <div class="iphone-frame">
+        <div class="iphone-notch"></div>
+        <div class="iphone-screen">
+          <div class="iphone-statusbar">
+            <span>14:23</span>
+            <div class="status-icons">5G · 87 %</div>
+          </div>
+
+          <div class="lock-screen">
+            <div class="lock-time">14:23</div>
+            <div class="lock-date">vendredi 18 avril</div>
+
+            <div class="push-notif">
+              <div class="push-header">
+                <span class="push-app">AX5-CitaFlow</span>
+                <span class="push-time">il y a 12 s</span>
+              </div>
+              <div class="push-title">Coactivité ROUGE détectée</div>
+              <div class="push-body">4 chantiers actifs &lt; 300 m sur Sainte-Catherine × Saint-Laurent. Validation terrain requise sous 30 min.</div>
+            </div>
+
+            <div class="push-notif severity-orange">
+              <div class="push-header">
+                <span class="push-app">AX5-CitaFlow</span>
+                <span class="push-time">il y a 8 min</span>
+              </div>
+              <div class="push-title">Flux piétons +52 % zone Berri</div>
+              <div class="push-body">Compteurs détectent surge inattendu — événement non planifié possible.</div>
+            </div>
+
+            <div class="push-notif severity-orange">
+              <div class="push-header">
+                <span class="push-app">AX5-CitaFlow</span>
+                <span class="push-time">il y a 23 min</span>
+              </div>
+              <div class="push-title">PMR bloqués Saint-Denis</div>
+              <div class="push-body">Rampe accessible obstruée — 85 m sans alternative balisée.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+        <h3>Mobile-first par design</h3>
+        <p>Marc Tremblay est sur le terrain, pas devant un écran. Il reçoit l'alerte critique directement sur son iPhone via le NudgeAgent profil #9 (dashboard mobile + push).</p>
+        <p>L'agent ne le dérange que pour les alertes <strong style="color: var(--danger);">orange ou rouge</strong>. Les zones vertes et jaunes sont gérées automatiquement.</p>
+        <div class="agent-list">
+          <div class="agent-line"><span class="agent-name">CoactivityAgent</span><span class="agent-status">détection</span></div>
+          <div class="agent-line"><span class="agent-name">UrbanFlowAgent</span><span class="agent-status">contexte live</span></div>
+          <div class="agent-line"><span class="agent-name">NudgeAgent #9</span><span class="agent-status">push iPhone</span></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-2">
+    <div class="mobile-layout">
+
+      <div class="iphone-frame">
+        <div class="iphone-notch"></div>
+        <div class="iphone-screen">
+          <div class="iphone-statusbar">
+            <span>14:24</span>
+            <div class="status-icons">5G · 87 %</div>
+          </div>
+
+          <div class="app-header">
+            <div>
+              <h2>Sainte-Catherine × St-Laurent</h2>
+            </div>
+            <div class="header-meta">
+              ouvert il y a 47 s<br>
+              GPS · 45.508, -73.567
+            </div>
+          </div>
+
+          <div class="iphone-content">
+            <div class="alert-banner">
+              <div class="alert-pulse"></div>
+              <div class="alert-content">
+                <div class="alert-title">Coactivité ROUGE × 2,5</div>
+                <div class="alert-detail">4 chantiers &lt; 300 m · multiplicateur risque maximum</div>
+              </div>
+            </div>
+
+            <div class="map-mock-mobile">
+              <div class="map-zone-rouge"></div>
+              <div class="map-marker-mobile" style="top: 30%; left: 35%;"></div>
+              <div class="map-marker-mobile" style="top: 45%; left: 55%;"></div>
+              <div class="map-marker-mobile" style="top: 60%; left: 40%;"></div>
+              <div class="map-marker-mobile" style="top: 55%; left: 65%;"></div>
+              <div class="map-marker-mobile user" style="bottom: 12px; right: 12px;"></div>
+            </div>
+
+            <div class="info-grid">
+              <div class="info-mini">
+                <div class="mini-label">Score zone</div>
+                <div class="mini-value danger">95 / 100</div>
+              </div>
+              <div class="info-mini">
+                <div class="mini-label">Distance</div>
+                <div class="mini-value">42 m</div>
+              </div>
+              <div class="info-mini">
+                <div class="mini-label">Piétons/h</div>
+                <div class="mini-value warn">~ 480</div>
+              </div>
+              <div class="info-mini">
+                <div class="mini-label">Cyclistes/h</div>
+                <div class="mini-value warn">~ 120</div>
+              </div>
+            </div>
+
+            <div class="qr-section">
+              <div class="qr-mock"></div>
+              <div class="qr-info">
+                <div class="qr-title">Scanner QR du chantier source</div>
+                <div class="qr-detail">permis 2026-MTL-58291 · Pomerleau</div>
+              </div>
+            </div>
+
+            <div class="actions-mobile">
+              <button class="action-btn primary" onclick="goToScreen(3)">
+                <span>Valider et escalader HITL</span>
+                <span class="btn-arrow">→</span>
+              </button>
+              <button class="action-btn">
+                <span>Faux positif · marquer</span>
+                <span class="btn-arrow">→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+        <h3>Tout en 30 secondes</h3>
+        <p>Marc voit instantanément la zone (carte rouge pulsante), les chantiers concernés (4 marqueurs), le contexte (480 piétons, 120 cyclistes, score 95) et son propre positionnement (point cyan).</p>
+        <p>Le scan QR du chantier source ouvre le permis complet de Pomerleau pour vérifier la conformité sur place.</p>
+        <div class="agent-list">
+          <div class="agent-line"><span class="agent-name">Carte</span><span class="agent-status">CoactivityAgent</span></div>
+          <div class="agent-line"><span class="agent-name">Flux temps réel</span><span class="agent-status">UrbanFlowAgent</span></div>
+          <div class="agent-line"><span class="agent-name">QR permis</span><span class="agent-status">PermitOptimizer</span></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-3">
+    <div class="mobile-layout">
+
+      <div class="iphone-frame">
+        <div class="iphone-notch"></div>
+        <div class="iphone-screen">
+          <div class="iphone-statusbar">
+            <span>14:26</span>
+            <div class="status-icons">5G · 87 %</div>
+          </div>
+
+          <div class="app-header">
+            <div>
+              <h2>Action validée</h2>
+            </div>
+            <div class="header-meta">
+              traitée en 2 min 14 s<br>
+              SLA &lt; 30 min · OK
+            </div>
+          </div>
+
+          <div class="iphone-content">
+            <div style="background: var(--success-dim); border: 1px solid var(--success); border-radius: 12px; padding: 16px; margin-bottom: 16px; text-align: center;">
+              <div style="font-family: 'Instrument Serif', serif; font-size: 28px; color: var(--success); margin-bottom: 6px;">Validé · escaladé</div>
+              <div style="color: var(--text); font-size: 13px;">Marc Tremblay · inspecteur terrain</div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-label">Action prise</div>
+              <div class="info-value">HITL escaladé au coordonnateur ville</div>
+              <div class="info-detail">Sophie Dubois · arrond. Plateau-Mont-Royal · notifié</div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-label">Mesures terrain immédiates</div>
+              <div class="info-value">Signaleur dédié déployé</div>
+              <div class="info-detail">prévu 15 min · arrêt temporaire trafic intersection</div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-label">Notifications déclenchées</div>
+              <div class="info-value">5 canaux activés simultanément</div>
+              <div class="info-detail">Waze CCP · GTFS-RT STM · Push citoyens · Radio camionneurs · AGIR</div>
+            </div>
+
+            <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 16px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">Trace PROV-O archivée</div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text); line-height: 1.7;">
+                <div><span style="color: var(--accent);">activity:</span> field-validation</div>
+                <div><span style="color: var(--accent);">attributedTo:</span> marc.tremblay</div>
+                <div><span style="color: var(--accent);">atTime:</span> 14:26:17</div>
+                <div><span style="color: var(--accent);">audit:</span> ISO 45001 ready</div>
+              </div>
+            </div>
+
+            <div class="actions-mobile">
+              <button class="action-btn primary" onclick="goToScreen(1)">
+                <span>Retour aux alertes</span>
+                <span class="btn-arrow">→</span>
+              </button>
+              <button class="action-btn">
+                <span>Voir suivi coordonnateur</span>
+                <span class="btn-arrow">→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+        <h3>Boucle fermée en 2 minutes</h3>
+        <p>De la détection automatique (push 14:23) à l'action terrain confirmée (14:26), il s'est écoulé 2 min 14 s. Pour comparaison, le processus historique demandait 1 à 3 jours (signalement citoyen, vérification bureau, dispatch).</p>
+        <p>La trace PROV-O est archivée automatiquement pour audit ISO 45001.</p>
+        <div class="agent-list">
+          <div class="agent-line"><span class="agent-name">HITL</span><span class="agent-status">escaladé</span></div>
+          <div class="agent-line"><span class="agent-name">Notifications</span><span class="agent-status">5 canaux</span></div>
+          <div class="agent-line"><span class="agent-name">PROV-O</span><span class="agent-status">archivé</span></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <div class="footer-bar">
+    AX5-CitaFlow · maquette persona B.3 · workflow #46-95
+    <span class="roi-callout">· ROI : 0 incident · push iPhone &lt; 2 s · boucle fermée en 2 min ·</span>
+    <a href="https://github.com/Preventera/AX5-UrbanIA">github.com/Preventera/AX5-UrbanIA</a>
+  </div>
+
+</div>
+
+<script>
+  function goToScreen(n) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('screen-' + n).classList.add('active');
+    document.querySelector('.nav-btn[data-screen="' + n + '"]').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => goToScreen(btn.dataset.screen));
+  });
+</script>
+
+</body>
+</html>

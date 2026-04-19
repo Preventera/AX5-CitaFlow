@@ -1,0 +1,193 @@
+# .gitignore · AX5-CitaFlow dépôt privé
+# Dossier documentation business · Innoventera Inc.
+
+# =====================================
+# FICHIERS SYSTÈME
+# =====================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# =====================================
+# ÉDITEURS ET IDE
+# =====================================
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# =====================================
+# LOGICIELS D'ÉDITION DOCUMENT
+# =====================================
+
+# LibreOffice / OpenOffice
+.~lock.*#
+*.bak
+
+# Microsoft Word / Office
+~$*
+*.tmp
+
+# Google Drive sync
+.google-drive-sync
+
+# =====================================
+# FICHIERS TEMPORAIRES DE GÉNÉRATION
+# =====================================
+
+# Pandoc intermédiaires
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+
+# WeasyPrint cache
+.weasyprint-cache/
+weasyprint-log.txt
+
+# Markdown prévisualiseurs
+*.preview.html
+_preview/
+
+# Artefacts de conversion temporaires
+*.tex.bak
+*.converted.html
+
+# =====================================
+# FICHIERS GÉNÉRÉS AUTOMATIQUEMENT
+# =====================================
+
+# Logs
+*.log
+logs/
+
+# Sauvegardes
+*.backup
+*.bak
+*.old
+*_backup.*
+*_old.*
+
+# Compressions temporaires
+*.zip.tmp
+*.tar.gz.tmp
+
+# =====================================
+# DONNÉES SENSIBLES À NE JAMAIS COMMITTER
+# =====================================
+
+# Secrets et clés
+*.key
+*.pem
+*.crt
+*.p12
+secrets.txt
+secrets.md
+credentials.json
+.env
+.env.local
+.env.*.local
+
+# Données clients brutes
+/raw-data/
+/client-data/
+/confidential/
+
+# Drafts personnels
+/drafts-personnels/
+/scratch/
+/notes-perso/
+
+# =====================================
+# ARCHIVES VOLUMINEUSES
+# =====================================
+
+# Vidéos et fichiers lourds non versionnés
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# Grosses archives
+large-exports/
+archives-lourdes/
+
+# =====================================
+# DÉVELOPPEMENT (au cas où code ajouté)
+# =====================================
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =====================================
+# EXCEPTIONS — FICHIERS À GARDER
+# =====================================
+
+# Garder les fichiers PDF finaux (livrables)
+!01-one-pager/*.pdf
+!02-annexe-donnees-perimetre/*.pdf
+!03-annexe-specifications-techniques/*.pdf
+
+# Garder les HTML publiés
+!01-one-pager/*.html
+!02-annexe-donnees-perimetre/*.html
+!03-annexe-specifications-techniques/*.html
+!06-personas/*.html

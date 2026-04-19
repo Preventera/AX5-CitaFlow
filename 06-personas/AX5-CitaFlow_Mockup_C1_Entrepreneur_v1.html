@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AX5-CitaFlow — Entrepreneur général (Persona C.1)</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0e1a;
+    --bg-elev: #121829;
+    --bg-card: #1a2138;
+    --bg-input: #0f1422;
+    --border: rgba(232, 236, 240, 0.08);
+    --border-strong: rgba(232, 236, 240, 0.18);
+    --text: #e8ecf0;
+    --text-muted: #8b95a7;
+    --text-dim: #6b7688;
+    --accent: #00d4ff;
+    --accent-dim: rgba(0, 212, 255, 0.15);
+    --warn: #ff6b35;
+    --warn-dim: rgba(255, 107, 53, 0.15);
+    --success: #4ade80;
+    --success-dim: rgba(74, 222, 128, 0.15);
+    --danger: #f87171;
+    --danger-dim: rgba(248, 113, 113, 0.15);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .container { max-width: 1400px; margin: 0 auto; }
+
+  .meta-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .meta-bar .meta-title { color: var(--accent); }
+  .meta-bar .meta-persona { color: var(--text); }
+  .meta-bar .meta-workflow { color: var(--warn); }
+
+  .nav-screens {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .nav-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-align: left;
+    transition: all 0.15s ease;
+    line-height: 1.4;
+  }
+
+  .nav-btn:hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+    background: var(--bg-card);
+  }
+
+  .nav-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .nav-btn .nav-num { display: block; font-size: 10px; margin-bottom: 4px; opacity: 0.7; }
+  .nav-btn .nav-label { display: block; font-weight: 500; }
+
+  .screen { display: none; animation: fadeIn 0.3s ease; }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .portal-shell {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .portal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .portal-title h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .portal-title .breadcrumb {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .portal-title .breadcrumb .crumb-active { color: var(--accent); }
+
+  .portal-meta {
+    text-align: right;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.7;
+  }
+
+  .portal-meta .user { color: var(--text); }
+  .portal-meta .company { color: var(--accent); font-weight: 500; }
+
+  .portal-body {
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+  }
+
+  @media (max-width: 1100px) {
+    .portal-body { grid-template-columns: 1fr; }
+  }
+
+  .hero-block {
+    background: linear-gradient(135deg, var(--accent-dim) 0%, transparent 100%);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .hero-block .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .hero-block .hero-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 26px;
+    color: var(--text);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .hero-block .hero-detail {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .hero-block .hero-detail strong { color: var(--accent); }
+
+  .project-form {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  @media (max-width: 768px) { .form-row { grid-template-columns: 1fr; } }
+
+  .form-field { display: flex; flex-direction: column; }
+
+  .form-field .label {
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+
+  .form-input {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+  }
+
+  .form-input:focus { outline: none; border-color: var(--accent); }
+
+  .btn {
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+  }
+
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  .btn-primary:hover { background: transparent; color: var(--accent); }
+
+  .section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin: 20px 0 12px;
+  }
+
+  .scenarios-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 1100px) { .scenarios-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .scenario-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+  }
+
+  .scenario-card:hover {
+    border-color: var(--border-strong);
+    background: var(--bg-elev);
+  }
+
+  .scenario-card.selected {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .scenario-card.best::before {
+    content: 'optimal';
+    position: absolute;
+    top: -8px;
+    right: 10px;
+    background: var(--success);
+    color: var(--bg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .scenario-season {
+    font-family: 'Instrument Serif', serif;
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+
+  .scenario-period {
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    margin-bottom: 12px;
+  }
+
+  .scenario-score {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .scenario-score.red { background: var(--danger-dim); color: var(--danger); }
+  .scenario-score.orange { background: var(--warn-dim); color: var(--warn); }
+  .scenario-score.green { background: var(--success-dim); color: var(--success); }
+
+  .scenario-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 11px;
+  }
+
+  .scenario-rows .sr-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+  }
+
+  .sr-row .sr-label { color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+  .sr-row .sr-value { color: var(--text); font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+
+  .delta-chart {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .delta-chart h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .bar-label {
+    flex: 0 0 80px;
+    color: var(--text);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .bar-track {
+    flex: 1;
+    background: var(--bg-input);
+    height: 16px;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bar-fill {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-right: 8px;
+    justify-content: flex-end;
+    color: var(--bg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  .bar-fill.red { background: var(--danger); }
+  .bar-fill.orange { background: var(--warn); }
+  .bar-fill.green { background: var(--success); }
+
+  .logistic-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 768px) { .logistic-grid { grid-template-columns: 1fr; } }
+
+  .logistic-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 16px;
+  }
+
+  .logistic-card.success { border-left-color: var(--success); }
+  .logistic-card.warn { border-left-color: var(--warn); }
+
+  .logistic-title {
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  .logistic-detail {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.5;
+  }
+
+  .logistic-detail .val { color: var(--success); }
+  .logistic-detail .val-warn { color: var(--warn); }
+
+  .roi-summary {
+    background: var(--success-dim);
+    border: 1px solid var(--success);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+
+  .roi-summary .roi-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--success);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .roi-summary .roi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 14px;
+  }
+
+  @media (max-width: 768px) { .roi-summary .roi-grid { grid-template-columns: 1fr; } }
+
+  .roi-item {
+    text-align: center;
+  }
+
+  .roi-item .roi-value {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: var(--success);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .roi-item .roi-label {
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .actions-bar {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+
+  .side-panel {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    align-self: start;
+    position: sticky;
+    top: 20px;
+  }
+
+  .side-panel-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .side-panel h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .side-panel p {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .agent-list {
+    background: var(--bg-card);
+    border-left: 2px solid var(--accent);
+    padding: 12px 14px;
+    border-radius: 0 8px 8px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text);
+    margin-top: 14px;
+    line-height: 1.7;
+  }
+
+  .agent-list .agent-line { display: flex; justify-content: space-between; }
+  .agent-list .agent-name { color: var(--accent); }
+  .agent-list .agent-status { color: var(--text-muted); }
+
+  .quote-box {
+    background: var(--bg-card);
+    border-left: 3px solid var(--warn);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 14px;
+    font-family: 'Instrument Serif', serif;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+    font-style: italic;
+    margin-top: 14px;
+  }
+
+  .quote-box .quote-source {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--warn);
+    margin-top: 8px;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .footer-bar {
+    margin-top: 24px;
+    padding: 16px 20px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-align: center;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .footer-bar a { color: var(--accent); text-decoration: none; }
+  .footer-bar .roi-callout { color: var(--success); margin: 0 12px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="meta-bar">
+    <span><span class="meta-title">AX5-CitaFlow</span> · maquette persona entrepreneur</span>
+    <span>Persona <span class="meta-persona">C.1 — Entrepreneur général · chargé de projet</span></span>
+    <span>Workflow <span class="meta-workflow">#16-35 ImpactSimulator + TerritoryPlanner</span></span>
+  </div>
+
+  <nav class="nav-screens">
+    <button class="nav-btn active" data-screen="1">
+      <span class="nav-num">01 / 03 — paramétrage projet</span>
+      <span class="nav-label">Simuler avant de déposer</span>
+    </button>
+    <button class="nav-btn" data-screen="2">
+      <span class="nav-num">02 / 03 — scénarios what-if</span>
+      <span class="nav-label">Comparaison 4 saisons</span>
+    </button>
+    <button class="nav-btn" data-screen="3">
+      <span class="nav-num">03 / 03 — optimisation logistique</span>
+      <span class="nav-label">Planning chantier optimal</span>
+    </button>
+  </nav>
+
+  <section class="screen active" id="screen-1">
+    <div class="portal-shell">
+      <div class="portal-header">
+        <div class="portal-title">
+          <h1>Nouveau projet · simulation pré-dépôt</h1>
+          <div class="breadcrumb">AX5-CitaFlow · <span class="crumb-active">portail entrepreneur · workflow #16</span></div>
+        </div>
+        <div class="portal-meta">
+          <div class="user">Patrick Lavoie · chargé de projet</div>
+          <div class="company">Pomerleau Construction</div>
+          <div>session · projet-draft-8932</div>
+        </div>
+      </div>
+
+      <div class="portal-body">
+        <div>
+          <div class="hero-block">
+            <div class="hero-eyebrow">— testez avant de déposer —</div>
+            <div class="hero-title">Évitez les reports de permis à 42 k$ pièce</div>
+            <div class="hero-detail">
+              Avant de soumettre votre demande de permis, <strong>simulez 4 scénarios temporels</strong> pour identifier
+              la fenêtre optimale. Les entrepreneurs utilisant ImpactSimulator voient leurs permis approuvés en jaune-vert
+              dans <strong>78 % des cas</strong>, contre 52 % pour les dépôts non-simulés.
+            </div>
+          </div>
+
+          <div class="project-form">
+            <div class="section-title" style="margin-top: 0;">Paramètres du projet</div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label class="label">Type de travaux</label>
+                <select class="form-input">
+                  <option>Aqueduc — réfection canalisation principale</option>
+                  <option>Voirie — pavage et trottoirs</option>
+                  <option>Génie civil — pont ou viaduc</option>
+                  <option>Énergie — enfouissement lignes</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="label">Localisation</label>
+                <input class="form-input" value="rue Saint-Denis × Duluth · Plateau-Mont-Royal" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label class="label">Durée estimée</label>
+                <input class="form-input" value="60 jours" />
+              </div>
+              <div class="form-field">
+                <label class="label">Emprise voirie</label>
+                <input class="form-input" value="2 voies sur 4 · trottoir nord fermé" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label class="label">Équipe terrain</label>
+                <input class="form-input" value="12 travailleurs · 2 grues · 4 camions" />
+              </div>
+              <div class="form-field">
+                <label class="label">Budget indicatif</label>
+                <input class="form-input" value="2,8 M$ · sans pénalités coactivité" />
+              </div>
+            </div>
+
+            <div class="actions-bar">
+              <button class="btn">Sauvegarder brouillon</button>
+              <button class="btn-primary" onclick="goToScreen(2)">Tester 4 scénarios →</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="side-panel">
+          <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+          <h3>La prévention par la simulation</h3>
+          <p>Patrick (Pomerleau) va soumettre un projet de 2,8 M$. Un report de permis lui coûte 42 k$ en équipe immobilisée et en replanification.</p>
+          <p>Avec ImpactSimulator, il teste gratuitement 4 fenêtres temporelles avant de déposer, pour choisir celle qui minimise les risques.</p>
+          <div class="agent-list">
+            <div class="agent-line"><span class="agent-name">ImpactSimulator</span><span class="agent-status">what-if</span></div>
+            <div class="agent-line"><span class="agent-name">TerritoryPlanner</span><span class="agent-status">saturation</span></div>
+            <div class="agent-line"><span class="agent-name">StakeholderSync</span><span class="agent-status">coordination</span></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-2">
+    <div class="portal-shell">
+      <div class="portal-header">
+        <div class="portal-title">
+          <h1>Simulation multi-scénarios · Saint-Denis aqueduc</h1>
+          <div class="breadcrumb">ImpactSimulator · <span class="crumb-active">workflow #26-35 · comparaison saisonnière</span></div>
+        </div>
+        <div class="portal-meta">
+          <div class="user">scénario recommandé · été</div>
+          <div>analyse parallèle 4 fenêtres</div>
+          <div class="company">économie potentielle 42 k$</div>
+        </div>
+      </div>
+
+      <div class="portal-body">
+        <div>
+          <div class="section-title" style="margin-top: 0;">4 scénarios temporels simulés</div>
+
+          <div class="scenarios-grid">
+            <div class="scenario-card">
+              <div class="scenario-season">Printemps</div>
+              <div class="scenario-period">6 mai → 5 juillet</div>
+              <div class="scenario-score orange">73 · orange</div>
+              <div class="scenario-rows">
+                <div class="sr-row"><span class="sr-label">Coactivité</span><span class="sr-value">24/30</span></div>
+                <div class="sr-row"><span class="sr-label">Vulnérables</span><span class="sr-value">18/25</span></div>
+                <div class="sr-row"><span class="sr-label">Saturation</span><span class="sr-value">7/10</span></div>
+              </div>
+            </div>
+
+            <div class="scenario-card best selected">
+              <div class="scenario-season">Été</div>
+              <div class="scenario-period">15 juin → 14 août</div>
+              <div class="scenario-score green">42 · vert</div>
+              <div class="scenario-rows">
+                <div class="sr-row"><span class="sr-label">Coactivité</span><span class="sr-value">14/30</span></div>
+                <div class="sr-row"><span class="sr-label">Vulnérables</span><span class="sr-value">12/25</span></div>
+                <div class="sr-row"><span class="sr-label">Saturation</span><span class="sr-value">4/10</span></div>
+              </div>
+            </div>
+
+            <div class="scenario-card">
+              <div class="scenario-season">Automne</div>
+              <div class="scenario-period">6 sept. → 5 nov.</div>
+              <div class="scenario-score orange">68 · orange</div>
+              <div class="scenario-rows">
+                <div class="sr-row"><span class="sr-label">Coactivité</span><span class="sr-value">22/30</span></div>
+                <div class="sr-row"><span class="sr-label">Vulnérables</span><span class="sr-value">17/25</span></div>
+                <div class="sr-row"><span class="sr-label">Saturation</span><span class="sr-value">6/10</span></div>
+              </div>
+            </div>
+
+            <div class="scenario-card">
+              <div class="scenario-season">Hiver</div>
+              <div class="scenario-period">6 janv. → 7 mars</div>
+              <div class="scenario-score red">95 · rouge</div>
+              <div class="scenario-rows">
+                <div class="sr-row"><span class="sr-label">Coactivité</span><span class="sr-value">24/30 ×1,3</span></div>
+                <div class="sr-row"><span class="sr-label">Vulnérables</span><span class="sr-value">19/25</span></div>
+                <div class="sr-row"><span class="sr-label">Saturation</span><span class="sr-value">7/10</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="delta-chart">
+            <h3>Delta risque par scénario</h3>
+            <div class="bar-row">
+              <span class="bar-label">Été</span>
+              <div class="bar-track"><div class="bar-fill green" style="width: 42%;">42 · optimal</div></div>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">Automne</span>
+              <div class="bar-track"><div class="bar-fill orange" style="width: 68%;">68</div></div>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">Printemps</span>
+              <div class="bar-track"><div class="bar-fill orange" style="width: 73%;">73</div></div>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">Hiver</span>
+              <div class="bar-track"><div class="bar-fill red" style="width: 95%;">95 · modif ×1,3</div></div>
+            </div>
+          </div>
+
+          <div class="roi-summary">
+            <div class="roi-eyebrow">— recommandation AX5-CitaFlow —</div>
+            <div style="color: var(--text); font-size: 14px; line-height: 1.6;">
+              Scénario <strong style="color: var(--success);">été (15 juin → 14 août)</strong> recommandé.
+              Score composite 42 <strong style="color: var(--success);">permet approbation directe sans conditions HITL</strong>,
+              évitant 42 k$ de coûts report et 7 conditions de mitigation lourdes.
+            </div>
+            <div class="roi-grid">
+              <div class="roi-item">
+                <div class="roi-value">42 k$</div>
+                <div class="roi-label">économies report évitées</div>
+              </div>
+              <div class="roi-item">
+                <div class="roi-value">- 53</div>
+                <div class="roi-label">points score vs hiver</div>
+              </div>
+              <div class="roi-item">
+                <div class="roi-value">0</div>
+                <div class="roi-label">conditions HITL imposées</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions-bar">
+            <button class="btn">Voir détails scénario</button>
+            <button class="btn-primary" onclick="goToScreen(3)">Optimiser logistique →</button>
+          </div>
+        </div>
+
+        <aside class="side-panel">
+          <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+          <h3>Chaque saison, un scénario</h3>
+          <p>L'hiver pénalise par un modificateur ×1,3 (gel, verglas, visibilité). L'été offre la meilleure combinaison de flux piétons dispersés (vacances) et d'absence de contraintes météo.</p>
+          <p>Patrick voit en 15 secondes ce qu'il aurait fallu 2 semaines d'analyse manuelle pour conclure.</p>
+          <div class="agent-list">
+            <div class="agent-line"><span class="agent-name">4 scénarios</span><span class="agent-status">15 s total</span></div>
+            <div class="agent-line"><span class="agent-name">Best season</span><span class="agent-status">été</span></div>
+            <div class="agent-line"><span class="agent-name">Gain</span><span class="agent-status">- 53 pts</span></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-3">
+    <div class="portal-shell">
+      <div class="portal-header">
+        <div class="portal-title">
+          <h1>Optimisation logistique · été retenu</h1>
+          <div class="breadcrumb">TerritoryPlanner + StakeholderSync · <span class="crumb-active">workflow #28-35</span></div>
+        </div>
+        <div class="portal-meta">
+          <div class="user">15 juin → 14 août 2026</div>
+          <div>score 42 · approbation directe</div>
+          <div class="company">prêt pour dépôt Bureau permis</div>
+        </div>
+      </div>
+
+      <div class="portal-body">
+        <div>
+          <div class="section-title" style="margin-top: 0;">Plan logistique optimisé par TerritoryPlanner</div>
+
+          <div class="logistic-grid">
+            <div class="logistic-card success">
+              <div class="logistic-title">Fenêtres livraisons béton</div>
+              <div class="logistic-detail">
+                <span class="val">14 h - 16 h</span> · évite rush 7 h-9 h et 17 h-19 h<br>
+                Lundi, mardi, jeudi · pas le vendredi (weekend flux)
+              </div>
+            </div>
+
+            <div class="logistic-card success">
+              <div class="logistic-title">Positionnement grues</div>
+              <div class="logistic-detail">
+                Côté est chantier · <span class="val">hors emprise trottoir nord</span><br>
+                Balisage Tome V MTQ 200 m amont
+              </div>
+            </div>
+
+            <div class="logistic-card">
+              <div class="logistic-title">Coordination sous-traitants</div>
+              <div class="logistic-detail">
+                Bell · enfouissement 3 sem. avant<br>
+                Énergir · inspection gaz 1 sem. avant<br>
+                Hydro · déplacement câbles J-3
+              </div>
+            </div>
+
+            <div class="logistic-card warn">
+              <div class="logistic-title">Coactivité chantiers voisins</div>
+              <div class="logistic-detail">
+                2 chantiers actifs 300 m · <span class="val-warn">Sherbrooke + Mont-Royal</span><br>
+                Réunion coordination hebdo recommandée
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title">StakeholderSync · notifications automatiques</div>
+
+          <div class="delta-chart">
+            <h3 style="margin-bottom: 14px;">Timeline coordination 8 parties prenantes</h3>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--bg-elev); border-radius: 6px; font-size: 12px;">
+                <span style="color: var(--text);">Bureau permis MTL</span>
+                <span style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">J-30 · dépôt permis</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--bg-elev); border-radius: 6px; font-size: 12px;">
+                <span style="color: var(--text);">Résidents secteur (SMS)</span>
+                <span style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">J-14 · notification</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--bg-elev); border-radius: 6px; font-size: 12px;">
+                <span style="color: var(--text);">Commerçants (email)</span>
+                <span style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">J-10 · accès clients</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--bg-elev); border-radius: 6px; font-size: 12px;">
+                <span style="color: var(--text);">STM · arrêts bus 31, 55</span>
+                <span style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">J-7 · GTFS-RT</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--bg-elev); border-radius: 6px; font-size: 12px;">
+                <span style="color: var(--text);">Waze CCP (automobilistes)</span>
+                <span style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">J-3 · alertes auto</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--bg-elev); border-radius: 6px; font-size: 12px;">
+                <span style="color: var(--text);">BIXI · 3 stations impactées</span>
+                <span style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">J-2 · rééquilibrage</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--bg-elev); border-radius: 6px; font-size: 12px;">
+                <span style="color: var(--text);">SPVM + SIM</span>
+                <span style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">J-1 · corridor urgence</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--bg-elev); border-radius: 6px; font-size: 12px;">
+                <span style="color: var(--text);">AGIR + Travaux publics</span>
+                <span style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">J-0 · activation</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="roi-summary">
+            <div class="roi-eyebrow">— ROI complet Pomerleau / projet 2,8 M$ —</div>
+            <div class="roi-grid">
+              <div class="roi-item">
+                <div class="roi-value">42 k$</div>
+                <div class="roi-label">report permis évité</div>
+              </div>
+              <div class="roi-item">
+                <div class="roi-value">- 18 %</div>
+                <div class="roi-label">incidents prévus chantier</div>
+              </div>
+              <div class="roi-item">
+                <div class="roi-value">2 sem.</div>
+                <div class="roi-label">analyse manuelle évitée</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions-bar">
+            <button class="btn">Exporter plan PDF</button>
+            <button class="btn">Partager avec équipe</button>
+            <button class="btn-primary" onclick="goToScreen(1)">Déposer permis au Bureau →</button>
+          </div>
+        </div>
+
+        <aside class="side-panel">
+          <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+          <h3>L'entrepreneur gagnant-gagnant</h3>
+          <p>Avant AX5-CitaFlow, Pomerleau devait deviner la meilleure fenêtre et vivre avec les conséquences. Maintenant, il teste et optimise avant de s'engager.</p>
+          <p>La ville gagne moins de congestion, Pomerleau gagne en prévisibilité. Le critère IVÉO #5 (pérennité) est démontré : les vrais payeurs bénéficient aussi.</p>
+          <div class="quote-box">
+            « Les entrepreneurs qui simulent évitent 73 % des reports, contre 22 % pour les autres. »
+            <span class="quote-source">analyse 1 247 permis ConstrucSync · mars 2026</span>
+          </div>
+          <div class="agent-list">
+            <div class="agent-line"><span class="agent-name">TerritoryPlanner</span><span class="agent-status">logistique</span></div>
+            <div class="agent-line"><span class="agent-name">StakeholderSync</span><span class="agent-status">8 parties</span></div>
+            <div class="agent-line"><span class="agent-name">ROI total</span><span class="agent-status">42 k$ + 2 sem.</span></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-bar">
+    AX5-CitaFlow · maquette persona C.1 · workflow #16-35 ImpactSimulator + TerritoryPlanner + StakeholderSync
+    <span class="roi-callout">· ROI : 42 k$ report évité · - 18 % incidents · 2 semaines analyse manuelle économisées ·</span>
+    <a href="https://github.com/Preventera/AX5-UrbanIA">github.com/Preventera/AX5-UrbanIA</a>
+  </div>
+
+</div>
+
+<script>
+  function goToScreen(n) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('screen-' + n).classList.add('active');
+    document.querySelector('.nav-btn[data-screen="' + n + '"]').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => goToScreen(btn.dataset.screen));
+  });
+</script>
+
+</body>
+</html>

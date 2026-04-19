@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AX5-CitaFlow — Coordonnateur ville (Persona B.1)</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0e1a;
+    --bg-elev: #121829;
+    --bg-card: #1a2138;
+    --bg-input: #0f1422;
+    --border: rgba(232, 236, 240, 0.08);
+    --border-strong: rgba(232, 236, 240, 0.18);
+    --text: #e8ecf0;
+    --text-muted: #8b95a7;
+    --text-dim: #6b7688;
+    --accent: #00d4ff;
+    --accent-dim: rgba(0, 212, 255, 0.15);
+    --warn: #ff6b35;
+    --warn-dim: rgba(255, 107, 53, 0.15);
+    --success: #4ade80;
+    --success-dim: rgba(74, 222, 128, 0.15);
+    --danger: #f87171;
+    --danger-dim: rgba(248, 113, 113, 0.15);
+    --yellow: #fbbf24;
+    --yellow-dim: rgba(251, 191, 36, 0.15);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .container { max-width: 1400px; margin: 0 auto; }
+
+  .meta-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .meta-bar .meta-title { color: var(--accent); }
+  .meta-bar .meta-persona { color: var(--text); }
+  .meta-bar .meta-workflow { color: var(--warn); }
+
+  .nav-screens {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .nav-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-align: left;
+    transition: all 0.15s ease;
+    line-height: 1.4;
+  }
+
+  .nav-btn:hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+    background: var(--bg-card);
+  }
+
+  .nav-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .nav-btn .nav-num {
+    display: block;
+    font-size: 10px;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .nav-btn .nav-label {
+    display: block;
+    font-weight: 500;
+  }
+
+  .screen { display: none; animation: fadeIn 0.3s ease; }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .dashboard-shell {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dashboard-title h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .dashboard-title .breadcrumb {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .dashboard-title .breadcrumb .crumb-active { color: var(--accent); }
+
+  .header-meta {
+    text-align: right;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .header-meta .user { color: var(--text); }
+
+  .dashboard-body {
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
+  }
+
+  @media (max-width: 1100px) {
+    .dashboard-body { grid-template-columns: 1fr; }
+  }
+
+  .form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 768px) {
+    .form-row { grid-template-columns: 1fr; }
+  }
+
+  .form-field { display: flex; flex-direction: column; }
+
+  .form-field .label {
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  .form-input {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    transition: border-color 0.15s;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .form-input.with-suggestion {
+    position: relative;
+  }
+
+  .autocomplete {
+    background: var(--bg-card);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    margin-top: 4px;
+    padding: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .autocomplete .ac-item {
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .autocomplete .ac-item:hover { background: var(--bg-elev); color: var(--text); }
+  .autocomplete .ac-item .highlight { color: var(--accent); }
+
+  .map-mock {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    height: 280px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .map-mock::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(45deg, transparent 49%, var(--border) 50%, transparent 51%),
+      linear-gradient(-45deg, transparent 49%, var(--border) 50%, transparent 51%);
+    background-size: 20px 20px;
+    opacity: 0.4;
+  }
+
+  .map-overlay {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(10, 14, 26, 0.9);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .map-overlay .map-arrond { color: var(--accent); display: block; margin-bottom: 4px; }
+
+  .map-marker {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--bg);
+  }
+
+  .map-marker.active { background: var(--warn); animation: pulse 2s ease-in-out infinite; }
+  .map-marker.normal { background: var(--accent); }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 var(--warn-dim); }
+    50% { box-shadow: 0 0 0 8px transparent; }
+  }
+
+  .popup-warning {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: var(--warn-dim);
+    border: 1px solid var(--warn);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--warn);
+    max-width: 200px;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    border: 1px solid var(--accent);
+    padding: 14px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.15s ease;
+    align-self: flex-end;
+  }
+
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--accent);
+  }
+
+  .btn {
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+  }
+
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn-danger {
+    background: var(--danger);
+    color: white;
+    border: 1px solid var(--danger);
+  }
+
+  .side-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    align-self: start;
+  }
+
+  .side-panel-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .side-panel h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .side-panel p {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .agent-list {
+    background: var(--bg-elev);
+    border-left: 2px solid var(--accent);
+    padding: 12px 14px;
+    border-radius: 0 8px 8px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text);
+    margin-top: 14px;
+    line-height: 1.7;
+  }
+
+  .agent-list .agent-line { display: flex; justify-content: space-between; }
+  .agent-list .agent-name { color: var(--accent); }
+  .agent-list .agent-status { color: var(--text-muted); }
+
+  .scoring-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .scoring-progress {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .progress-counter {
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .progress-bar {
+    background: var(--bg-input);
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    background: var(--accent);
+    height: 100%;
+    width: 100%;
+    transition: width 0.5s ease;
+  }
+
+  .gauges-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+
+  @media (max-width: 768px) {
+    .gauges-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .gauge-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  .gauge-svg {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 10px;
+    display: block;
+  }
+
+  .gauge-card .gauge-label {
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .gauge-card .gauge-value {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .gauge-card .gauge-source {
+    color: var(--text-dim);
+    font-size: 10px;
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .gauge-card.gauge-jaune { border-color: var(--yellow-dim); }
+  .gauge-card.gauge-orange { border-color: var(--warn-dim); background: var(--warn-dim); }
+  .gauge-card.gauge-rouge { border-color: var(--danger-dim); background: var(--danger-dim); }
+
+  .score-final {
+    background: var(--danger-dim);
+    border: 2px solid var(--danger);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    animation: scoreFlash 1.5s ease-in-out infinite;
+  }
+
+  @keyframes scoreFlash {
+    0%, 100% { box-shadow: 0 0 0 0 transparent; }
+    50% { box-shadow: 0 0 30px var(--danger-dim); }
+  }
+
+  .score-final .score-value {
+    font-family: 'Instrument Serif', serif;
+    font-size: 56px;
+    color: var(--danger);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .score-final .score-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--danger);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  .score-final .score-detail {
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .score-final .score-detail .modifier {
+    color: var(--warn);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .timing-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  .timing-bar .timing-old { color: var(--text-dim); text-decoration: line-through; }
+  .timing-bar .timing-new { color: var(--success); font-weight: 500; }
+  .timing-bar .timing-gain { color: var(--accent); }
+
+  .hitl-modal {
+    background: var(--bg-card);
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .hitl-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hitl-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: var(--accent);
+  }
+
+  .hitl-badge {
+    background: var(--warn-dim);
+    color: var(--warn);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .conditions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .condition-item {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .condition-check {
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    background: var(--accent-dim);
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .condition-check::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 6px;
+    width: 4px;
+    height: 9px;
+    border-right: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent);
+    transform: rotate(45deg);
+  }
+
+  .condition-text { color: var(--text); font-size: 13px; flex: 1; }
+  .condition-source {
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .hitl-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+  }
+
+  .pdf-preview {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .pdf-frame {
+    background: white;
+    color: #1a2138;
+    border-radius: 8px;
+    padding: 24px;
+    font-family: 'Inter', serif;
+    line-height: 1.5;
+  }
+
+  .pdf-frame .pdf-header {
+    border-bottom: 2px solid #0a0e1a;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .pdf-frame .pdf-logo {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    color: #00d4ff;
+  }
+
+  .pdf-frame .pdf-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #6b7688;
+    text-align: right;
+    line-height: 1.5;
+  }
+
+  .pdf-frame h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: #1a2138;
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+
+  .pdf-frame .pdf-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #e8ecf0;
+    font-size: 13px;
+  }
+
+  .pdf-frame .pdf-row .pdf-key { color: #6b7688; }
+  .pdf-frame .pdf-row .pdf-val { color: #1a2138; font-weight: 500; }
+
+  .pdf-frame .pdf-conditions {
+    background: #fef3c7;
+    border-left: 3px solid #f59e0b;
+    padding: 12px 14px;
+    border-radius: 0 6px 6px 0;
+    margin: 16px 0;
+    font-size: 12px;
+    color: #92400e;
+  }
+
+  .pdf-frame .pdf-signature {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 2px solid #0a0e1a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .pdf-frame .pdf-sig-block {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #6b7688;
+  }
+
+  .pdf-frame .pdf-sig-block .sig-name { color: #1a2138; font-weight: 500; }
+
+  .prov-trail {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .prov-trail .prov-line { margin-bottom: 4px; }
+  .prov-trail .prov-key { color: var(--accent); }
+  .prov-trail .prov-val { color: var(--text); }
+
+  .footer-bar {
+    margin-top: 24px;
+    padding: 16px 20px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-align: center;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .footer-bar a { color: var(--accent); text-decoration: none; }
+  .footer-bar .roi-callout { color: var(--success); margin: 0 12px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="meta-bar">
+    <span><span class="meta-title">AX5-CitaFlow</span> · maquette persona</span>
+    <span>Persona <span class="meta-persona">B.1 — Coordonnateur ville</span></span>
+    <span>Workflow <span class="meta-workflow">#1-15 PermitOptimizer</span></span>
+  </div>
+
+  <nav class="nav-screens">
+    <button class="nav-btn active" data-screen="1">
+      <span class="nav-num">01 / 04 — workflow #1-2</span>
+      <span class="nav-label">Soumission permis</span>
+    </button>
+    <button class="nav-btn" data-screen="2">
+      <span class="nav-num">02 / 04 — workflow #8</span>
+      <span class="nav-label">Score composite live</span>
+    </button>
+    <button class="nav-btn" data-screen="3">
+      <span class="nav-num">03 / 04 — workflow #10</span>
+      <span class="nav-label">Validation HITL</span>
+    </button>
+    <button class="nav-btn" data-screen="4">
+      <span class="nav-num">04 / 04 — workflow #15</span>
+      <span class="nav-label">Export Bureau permis</span>
+    </button>
+  </nav>
+
+  <section class="screen active" id="screen-1">
+    <div class="dashboard-shell">
+      <div class="dashboard-header">
+        <div class="dashboard-title">
+          <h1>Nouveau permis d'occupation</h1>
+          <div class="breadcrumb">ConstrucSync · <span class="crumb-active">PermitOptimizer</span> · workflow #1-2</div>
+        </div>
+        <div class="header-meta">
+          <div class="user">Sophie Dubois</div>
+          <div>Bureau des permis · arrond. Villeray</div>
+          <div>session ouverte 08:14</div>
+        </div>
+      </div>
+
+      <div class="dashboard-body">
+        <div class="form-section">
+          <div class="form-row">
+            <div class="form-field">
+              <label class="label">Adresse du chantier</label>
+              <input type="text" class="form-input" value="rue Saint-Denis, entre Duluth et" />
+              <div class="autocomplete">
+                <div class="ac-item"><span class="highlight">rue Saint-Denis × Duluth</span> · Plateau-Mont-Royal · 45.519, -73.572</div>
+                <div class="ac-item">rue Saint-Denis × Rachel · Plateau-Mont-Royal · 45.524, -73.578</div>
+                <div class="ac-item">rue Saint-Denis × Beaubien · Rosemont · 45.539, -73.598</div>
+              </div>
+            </div>
+            <div class="form-field">
+              <label class="label">Type de travaux</label>
+              <select class="form-input">
+                <option>Aqueduc — réfection canalisation principale</option>
+                <option>Égout — branchement résidentiel</option>
+                <option>Voirie — pavage et marquage</option>
+                <option>Énergie — enfouissement Hydro-Québec</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label class="label">Durée estimée</label>
+              <input type="text" class="form-input" value="60 jours · du 6 mai au 5 juillet 2026" />
+            </div>
+            <div class="form-field">
+              <label class="label">Emprise voirie</label>
+              <input type="text" class="form-input" value="2 voies sur 4 · trottoir nord fermé" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label class="label">Saison</label>
+              <select class="form-input">
+                <option>Printemps · pondération neutre</option>
+                <option>Été · pondération neutre</option>
+                <option>Automne · pondération neutre</option>
+                <option>Hiver · pondération ×1,3</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="label">Maître d'œuvre</label>
+              <input type="text" class="form-input" value="Pomerleau · LSST art. 198 conforme" />
+            </div>
+          </div>
+
+          <button class="btn-primary" onclick="goToScreen(2)">Évaluer le permis →</button>
+        </div>
+
+        <aside>
+          <div class="map-mock">
+            <div class="map-overlay">
+              <span class="map-arrond">Arrond. Plateau-Mont-Royal</span>
+              <span>capacité : 12 / 15 chantiers actifs</span>
+            </div>
+            <div class="map-marker normal" style="top: 30%; left: 20%;"></div>
+            <div class="map-marker normal" style="top: 45%; left: 35%;"></div>
+            <div class="map-marker active" style="top: 55%; left: 50%;"></div>
+            <div class="map-marker normal" style="top: 60%; left: 65%;"></div>
+            <div class="map-marker normal" style="top: 70%; left: 45%;"></div>
+            <div class="popup-warning">3 chantiers actifs &lt; 300 m du nouveau site</div>
+          </div>
+
+          <div class="side-panel" style="margin-top: 16px;">
+            <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+            <h3>Un formulaire qui sait</h3>
+            <p>L'autocomplete consulte l'API donnees.montreal.ca en direct. Dès la sélection de la rue, l'agent identifie l'arrondissement, sa capacité et les chantiers actifs en proximité.</p>
+            <p>Sophie n'a plus à ouvrir 4 systèmes pour vérifier ces informations.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-2">
+    <div class="dashboard-shell">
+      <div class="dashboard-header">
+        <div class="dashboard-title">
+          <h1>Évaluation en cours</h1>
+          <div class="breadcrumb">ConstrucSync · PermitOptimizer · <span class="crumb-active">workflow #8 score composite</span></div>
+        </div>
+        <div class="header-meta">
+          <div class="user">permis ID · #2026-MTL-58291</div>
+          <div>5 agents en parallèle · WebSocket live</div>
+          <div class="user" style="color: var(--accent);">latence cumulée : 7,4 s</div>
+        </div>
+      </div>
+
+      <div class="dashboard-body">
+        <div class="scoring-section">
+          <div class="scoring-progress">
+            <div class="progress-header">
+              <span class="progress-label">Agents PermitOptimizer en parallèle</span>
+              <span class="progress-counter">5 / 5 · terminé</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+          </div>
+
+          <div class="gauges-grid">
+            <div class="gauge-card gauge-jaune">
+              <svg class="gauge-svg" viewBox="0 0 90 90">
+                <circle cx="45" cy="45" r="38" fill="none" stroke="#1a2138" stroke-width="8"></circle>
+                <circle cx="45" cy="45" r="38" fill="none" stroke="#fbbf24" stroke-width="8"
+                  stroke-dasharray="190 240" stroke-dashoffset="0" transform="rotate(-90 45 45)" stroke-linecap="round"></circle>
+                <text x="45" y="50" text-anchor="middle" fill="#fbbf24" font-family="JetBrains Mono" font-size="16" font-weight="500">24/30</text>
+              </svg>
+              <div class="gauge-label">Coactivité</div>
+              <div class="gauge-value">poids 30 %</div>
+              <div class="gauge-source">API MTL · 1 004 permis</div>
+            </div>
+
+            <div class="gauge-card gauge-orange">
+              <svg class="gauge-svg" viewBox="0 0 90 90">
+                <circle cx="45" cy="45" r="38" fill="none" stroke="#1a2138" stroke-width="8"></circle>
+                <circle cx="45" cy="45" r="38" fill="none" stroke="#ff6b35" stroke-width="8"
+                  stroke-dasharray="180 240" stroke-dashoffset="0" transform="rotate(-90 45 45)" stroke-linecap="round"></circle>
+                <text x="45" y="50" text-anchor="middle" fill="#ff6b35" font-family="JetBrains Mono" font-size="16" font-weight="500">19/25</text>
+              </svg>
+              <div class="gauge-label">Vulnérables</div>
+              <div class="gauge-value">poids 25 %</div>
+              <div class="gauge-source">Compteurs piétons</div>
+            </div>
+
+            <div class="gauge-card gauge-jaune">
+              <svg class="gauge-svg" viewBox="0 0 90 90">
+                <circle cx="45" cy="45" r="38" fill="none" stroke="#1a2138" stroke-width="8"></circle>
+                <circle cx="45" cy="45" r="38" fill="none" stroke="#fbbf24" stroke-width="8"
+                  stroke-dasharray="167 240" stroke-dashoffset="0" transform="rotate(-90 45 45)" stroke-linecap="round"></circle>
+                <text x="45" y="50" text-anchor="middle" fill="#fbbf24" font-family="JetBrains Mono" font-size="16" font-weight="500">14/20</text>
+              </svg>
+              <div class="gauge-label">CNESST</div>
+              <div class="gauge-value">poids 20 %</div>
+              <div class="gauge-source">54 k lésions RAG</div>
+            </div>
+
+            <div class="gauge-card gauge-orange">
+              <svg class="gauge-svg" viewBox="0 0 90 90">
+                <circle cx="45" cy="45" r="38" fill="none" stroke="#1a2138" stroke-width="8"></circle>
+                <circle cx="45" cy="45" r="38" fill="none" stroke="#ff6b35" stroke-width="8"
+                  stroke-dasharray="175 240" stroke-dashoffset="0" transform="rotate(-90 45 45)" stroke-linecap="round"></circle>
+                <text x="45" y="50" text-anchor="middle" fill="#ff6b35" font-family="JetBrains Mono" font-size="16" font-weight="500">11/15</text>
+              </svg>
+              <div class="gauge-label">SAAQ cascade</div>
+              <div class="gauge-value">poids 15 %</div>
+              <div class="gauge-source">8 k accidents zones</div>
+            </div>
+
+            <div class="gauge-card gauge-rouge">
+              <svg class="gauge-svg" viewBox="0 0 90 90">
+                <circle cx="45" cy="45" r="38" fill="none" stroke="#1a2138" stroke-width="8"></circle>
+                <circle cx="45" cy="45" r="38" fill="none" stroke="#f87171" stroke-width="8"
+                  stroke-dasharray="167 240" stroke-dashoffset="0" transform="rotate(-90 45 45)" stroke-linecap="round"></circle>
+                <text x="45" y="50" text-anchor="middle" fill="#f87171" font-family="JetBrains Mono" font-size="14" font-weight="500">7/10</text>
+              </svg>
+              <div class="gauge-label">Saturation</div>
+              <div class="gauge-value">poids 10 %</div>
+              <div class="gauge-source">TerritoryPlanner</div>
+            </div>
+          </div>
+
+          <div class="score-final">
+            <div class="score-value">95</div>
+            <div class="score-label">rouge · validation humaine requise</div>
+            <div class="score-detail">
+              Score brut 73/100 <span class="modifier">× modificateur saisonnier 1,3 (hiver)</span> = 95/100<br>
+              Recommandation : <strong style="color: var(--danger);">reporter ou conditionner avec mitigation lourde</strong>
+            </div>
+          </div>
+
+          <div class="timing-bar">
+            <span>Évaluation manuelle Excel : <span class="timing-old">2 h 15 min</span></span>
+            <span>Évaluation AX5-CitaFlow : <span class="timing-new">7,4 secondes</span></span>
+            <span class="timing-gain">gain temps · 99,9 %</span>
+          </div>
+
+          <div style="display: flex; gap: 12px; justify-content: flex-end;">
+            <button class="btn">Recalculer avec autres dates</button>
+            <button class="btn-primary" onclick="goToScreen(3)">Valider en HITL →</button>
+          </div>
+        </div>
+
+        <aside class="side-panel">
+          <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+          <h3>Cinq agents, une décision</h3>
+          <p>Pendant que Sophie attend, 5 agents PermitOptimizer travaillent en parallèle (WebSocket FastAPI). Chaque jauge montre une composante du score composite, sa pondération, et la source de données mobilisée.</p>
+          <div class="agent-list">
+            <div class="agent-line"><span class="agent-name">Coactivité</span><span class="agent-status">1,2 s ✓</span></div>
+            <div class="agent-line"><span class="agent-name">Vulnérables</span><span class="agent-status">1,8 s ✓</span></div>
+            <div class="agent-line"><span class="agent-name">CNESST RAG</span><span class="agent-status">2,4 s ✓</span></div>
+            <div class="agent-line"><span class="agent-name">SAAQ cascade</span><span class="agent-status">1,9 s ✓</span></div>
+            <div class="agent-line"><span class="agent-name">Saturation</span><span class="agent-status">1,1 s ✓</span></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-3">
+    <div class="dashboard-shell">
+      <div class="dashboard-header">
+        <div class="dashboard-title">
+          <h1>Validation humaine requise</h1>
+          <div class="breadcrumb">ConstrucSync · PermitOptimizer · <span class="crumb-active">workflow #10 HITL</span></div>
+        </div>
+        <div class="header-meta">
+          <div class="user">permis ID · #2026-MTL-58291</div>
+          <div>seuil HITL · score ≥ 65</div>
+          <div class="user" style="color: var(--warn);">SLA validation : 30 min</div>
+        </div>
+      </div>
+
+      <div class="dashboard-body">
+        <div>
+          <div class="hitl-modal">
+            <div class="hitl-header">
+              <div class="hitl-title">Permis 2026-MTL-58291</div>
+              <span class="hitl-badge">Score 95 · rouge</span>
+            </div>
+
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 14px;">
+              L'agent recommande <strong style="color: var(--accent);">conditionner avec mitigation lourde</strong> plutôt que reporter. Sophie peut valider, contester ou demander une seconde analyse.
+            </p>
+
+            <div style="margin-bottom: 16px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">7 conditions de mitigation proposées</div>
+
+              <div class="conditions-list">
+                <div class="condition-item">
+                  <div class="condition-check"></div>
+                  <div class="condition-text">Corridor piéton sécurisé minimum 1,5 m largeur</div>
+                  <div class="condition-source">CSA Z259</div>
+                </div>
+                <div class="condition-item">
+                  <div class="condition-check"></div>
+                  <div class="condition-text">Déviation cyclable balisée et signalée</div>
+                  <div class="condition-source">REV cyclable</div>
+                </div>
+                <div class="condition-item">
+                  <div class="condition-check"></div>
+                  <div class="condition-text">Parcours PMR conforme · pente ≤ 5 %, largeur ≥ 1,5 m</div>
+                  <div class="condition-source">accessibilité universelle</div>
+                </div>
+                <div class="condition-item">
+                  <div class="condition-check"></div>
+                  <div class="condition-text">Notification STM 72 h avant impact arrêts bus 31 et 55</div>
+                  <div class="condition-source">GTFS-RT</div>
+                </div>
+                <div class="condition-item">
+                  <div class="condition-check"></div>
+                  <div class="condition-text">Signalisation avancée 200 m en amont du chantier</div>
+                  <div class="condition-source">Tome V MTQ</div>
+                </div>
+                <div class="condition-item">
+                  <div class="condition-check"></div>
+                  <div class="condition-text">Coordination inter-chantiers hebdomadaire avec 3 voisins</div>
+                  <div class="condition-source">CoactivityAgent</div>
+                </div>
+                <div class="condition-item">
+                  <div class="condition-check"></div>
+                  <div class="condition-text">Rapport bi-mensuel au Bureau des permis</div>
+                  <div class="condition-source">audit ISO 45001</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="hitl-actions">
+              <button class="btn">Demander seconde analyse</button>
+              <button class="btn btn-danger">Reporter le permis</button>
+              <button class="btn-primary" onclick="goToScreen(4)">Valider avec mitigation →</button>
+            </div>
+          </div>
+
+          <div class="prov-trail">
+            <div class="prov-line"><span class="prov-key">prov:wasGeneratedBy</span> = <span class="prov-val">PermitOptimizer + 4 sub-agents · workflow #1-10</span></div>
+            <div class="prov-line"><span class="prov-key">prov:wasDerivedFrom</span> = <span class="prov-val">API_MTL_permis (1004), CNESST_RAG (54k lésions), SAAQ_zones_travaux (8k), TerritoryPlanner_live, météo_canada</span></div>
+            <div class="prov-line"><span class="prov-key">prov:wasAttributedTo</span> = <span class="prov-val">Sophie Dubois · Bureau permis Villeray [validation pending]</span></div>
+            <div class="prov-line"><span class="prov-key">prov:atTime</span> = <span class="prov-val">2026-04-18T08:21:34-04:00</span></div>
+            <div class="prov-line"><span class="prov-key">prov:hadActivity</span> = <span class="prov-val">scoring → recommandation → mitigation → human-validation [in progress]</span></div>
+          </div>
+        </div>
+
+        <aside class="side-panel">
+          <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+          <h3>L'humain garde la main</h3>
+          <p>Aucun permis avec score orange ou rouge ne se valide automatiquement. C'est une contrainte dure de la charte AgenticX5.</p>
+          <p>L'agent propose, Sophie tranche. La trace PROV-O fait foi pour les audits ISO 45001 et CNESST.</p>
+          <div class="agent-list">
+            <div class="agent-line"><span class="agent-name">Score</span><span class="agent-status">95 rouge</span></div>
+            <div class="agent-line"><span class="agent-name">Mitigation</span><span class="agent-status">7 conditions</span></div>
+            <div class="agent-line"><span class="agent-name">SLA</span><span class="agent-status">30 min</span></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-4">
+    <div class="dashboard-shell">
+      <div class="dashboard-header">
+        <div class="dashboard-title">
+          <h1>Permis approuvé conditionnel</h1>
+          <div class="breadcrumb">ConstrucSync · PermitOptimizer · <span class="crumb-active">workflow #15 export Bureau permis</span></div>
+        </div>
+        <div class="header-meta">
+          <div class="user">signature · 2026-04-18T08:23:12</div>
+          <div>signature électronique Sophie Dubois</div>
+          <div class="user" style="color: var(--success);">PDF audit-ready prêt</div>
+        </div>
+      </div>
+
+      <div class="dashboard-body">
+        <div>
+          <div class="pdf-preview">
+            <div class="pdf-frame">
+              <div class="pdf-header">
+                <div class="pdf-logo">AX5-CitaFlow</div>
+                <div class="pdf-meta">
+                  Permis 2026-MTL-58291<br>
+                  Bureau des permis · Villeray<br>
+                  Émis le 18 avril 2026
+                </div>
+              </div>
+
+              <h2>Permis d'occupation conditionnel</h2>
+
+              <div class="pdf-row"><span class="pdf-key">Adresse</span><span class="pdf-val">rue Saint-Denis × Duluth, Plateau-Mont-Royal</span></div>
+              <div class="pdf-row"><span class="pdf-key">Type travaux</span><span class="pdf-val">Aqueduc · réfection canalisation</span></div>
+              <div class="pdf-row"><span class="pdf-key">Maître d'œuvre</span><span class="pdf-val">Pomerleau · LSST art. 198 conforme</span></div>
+              <div class="pdf-row"><span class="pdf-key">Période</span><span class="pdf-val">6 mai au 5 juillet 2026 · 60 jours</span></div>
+              <div class="pdf-row"><span class="pdf-key">Score AX5-CitaFlow</span><span class="pdf-val">95/100 · rouge · approuvé conditionnel</span></div>
+
+              <div class="pdf-conditions">
+                <strong>7 conditions de mitigation obligatoires</strong> · corridor piéton 1,5 m, déviation cyclable balisée, parcours PMR conforme, notification STM 72 h, signalisation 200 m amont, coordination hebdo voisins, rapport bi-mensuel.
+              </div>
+
+              <div class="pdf-row"><span class="pdf-key">Référence audit</span><span class="pdf-val">ISO 45001 · trace PROV-O archivée</span></div>
+              <div class="pdf-row"><span class="pdf-key">Conformité réglementaire</span><span class="pdf-val">CSA Z259 · Tome V MTQ · LSST · accessibilité universelle</span></div>
+
+              <div class="pdf-signature">
+                <div class="pdf-sig-block">
+                  Signé électroniquement par<br>
+                  <span class="sig-name">Sophie Dubois</span><br>
+                  Bureau des permis · arrond. Villeray
+                </div>
+                <div class="pdf-sig-block" style="text-align: right;">
+                  Validation horodatée<br>
+                  <span class="sig-name">2026-04-18T08:23:12-04:00</span><br>
+                  Signature certifiée AX5
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="timing-bar" style="background: var(--success-dim); border-color: var(--success);">
+            <span style="color: var(--text);">Avant AX5-CitaFlow : <span class="timing-old">2 h 15 min · risque erreur</span></span>
+            <span style="color: var(--text);">Avec AX5-CitaFlow : <span style="color: var(--success); font-weight: 500;">12 secondes · audit-ready</span></span>
+            <span style="color: var(--success); font-family: 'JetBrains Mono', monospace; font-weight: 500;">42 000 $/permis report justifié</span>
+          </div>
+
+          <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+            <button class="btn">Télécharger PDF</button>
+            <button class="btn">Notifier 8 parties prenantes</button>
+            <button class="btn-primary" onclick="goToScreen(1)">Nouveau permis →</button>
+          </div>
+        </div>
+
+        <aside class="side-panel">
+          <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+          <h3>Audit-ready dès la signature</h3>
+          <p>Le PDF généré contient toutes les sources, conditions, scores et signatures. Aucune relecture manuelle nécessaire pour passer un audit ISO 45001 ou CNESST.</p>
+          <p>L'export AGIR vers le système chantiers MTL est automatique.</p>
+          <div class="agent-list">
+            <div class="agent-line"><span class="agent-name">PDF</span><span class="agent-status">prêt en 1 s</span></div>
+            <div class="agent-line"><span class="agent-name">PROV-O</span><span class="agent-status">archivé</span></div>
+            <div class="agent-line"><span class="agent-name">8 notifs</span><span class="agent-status">en attente</span></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-bar">
+    AX5-CitaFlow · maquette persona B.1 · workflow #1-15 PermitOptimizer
+    <span class="roi-callout">· ROI : 12 s vs 2 h Excel · 95 % temps économisé · 42 000 $/permis report justifié ·</span>
+    <a href="https://github.com/Preventera/AX5-UrbanIA">github.com/Preventera/AX5-UrbanIA</a>
+  </div>
+
+</div>
+
+<script>
+  function goToScreen(n) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('screen-' + n).classList.add('active');
+    document.querySelector('.nav-btn[data-screen="' + n + '"]').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => goToScreen(btn.dataset.screen));
+  });
+</script>
+
+</body>
+</html>

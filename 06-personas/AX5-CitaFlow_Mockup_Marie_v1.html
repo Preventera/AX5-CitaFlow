@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AX5-CitaFlow — Maquette Marie Tremblay</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0e1a;
+    --bg-elev: #121829;
+    --bg-card: #1a2138;
+    --border: rgba(232, 236, 240, 0.08);
+    --border-strong: rgba(232, 236, 240, 0.18);
+    --text: #e8ecf0;
+    --text-muted: #8b95a7;
+    --text-dim: #6b7688;
+    --accent: #00d4ff;
+    --accent-dim: rgba(0, 212, 255, 0.15);
+    --warn: #ff6b35;
+    --warn-dim: rgba(255, 107, 53, 0.15);
+    --success: #4ade80;
+    --success-dim: rgba(74, 222, 128, 0.15);
+    --danger: #f87171;
+    --danger-dim: rgba(248, 113, 113, 0.15);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .container { max-width: 1400px; margin: 0 auto; }
+
+  .meta-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .meta-bar .meta-title { color: var(--accent); }
+  .meta-bar .meta-persona { color: var(--text); }
+
+  .nav-screens {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .nav-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-align: left;
+    transition: all 0.15s ease;
+    line-height: 1.4;
+  }
+
+  .nav-btn:hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+    background: var(--bg-card);
+  }
+
+  .nav-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .nav-btn .nav-num {
+    display: block;
+    font-size: 10px;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .nav-btn .nav-label {
+    display: block;
+    font-weight: 500;
+  }
+
+  .screen { display: none; animation: fadeIn 0.3s ease; }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 20px;
+  }
+
+  @media (max-width: 1100px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  .main-panel {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .side-panel {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    align-self: start;
+    position: sticky;
+    top: 20px;
+  }
+
+  .side-panel-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .side-panel h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .side-panel p {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .side-panel .agent-thought {
+    background: var(--bg-card);
+    border-left: 2px solid var(--accent);
+    padding: 12px 14px;
+    border-radius: 0 8px 8px 0;
+    font-size: 12px;
+    color: var(--text);
+    margin-top: 16px;
+    line-height: 1.5;
+  }
+
+  .side-panel .agent-thought-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .screen-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .screen-title h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .screen-title .subtitle {
+    color: var(--text-muted);
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .screen-meta {
+    text-align: right;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .screen-meta .timestamp { color: var(--text); }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 768px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .stat-card .stat-label {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  .stat-card .stat-value {
+    color: var(--text);
+    font-size: 28px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    line-height: 1;
+  }
+
+  .stat-card .stat-trend {
+    color: var(--text-dim);
+    font-size: 11px;
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .stat-card.alert .stat-value { color: var(--warn); }
+  .stat-card.alert { border-color: var(--warn-dim); background: var(--warn-dim); }
+
+  .section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin: 24px 0 12px;
+  }
+
+  .causes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 768px) {
+    .causes-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .cause-pill {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cause-pill .cause-name {
+    color: var(--text);
+    font-size: 13px;
+  }
+
+  .cause-pill .cause-count {
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .cause-pill.alert {
+    border-color: var(--warn-dim);
+    background: var(--warn-dim);
+  }
+  .cause-pill.alert .cause-count { color: var(--warn); }
+
+  .alerts-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .alert-row {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--text-dim);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .alert-row:hover {
+    border-color: var(--border-strong);
+    background: var(--bg-elev);
+  }
+
+  .alert-row.severity-orange { border-left-color: var(--warn); }
+  .alert-row.severity-red { border-left-color: var(--danger); }
+  .alert-row.severity-green { border-left-color: var(--success); }
+
+  .alert-row .alert-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .alert-row .severity-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--text-dim);
+  }
+  .alert-row.severity-orange .severity-dot { background: var(--warn); }
+  .alert-row.severity-red .severity-dot { background: var(--danger); }
+  .alert-row.severity-green .severity-dot { background: var(--success); }
+
+  .alert-row .alert-text { color: var(--text); font-size: 13px; }
+  .alert-row .alert-loc {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .ghost-banner {
+    background: linear-gradient(135deg, var(--warn-dim), transparent);
+    border: 1px solid var(--warn);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .ghost-banner .ghost-icon {
+    width: 48px; height: 48px;
+    background: var(--warn);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .ghost-banner .ghost-text { flex: 1; }
+  .ghost-banner .ghost-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: var(--warn);
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+  .ghost-banner .ghost-detail {
+    color: var(--text-muted);
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .evidence-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 768px) { .evidence-grid { grid-template-columns: 1fr; } }
+
+  .evidence-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .evidence-card .ev-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .timeline-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .timeline-row:last-child { border-bottom: none; }
+
+  .timeline-time { color: var(--text-muted); min-width: 80px; }
+  .timeline-status { color: var(--text); flex: 1; }
+  .timeline-row.flag .timeline-status { color: var(--warn); }
+
+  .video-mock {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .video-mock::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(45deg, transparent 0 8px, rgba(255,107,53,0.04) 8px 16px);
+  }
+
+  .pie-mock {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .pie-svg { flex-shrink: 0; }
+
+  .pie-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .pie-legend-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pie-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  .actions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .action-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .action-card:hover {
+    border-color: var(--accent);
+    background: var(--bg-elev);
+  }
+
+  .action-card.selected {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .action-card .action-info { flex: 1; }
+  .action-card .action-title {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .action-card .action-detail {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .action-card .action-confidence {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    margin-left: 16px;
+  }
+
+  .hitl-bar {
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .hitl-bar .hitl-text { color: var(--text); font-size: 13px; }
+  .hitl-bar .hitl-text strong { color: var(--accent); font-weight: 500; }
+
+  .btn {
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+  }
+
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+  .btn-primary:hover { background: transparent; color: var(--accent); }
+
+  .channels-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 768px) { .channels-grid { grid-template-columns: 1fr; } }
+
+  .channel-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .channel-card.published {
+    border-left: 3px solid var(--success);
+    border-radius: 0 10px 10px 0;
+  }
+
+  .channel-info { flex: 1; }
+  .channel-name {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .channel-detail {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .channel-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: var(--success-dim);
+    color: var(--success);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .prov-trail {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .prov-trail .prov-line { margin-bottom: 4px; }
+  .prov-trail .prov-key { color: var(--accent); }
+  .prov-trail .prov-val { color: var(--text); }
+
+  .footer-bar {
+    margin-top: 24px;
+    padding: 16px 20px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-align: center;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .footer-bar a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="meta-bar">
+    <span><span class="meta-title">AX5-CitaFlow</span> · maquette utilisateur v1.0</span>
+    <span>Persona : <span class="meta-persona">Marie Tremblay</span> · coordonnatrice mobilité, Ville de Montréal</span>
+  </div>
+
+  <nav class="nav-screens">
+    <button class="nav-btn active" data-screen="1">
+      <span class="nav-num">01 / 05</span>
+      <span class="nav-label">Dashboard matinal</span>
+    </button>
+    <button class="nav-btn" data-screen="2">
+      <span class="nav-num">02 / 05</span>
+      <span class="nav-label">Détection chantier fantôme</span>
+    </button>
+    <button class="nav-btn" data-screen="3">
+      <span class="nav-num">03 / 05</span>
+      <span class="nav-label">Analyse multi-causes</span>
+    </button>
+    <button class="nav-btn" data-screen="4">
+      <span class="nav-num">04 / 05</span>
+      <span class="nav-label">Décision HITL</span>
+    </button>
+    <button class="nav-btn" data-screen="5">
+      <span class="nav-num">05 / 05</span>
+      <span class="nav-label">Publication multi-canaux</span>
+    </button>
+  </nav>
+
+  <section class="screen active" id="screen-1">
+    <div class="layout">
+      <div class="main-panel">
+        <div class="screen-header">
+          <div class="screen-title">
+            <h2>Bonjour Marie</h2>
+            <div class="subtitle">vue d'ensemble — vendredi 17 avril 2026, 07h12</div>
+          </div>
+          <div class="screen-meta">
+            <div class="timestamp">07:12:34</div>
+            <div>actualisé il y a 8 s</div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Chantiers actifs</div>
+            <div class="stat-value">4 218</div>
+            <div class="stat-trend">+12 depuis hier</div>
+          </div>
+          <div class="stat-card alert">
+            <div class="stat-label">Chantiers fantômes</div>
+            <div class="stat-value">7</div>
+            <div class="stat-trend">détectés ce matin</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Score congestion</div>
+            <div class="stat-value">68 / 100</div>
+            <div class="stat-trend">orange · stable</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Alertes en attente</div>
+            <div class="stat-value">12</div>
+            <div class="stat-trend">3 nécessitent validation</div>
+          </div>
+        </div>
+
+        <div class="section-title">Causes de congestion temps réel — 6 dimensions IVÉO</div>
+        <div class="causes-grid">
+          <div class="cause-pill"><span class="cause-name">Chantiers</span><span class="cause-count">2 109</span></div>
+          <div class="cause-pill"><span class="cause-name">Accidents</span><span class="cause-count">14</span></div>
+          <div class="cause-pill"><span class="cause-name">Interblocages</span><span class="cause-count">8</span></div>
+          <div class="cause-pill alert"><span class="cause-name">Pannes électriques</span><span class="cause-count">3</span></div>
+          <div class="cause-pill"><span class="cause-name">Services urgence</span><span class="cause-count">22</span></div>
+          <div class="cause-pill"><span class="cause-name">Feux défaillants</span><span class="cause-count">11</span></div>
+        </div>
+
+        <div class="section-title">Alertes nécessitant ton attention</div>
+        <div class="alerts-list">
+          <div class="alert-row severity-orange" onclick="goToScreen(2)">
+            <div class="alert-info">
+              <span class="severity-dot"></span>
+              <div>
+                <div class="alert-text">Chantier fantôme détecté — signalisation présente, activité absente 3 j</div>
+                <div class="alert-loc">rue Saint-Denis × Beaubien · arrond. Rosemont</div>
+              </div>
+            </div>
+            <span class="btn">Inspecter →</span>
+          </div>
+          <div class="alert-row severity-red">
+            <div class="alert-info">
+              <span class="severity-dot"></span>
+              <div>
+                <div class="alert-text">Convergence chantier + feu défaillant + accident</div>
+                <div class="alert-loc">Sherbrooke × Saint-Laurent · arrond. Plateau</div>
+              </div>
+            </div>
+            <span class="btn">Inspecter →</span>
+          </div>
+          <div class="alert-row severity-green">
+            <div class="alert-info">
+              <span class="severity-dot"></span>
+              <div>
+                <div class="alert-text">Chantier achevé — signalisation à retirer</div>
+                <div class="alert-loc">avenue du Parc × Mont-Royal</div>
+              </div>
+            </div>
+            <span class="btn">Confirmer →</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+        <h3>Vue de bord, pas tour de contrôle</h3>
+        <p>Marie ouvre AX5-CitaFlow chaque matin à 7 h. Elle ne veut pas voir les 4 218 chantiers — elle veut voir <em>les 3 qui exigent une décision aujourd'hui</em>.</p>
+        <p>Le tri n'est pas chronologique, il est <em>actionnable</em>. Les agents AX5 priorisent par convergence des 6 causes et par déviation par rapport à l'historique.</p>
+        <div class="agent-thought">
+          <span class="agent-thought-label">Pensée agentique</span>
+          7 chantiers fantômes détectés cette nuit. Le plus prioritaire bloque un corridor STM.
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-2">
+    <div class="layout">
+      <div class="main-panel">
+        <div class="screen-header">
+          <div class="screen-title">
+            <h2>Saint-Denis × Beaubien</h2>
+            <div class="subtitle">chantier fantôme · alerte orange · ouverte il y a 47 min</div>
+          </div>
+          <div class="screen-meta">
+            <div class="timestamp">07:24:18</div>
+            <div>permis n° 2026-MTL-12847</div>
+          </div>
+        </div>
+
+        <div class="ghost-banner">
+          <div class="ghost-icon">!</div>
+          <div class="ghost-text">
+            <div class="ghost-title">Chantier déclaré actif. Aucune activité détectée depuis 3 jours.</div>
+            <div class="ghost-detail">signalisation toujours en place · 4 cônes orange + déviation cyclable maintenue</div>
+          </div>
+        </div>
+
+        <div class="section-title">Évidences croisées</div>
+        <div class="evidence-grid">
+          <div class="evidence-card">
+            <div class="ev-label">Caméra circulation 2317</div>
+            <div class="video-mock">flux 720p · YOLO v8 · 30 FPS</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px; font-family: 'JetBrains Mono', monospace;">0 travailleur détecté · 0 véhicule chantier · 14, 15 et 16 avril</div>
+          </div>
+          <div class="evidence-card">
+            <div class="ev-label">Chronologie permis</div>
+            <div class="timeline">
+              <div class="timeline-row"><span class="timeline-time">8 avril</span><span class="timeline-status">permis activé</span></div>
+              <div class="timeline-row"><span class="timeline-time">9–13 avril</span><span class="timeline-status">activité confirmée caméra</span></div>
+              <div class="timeline-row flag"><span class="timeline-time">14 avril</span><span class="timeline-status">activité absente · signalisation maintenue</span></div>
+              <div class="timeline-row flag"><span class="timeline-time">15 avril</span><span class="timeline-status">activité absente · signalisation maintenue</span></div>
+              <div class="timeline-row flag"><span class="timeline-time">16 avril</span><span class="timeline-status">activité absente · signalisation maintenue</span></div>
+            </div>
+          </div>
+          <div class="evidence-card">
+            <div class="ev-label">Impact mobilité</div>
+            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+              <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Détours BIXI / piétons</span><span style="color: var(--text);">~ 320 / jour</span></div>
+              <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Bus STM 31 affectés</span><span style="color: var(--text);">112 passages / jour</span></div>
+              <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Surplus émissions estimé</span><span style="color: var(--warn);">+ 18 kg CO₂ / jour</span></div>
+            </div>
+          </div>
+          <div class="evidence-card">
+            <div class="ev-label">Permis et entrepreneur</div>
+            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+              <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Type travaux</span><span style="color: var(--text);">aqueduc</span></div>
+              <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Entrepreneur</span><span style="color: var(--text);">[masqué — RGPD]</span></div>
+              <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Date fin prévue</span><span style="color: var(--text);">22 avril 2026</span></div>
+              <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Confiance détection</span><span style="color: var(--accent);">94 %</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+          <button class="btn">Marquer faux positif</button>
+          <button class="btn btn-primary" onclick="goToScreen(3)">Analyser les causes →</button>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+        <h3>Le scénario fantôme</h3>
+        <p>Avant AX5-CitaFlow, les chantiers fantômes étaient invisibles. Marie aurait découvert celui-ci par un courriel citoyen — ou jamais.</p>
+        <p>Ici, l'agent croise <em>permis municipal</em>, <em>vidéo YOLO</em> et <em>impact mobilité</em>. C'est ton différenciateur unique face à tout autre soumissionnaire IVÉO.</p>
+        <div class="agent-thought">
+          <span class="agent-thought-label">Pensée agentique</span>
+          Conjonction de 3 sources indépendantes. Confiance 94 %. Recommande validation humaine avant action.
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-3">
+    <div class="layout">
+      <div class="main-panel">
+        <div class="screen-header">
+          <div class="screen-title">
+            <h2>Décomposition des causes</h2>
+            <div class="subtitle">classification probabiliste · CauseClassifierAgent v1.0</div>
+          </div>
+          <div class="screen-meta">
+            <div class="timestamp">07:31:02</div>
+            <div>analysé en 1.4 s</div>
+          </div>
+        </div>
+
+        <div class="evidence-grid" style="grid-template-columns: 1fr 1fr; align-items: stretch;">
+          <div class="evidence-card">
+            <div class="ev-label">Pondération softmax · 6 causes</div>
+            <div class="pie-mock" style="margin-top: 12px;">
+              <svg class="pie-svg" width="140" height="140" viewBox="0 0 140 140">
+                <circle cx="70" cy="70" r="60" fill="none" stroke="#1a2138" stroke-width="20"></circle>
+                <circle cx="70" cy="70" r="60" fill="none" stroke="#ff6b35" stroke-width="20"
+                  stroke-dasharray="226 377" stroke-dashoffset="0" transform="rotate(-90 70 70)"></circle>
+                <circle cx="70" cy="70" r="60" fill="none" stroke="#00d4ff" stroke-width="20"
+                  stroke-dasharray="94 377" stroke-dashoffset="-226" transform="rotate(-90 70 70)"></circle>
+                <circle cx="70" cy="70" r="60" fill="none" stroke="#f87171" stroke-width="20"
+                  stroke-dasharray="56 377" stroke-dashoffset="-320" transform="rotate(-90 70 70)"></circle>
+                <text x="70" y="76" text-anchor="middle" fill="#e8ecf0" font-family="Inter" font-size="20" font-weight="500">6 causes</text>
+              </svg>
+              <div class="pie-legend">
+                <div class="pie-legend-row"><span class="pie-dot" style="background: #ff6b35;"></span><span>Chantier fantôme</span><span style="color: var(--text); margin-left: auto;">60 %</span></div>
+                <div class="pie-legend-row"><span class="pie-dot" style="background: #00d4ff;"></span><span>Feu défaillant</span><span style="color: var(--text); margin-left: auto;">25 %</span></div>
+                <div class="pie-legend-row"><span class="pie-dot" style="background: #f87171;"></span><span>Trafic résiduel</span><span style="color: var(--text); margin-left: auto;">15 %</span></div>
+                <div class="pie-legend-row" style="opacity: 0.4;"><span class="pie-dot" style="background: #4a5568;"></span><span>Accident · panne · urgence</span><span style="color: var(--text); margin-left: auto;">0 %</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="evidence-card">
+            <div class="ev-label">Explication XAI · top facteurs</div>
+            <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 12px;">
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;"><span style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">absence_activité_72h</span><span style="color: var(--warn); font-family: 'JetBrains Mono', monospace;">+ 0.42</span></div>
+                <div style="background: var(--bg); height: 6px; border-radius: 3px; overflow: hidden;"><div style="background: var(--warn); height: 100%; width: 84%;"></div></div>
+              </div>
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;"><span style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">signalisation_maintenue</span><span style="color: var(--warn); font-family: 'JetBrains Mono', monospace;">+ 0.31</span></div>
+                <div style="background: var(--bg); height: 6px; border-radius: 3px; overflow: hidden;"><div style="background: var(--warn); height: 100%; width: 62%;"></div></div>
+              </div>
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;"><span style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">feu_intersection_lent</span><span style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">+ 0.18</span></div>
+                <div style="background: var(--bg); height: 6px; border-radius: 3px; overflow: hidden;"><div style="background: var(--accent); height: 100%; width: 36%;"></div></div>
+              </div>
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;"><span style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">historique_zone</span><span style="color: var(--danger); font-family: 'JetBrains Mono', monospace;">+ 0.11</span></div>
+                <div style="background: var(--bg); height: 6px; border-radius: 3px; overflow: hidden;"><div style="background: var(--danger); height: 100%; width: 22%;"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">Hypothèse retenue par l'agent</div>
+        <div style="background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 16px 20px; margin-bottom: 24px;">
+          <div style="color: var(--text); font-size: 14px; line-height: 1.6;">
+            Le chantier d'aqueduc est probablement <em style="color: var(--warn);">terminé ou en pause prolongée</em>. La signalisation n'a pas été retirée. Un feu d'intersection adjacent fonctionne en mode lent en raison de l'ancien périmètre. Aucun signal d'urgence ou d'accident ne contribue.
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+          <button class="btn">Demander une seconde analyse</button>
+          <button class="btn btn-primary" onclick="goToScreen(4)">Voir actions recommandées →</button>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+        <h3>Probabilités, pas verdicts</h3>
+        <p>L'agent ne dit jamais « c'est un chantier fantôme ». Il dit « 60 % chantier fantôme, 25 % feu, 15 % résiduel ».</p>
+        <p>Cette nuance est rendue visible. Marie peut désaccorder. C'est ce que XAI signifie en pratique : voir les pondérations, voir les facteurs, garder le pouvoir.</p>
+        <div class="agent-thought">
+          <span class="agent-thought-label">Pensée agentique</span>
+          Je propose une hypothèse dominante mais je ne masque pas l'incertitude. Marie reste en charge.
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-4">
+    <div class="layout">
+      <div class="main-panel">
+        <div class="screen-header">
+          <div class="screen-title">
+            <h2>3 actions recommandées</h2>
+            <div class="subtitle">human-in-the-loop · validation requise au seuil orange</div>
+          </div>
+          <div class="screen-meta">
+            <div class="timestamp">07:38:45</div>
+            <div>SLA réponse : 30 min</div>
+          </div>
+        </div>
+
+        <div class="actions-list">
+          <div class="action-card selected" onclick="this.parentElement.querySelectorAll('.action-card').forEach(c=>c.classList.remove('selected'));this.classList.add('selected');">
+            <div class="action-info">
+              <div class="action-title">Action A · Contacter l'entrepreneur sous 24 h</div>
+              <div class="action-detail">obliger retrait signalisation OU justification activité · template courriel pré-rempli</div>
+            </div>
+            <span class="action-confidence">conf. 87 %</span>
+          </div>
+          <div class="action-card" onclick="this.parentElement.querySelectorAll('.action-card').forEach(c=>c.classList.remove('selected'));this.classList.add('selected');">
+            <div class="action-info">
+              <div class="action-title">Action B · Retirer signalisation municipale d'office</div>
+              <div class="action-detail">dispatch équipe arrond. Rosemont · délai 48 h · facturation entrepreneur</div>
+            </div>
+            <span class="action-confidence">conf. 64 %</span>
+          </div>
+          <div class="action-card" onclick="this.parentElement.querySelectorAll('.action-card').forEach(c=>c.classList.remove('selected'));this.classList.add('selected');">
+            <div class="action-info">
+              <div class="action-title">Action C · Surveiller 48 h supplémentaires</div>
+              <div class="action-detail">augmenter fréquence vérification caméra · alerte si toujours inactif lundi matin</div>
+            </div>
+            <span class="action-confidence">conf. 41 %</span>
+          </div>
+        </div>
+
+        <div class="hitl-bar">
+          <div class="hitl-text">
+            <strong>Validation Marie Tremblay requise.</strong> Action A présélectionnée par AX5-CitaFlow. Tu peux modifier ou refuser avant signature.
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn">Refuser</button>
+            <button class="btn btn-primary" onclick="goToScreen(5)">Approuver et signer →</button>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top: 32px;">Trace décisionnelle PROV-O</div>
+        <div class="prov-trail">
+          <div class="prov-line"><span class="prov-key">prov:wasGeneratedBy</span> = <span class="prov-val">CauseClassifierAgent v1.0</span></div>
+          <div class="prov-line"><span class="prov-key">prov:wasDerivedFrom</span> = <span class="prov-val">camera_2317, permis_2026-MTL-12847, GTFS-RT_STM31, hist_zone_rosemont</span></div>
+          <div class="prov-line"><span class="prov-key">prov:wasAttributedTo</span> = <span class="prov-val">Marie Tremblay [validation pending]</span></div>
+          <div class="prov-line"><span class="prov-key">prov:atTime</span> = <span class="prov-val">2026-04-17T07:38:45-04:00</span></div>
+          <div class="prov-line"><span class="prov-key">prov:hadActivity</span> = <span class="prov-val">classification → recommendation → human-validation</span></div>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+        <h3>L'humain garde la dernière touche</h3>
+        <p>Aucune décision orange ou rouge ne s'exécute sans la signature de Marie. C'est une contrainte dure de la charte AgenticX5.</p>
+        <p>L'agent recommande, hiérarchise, explique. Marie tranche. La trace PROV-O fait foi pour les audits BNQ, CNESST ou Loi 25.</p>
+        <div class="agent-thought">
+          <span class="agent-thought-label">Pensée agentique</span>
+          Action A est la moins coûteuse politiquement et la plus respectueuse de l'entrepreneur. Je la propose en premier, mais c'est ton appel.
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-5">
+    <div class="layout">
+      <div class="main-panel">
+        <div class="screen-header">
+          <div class="screen-title">
+            <h2>Diffusion en cours</h2>
+            <div class="subtitle">action A signée · 4 canaux activés simultanément</div>
+          </div>
+          <div class="screen-meta">
+            <div class="timestamp">07:39:12</div>
+            <div>signature : Marie Tremblay</div>
+          </div>
+        </div>
+
+        <div class="channels-grid">
+          <div class="channel-card published">
+            <div class="channel-info">
+              <div class="channel-name">Waze CCP</div>
+              <div class="channel-detail">construction zone · downgrade severity · radius 200 m</div>
+            </div>
+            <span class="channel-status">publié</span>
+          </div>
+          <div class="channel-card published">
+            <div class="channel-info">
+              <div class="channel-name">GTFS-RT (STM bus 31)</div>
+              <div class="channel-detail">retrait alerte ralentissement programmée 14 avril</div>
+            </div>
+            <span class="channel-status">publié</span>
+          </div>
+          <div class="channel-card published">
+            <div class="channel-info">
+              <div class="channel-name">AGIR (système chantiers MTL)</div>
+              <div class="channel-detail">flag "à vérifier sur site" sur permis 2026-MTL-12847</div>
+            </div>
+            <span class="channel-status">publié</span>
+          </div>
+          <div class="channel-card published">
+            <div class="channel-info">
+              <div class="channel-name">Open511 + portail citoyen</div>
+              <div class="channel-detail">information transparente · délai mise à jour entrepreneur 24 h</div>
+            </div>
+            <span class="channel-status">publié</span>
+          </div>
+        </div>
+
+        <div class="section-title">Effets attendus dans les 24 h</div>
+        <div class="evidence-grid">
+          <div class="evidence-card">
+            <div class="ev-label">Mobilité</div>
+            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+              <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Détours BIXI / piétons</span><span style="color: var(--success);">-260 / jour</span></div>
+              <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Bus STM 31 fluidifiés</span><span style="color: var(--success);">+ 4 min / passage</span></div>
+              <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Émissions évitées</span><span style="color: var(--success);">-15 kg CO₂ / jour</span></div>
+            </div>
+          </div>
+          <div class="evidence-card">
+            <div class="ev-label">Audit et conformité</div>
+            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+              <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Trace PROV-O</span><span style="color: var(--success);">archivée</span></div>
+              <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">AI Register MTL</span><span style="color: var(--success);">entrée auto-créée</span></div>
+              <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Conformité Loi 25</span><span style="color: var(--success);">données entrepreneur masquées</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: space-between; align-items: center;">
+          <div style="color: var(--text-muted); font-size: 13px; font-family: 'JetBrains Mono', monospace;">
+            ← suivante alerte : convergence Sherbrooke × Saint-Laurent
+          </div>
+          <button class="btn btn-primary" onclick="goToScreen(1)">Retour au dashboard →</button>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+        <h3>Une décision, quatre canaux</h3>
+        <p>Avant AX5-CitaFlow, Marie aurait dû ouvrir 4 systèmes différents pour informer Waze, la STM, AGIR et le portail citoyen. Délai typique : 2 heures, avec inévitables incohérences.</p>
+        <p>Ici : un clic, quatre publications cohérentes, traces PROV-O archivées, AI Register MTL automatiquement mis à jour pour transparence publique.</p>
+        <div class="agent-thought">
+          <span class="agent-thought-label">Pensée agentique</span>
+          Mission accomplie. Prochaine alerte priorisée : convergence Plateau. Marie reprend le contrôle.
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <div class="footer-bar">
+    AX5-CitaFlow · maquette utilisateur v1.0 · 17 avril 2026 · <a href="https://github.com/Preventera/AX5-UrbanIA">github.com/Preventera/AX5-UrbanIA</a>
+  </div>
+
+</div>
+
+<script>
+  function goToScreen(n) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('screen-' + n).classList.add('active');
+    document.querySelector('.nav-btn[data-screen="' + n + '"]').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => goToScreen(btn.dataset.screen));
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AX5-CitaVital — Maquette Sami Lévesque v1</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0e1a; --bg-elev: #121829; --bg-card: #1a2138;
+    --border: rgba(232, 236, 240, 0.08); --border-strong: rgba(232, 236, 240, 0.18);
+    --text: #e8ecf0; --text-muted: #8b95a7; --text-dim: #6b7688;
+    --accent: #00d4ff; --accent-dim: rgba(0, 212, 255, 0.15);
+    --warn: #ff6b35; --warn-dim: rgba(255, 107, 53, 0.15);
+    --success: #4ade80; --success-dim: rgba(74, 222, 128, 0.15);
+    --danger: #f87171; --danger-dim: rgba(248, 113, 113, 0.15);
+    --vital: #a855f7; --vital-dim: rgba(168, 85, 247, 0.15);
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.5; min-height: 100vh; padding: 20px; }
+  .container { max-width: 1400px; margin: 0 auto; }
+  .meta-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 16px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); letter-spacing: 0.05em; }
+  .meta-bar .meta-title { color: var(--vital); }
+  .meta-bar .meta-persona { color: var(--text); }
+  .nav-screens { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px; padding: 12px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 12px; }
+  .nav-btn { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 12px 16px; border-radius: 8px; cursor: pointer; font-family: 'JetBrains Mono', monospace; font-size: 11px; text-align: left; transition: all 0.15s ease; line-height: 1.4; }
+  .nav-btn:hover { border-color: var(--border-strong); color: var(--text); background: var(--bg-card); }
+  .nav-btn.active { border-color: var(--vital); color: var(--vital); background: var(--vital-dim); }
+  .nav-btn .nav-num { display: block; font-size: 10px; margin-bottom: 4px; opacity: 0.7; }
+  .nav-btn .nav-label { display: block; font-weight: 500; }
+  .screen { display: none; animation: fadeIn 0.3s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
+  @media (max-width: 1100px) { .layout { grid-template-columns: 1fr; } }
+  .main-panel { background: var(--bg-elev); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+  .side-panel { background: var(--bg-elev); border: 1px solid var(--border); border-radius: 12px; padding: 20px; align-self: start; position: sticky; top: 20px; }
+  .side-panel-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--vital); letter-spacing: 0.1em; margin-bottom: 8px; text-transform: uppercase; }
+  .side-panel h3 { font-family: 'Instrument Serif', serif; font-size: 22px; font-weight: 400; color: var(--text); margin-bottom: 12px; line-height: 1.2; }
+  .side-panel p { color: var(--text-muted); font-size: 13px; line-height: 1.6; margin-bottom: 16px; }
+  .side-panel .agent-thought { background: var(--bg-card); border-left: 2px solid var(--vital); padding: 12px 14px; border-radius: 0 8px 8px 0; font-size: 12px; color: var(--text); margin-top: 16px; line-height: 1.5; }
+  .side-panel .agent-thought-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--vital); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; display: block; }
+  .screen-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .screen-title h2 { font-family: 'Instrument Serif', serif; font-size: 28px; font-weight: 400; color: var(--text); line-height: 1.2; margin-bottom: 4px; }
+  .screen-title .subtitle { color: var(--text-muted); font-size: 13px; font-family: 'JetBrains Mono', monospace; }
+  .screen-meta { text-align: right; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 1.6; }
+  .screen-meta .timestamp { color: var(--text); }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+  .stat-card { background: var(--bg-card); border: 1px solid var(--border); padding: 16px; border-radius: 10px; }
+  .stat-card .stat-label { color: var(--text-muted); font-size: 11px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+  .stat-card .stat-value { color: var(--text); font-size: 28px; font-weight: 500; line-height: 1; }
+  .stat-card .stat-trend { color: var(--text-dim); font-size: 11px; margin-top: 6px; font-family: 'JetBrains Mono', monospace; }
+  .stat-card.good { border-color: var(--success-dim); }
+  .stat-card.good .stat-value { color: var(--success); }
+  .stat-card.warn { border-color: var(--warn-dim); }
+  .stat-card.warn .stat-value { color: var(--warn); }
+  .section-title { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted); text-transform: uppercase; margin: 24px 0 12px; }
+  .scf-radar { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 768px) { .scf-radar { grid-template-columns: 1fr; } }
+  .axis-bars { display: flex; flex-direction: column; gap: 14px; }
+  .axis-row { display: flex; flex-direction: column; gap: 6px; }
+  .axis-label-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; }
+  .axis-name { color: var(--text); font-weight: 500; }
+  .axis-value { color: var(--vital); font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+  .axis-bar-bg { background: var(--bg); height: 8px; border-radius: 4px; overflow: hidden; }
+  .axis-bar-fill { background: var(--vital); height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+  .axis-bar-fill.warn { background: var(--warn); }
+  .axis-bar-fill.success { background: var(--success); }
+  .nudge-card { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--vital); border-radius: 0 10px 10px 0; padding: 16px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.15s ease; }
+  .nudge-card:hover { border-color: var(--vital); background: var(--bg-elev); }
+  .nudge-card .nudge-info { flex: 1; }
+  .nudge-card .nudge-title { color: var(--text); font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .nudge-card .nudge-detail { color: var(--text-muted); font-size: 12px; font-family: 'JetBrains Mono', monospace; }
+  .nudge-card .nudge-impact { background: var(--vital-dim); border: 1px solid var(--vital); color: var(--vital); padding: 4px 10px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 11px; margin-left: 16px; }
+  .route-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.15s ease; }
+  .route-card:hover, .route-card.selected { border-color: var(--vital); background: var(--vital-dim); }
+  .route-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .route-name { color: var(--text); font-weight: 500; font-size: 14px; }
+  .route-score { background: var(--vital); color: var(--bg); padding: 4px 10px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; }
+  .route-stats { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--text-muted); }
+  .route-stat strong { color: var(--text); font-weight: 500; }
+  .partner-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+  @media (max-width: 768px) { .partner-grid { grid-template-columns: 1fr; } }
+  .partner-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+  .partner-card .partner-name { color: var(--text); font-weight: 500; font-size: 14px; margin-bottom: 4px; }
+  .partner-card .partner-type { color: var(--text-muted); font-size: 11px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+  .partner-card .partner-reward { color: var(--vital); font-size: 13px; padding: 8px; background: var(--vital-dim); border-radius: 6px; }
+  .privacy-card { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 16px 20px; margin-bottom: 24px; }
+  .privacy-card .privacy-title { color: var(--accent); font-size: 13px; font-weight: 500; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; }
+  .privacy-card .privacy-text { color: var(--text-muted); font-size: 13px; line-height: 1.6; }
+  .privacy-card .privacy-text strong { color: var(--text); font-weight: 500; }
+  .footer-bar { margin-top: 24px; padding: 16px 20px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 12px; text-align: center; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+  .footer-bar a { color: var(--vital); text-decoration: none; }
+  .btn { background: transparent; border: 1px solid var(--border-strong); color: var(--text); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; transition: all 0.15s ease; }
+  .btn:hover { border-color: var(--vital); color: var(--vital); }
+  .btn-primary { background: var(--vital); color: var(--bg); border-color: var(--vital); }
+  .btn-primary:hover { background: transparent; color: var(--vital); }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="meta-bar">
+    <span><span class="meta-title">AX5-CitaVital</span> · maquette utilisateur v1.0 · santé urbaine</span>
+    <span>Persona : <span class="meta-persona">Sami Lévesque</span> · 34 ans, citoyen-cycliste, parent</span>
+  </div>
+
+  <nav class="nav-screens">
+    <button class="nav-btn active" data-screen="1"><span class="nav-num">01 / 05</span><span class="nav-label">Mon score vital</span></button>
+    <button class="nav-btn" data-screen="2"><span class="nav-num">02 / 05</span><span class="nav-label">Itinéraire santé</span></button>
+    <button class="nav-btn" data-screen="3"><span class="nav-num">03 / 05</span><span class="nav-label">Nudges du jour</span></button>
+    <button class="nav-btn" data-screen="4"><span class="nav-num">04 / 05</span><span class="nav-label">Mes récompenses</span></button>
+    <button class="nav-btn" data-screen="5"><span class="nav-num">05 / 05</span><span class="nav-label">Mes données</span></button>
+  </nav>
+
+  <section class="screen active" id="screen-1">
+    <div class="layout">
+      <div class="main-panel">
+        <div class="screen-header">
+          <div class="screen-title">
+            <h2>Salut Sami</h2>
+            <div class="subtitle">ton score santé-mobilité — semaine du 12 au 18 avril 2026</div>
+          </div>
+          <div class="screen-meta">
+            <div class="timestamp">07:42:18</div>
+            <div>synchronisé Garmin · 2 min</div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card good"><div class="stat-label">Score vital global</div><div class="stat-value">73</div><div class="stat-trend">+ 8 vs sem. dernière</div></div>
+          <div class="stat-card"><div class="stat-label">Vélo cette semaine</div><div class="stat-value">42 km</div><div class="stat-trend">objectif 50 km</div></div>
+          <div class="stat-card good"><div class="stat-label">CO₂ évité</div><div class="stat-value">5,8 kg</div><div class="stat-trend">vs trajets en auto</div></div>
+          <div class="stat-card warn"><div class="stat-label">Sédentarité</div><div class="stat-value">6h12</div><div class="stat-trend">au-dessus seuil 5h</div></div>
+        </div>
+
+        <div class="section-title">4 axes HUGES — méthode Smart City Fitness</div>
+        <div class="scf-radar">
+          <div class="axis-bars">
+            <div class="axis-row">
+              <div class="axis-label-row"><span class="axis-name">H · Habitudes (déplacements actifs)</span><span class="axis-value">82 / 100</span></div>
+              <div class="axis-bar-bg"><div class="axis-bar-fill success" style="width: 82%;"></div></div>
+            </div>
+            <div class="axis-row">
+              <div class="axis-label-row"><span class="axis-name">U · Urbanisme (qualité environnement)</span><span class="axis-value">68 / 100</span></div>
+              <div class="axis-bar-bg"><div class="axis-bar-fill" style="width: 68%;"></div></div>
+            </div>
+            <div class="axis-row">
+              <div class="axis-label-row"><span class="axis-name">G · Gouvernance (participation)</span><span class="axis-value">45 / 100</span></div>
+              <div class="axis-bar-bg"><div class="axis-bar-fill warn" style="width: 45%;"></div></div>
+            </div>
+            <div class="axis-row">
+              <div class="axis-label-row"><span class="axis-name">E · Énergie (consommation)</span><span class="axis-value">76 / 100</span></div>
+              <div class="axis-bar-bg"><div class="axis-bar-fill" style="width: 76%;"></div></div>
+            </div>
+            <div class="axis-row">
+              <div class="axis-label-row"><span class="axis-name">S · Social (lien communauté)</span><span class="axis-value">71 / 100</span></div>
+              <div class="axis-bar-bg"><div class="axis-bar-fill" style="width: 71%;"></div></div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: center;">
+            <svg viewBox="0 0 200 200" width="200" height="200">
+              <polygon points="100,20 168,60 168,140 100,180 32,140 32,60" fill="none" stroke="#1a2138" stroke-width="1"/>
+              <polygon points="100,52 142,76 142,124 100,148 58,124 58,76" fill="none" stroke="#1a2138" stroke-width="1"/>
+              <polygon points="100,84 116,93 116,107 100,116 84,107 84,93" fill="none" stroke="#1a2138" stroke-width="1"/>
+              <polygon points="100,30 153,65 156,128 100,164 50,131 47,68"
+                fill="rgba(168,85,247,0.2)" stroke="#a855f7" stroke-width="2"/>
+              <text x="100" y="14" text-anchor="middle" fill="#8b95a7" font-size="11" font-family="JetBrains Mono">H 82</text>
+              <text x="178" y="62" text-anchor="middle" fill="#8b95a7" font-size="11" font-family="JetBrains Mono">U 68</text>
+              <text x="178" y="148" text-anchor="middle" fill="#8b95a7" font-size="11" font-family="JetBrains Mono">G 45</text>
+              <text x="100" y="196" text-anchor="middle" fill="#8b95a7" font-size="11" font-family="JetBrains Mono">E 76</text>
+              <text x="22" y="148" text-anchor="middle" fill="#8b95a7" font-size="11" font-family="JetBrains Mono">S 71</text>
+            </svg>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+          <button class="btn">Voir détails par jour</button>
+          <button class="btn btn-primary" onclick="goToScreen(3)">Voir nudges du jour →</button>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+        <h3>Un score, pas un jugement</h3>
+        <p>Sami n'est ni athlète ni sédentaire. Il veut savoir si sa semaine a été <em>meilleure</em>, pas si elle a été <em>parfaite</em>.</p>
+        <p>Le score 73 est nuancé par 5 axes. Pas de classement comparatif avec ses voisins — pas de honte, pas de gamification toxique.</p>
+        <div class="agent-thought">
+          <span class="agent-thought-label">Pensée agentique</span>
+          Sami progresse sur Habitudes mais Gouvernance reste basse — il pourrait participer au prochain conseil d'arrondissement.
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-2">
+    <div class="layout">
+      <div class="main-panel">
+        <div class="screen-header">
+          <div class="screen-title">
+            <h2>Itinéraire matinal</h2>
+            <div class="subtitle">domicile (Rosemont) → bureau (Plateau) · 4,2 km</div>
+          </div>
+          <div class="screen-meta">
+            <div class="timestamp">07:55:33</div>
+            <div>3 options proposées</div>
+          </div>
+        </div>
+
+        <div class="route-card selected" onclick="this.parentElement.querySelectorAll('.route-card').forEach(c=>c.classList.remove('selected'));this.classList.add('selected');">
+          <div class="route-header">
+            <div class="route-name">Option A · piste cyclable Boyer + Saint-Denis</div>
+            <span class="route-score">santé 88</span>
+          </div>
+          <div class="route-stats">
+            <span class="route-stat"><strong>18 min</strong> · vélo</span>
+            <span class="route-stat">PM2.5 <strong>faible</strong></span>
+            <span class="route-stat">bruit <strong>65 dB</strong></span>
+            <span class="route-stat">+ 142 cal</span>
+            <span class="route-stat">- 0,7 kg CO₂</span>
+            <span class="route-stat">2 cafés-haltes partenaires</span>
+          </div>
+        </div>
+
+        <div class="route-card" onclick="this.parentElement.querySelectorAll('.route-card').forEach(c=>c.classList.remove('selected'));this.classList.add('selected');">
+          <div class="route-header">
+            <div class="route-name">Option B · BIXI + métro orange</div>
+            <span class="route-score">santé 64</span>
+          </div>
+          <div class="route-stats">
+            <span class="route-stat"><strong>22 min</strong> · BIXI 6 min + métro</span>
+            <span class="route-stat">PM2.5 <strong>moyen</strong></span>
+            <span class="route-stat">bruit <strong>78 dB</strong></span>
+            <span class="route-stat">+ 48 cal</span>
+            <span class="route-stat">- 0,5 kg CO₂</span>
+            <span class="route-stat">2 stations BIXI</span>
+          </div>
+        </div>
+
+        <div class="route-card" onclick="this.parentElement.querySelectorAll('.route-card').forEach(c=>c.classList.remove('selected'));this.classList.add('selected');">
+          <div class="route-header">
+            <div class="route-name">Option C · vélo Plaza Saint-Hubert (chantier détecté)</div>
+            <span class="route-score">santé 51</span>
+          </div>
+          <div class="route-stats">
+            <span class="route-stat"><strong>26 min</strong> · vélo + détour</span>
+            <span class="route-stat">PM2.5 <strong>élevé</strong></span>
+            <span class="route-stat">chantier actif</span>
+            <span class="route-stat">+ 178 cal</span>
+            <span class="route-stat">non recommandé</span>
+          </div>
+        </div>
+
+        <div class="privacy-card" style="margin-top: 24px;">
+          <div class="privacy-title">→ Pourquoi cette recommandation</div>
+          <div class="privacy-text">L'agent croise <strong>météo</strong>, <strong>qualité air RSQA</strong>, <strong>chantiers temps réel CitaFlow</strong>, <strong>tes préférences vélo</strong> et <strong>historique d'effort</strong>. Aucune donnée vendue ni partagée — voir écran 5.</div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+          <button class="btn">Modifier mes préférences</button>
+          <button class="btn btn-primary" onclick="goToScreen(3)">Démarrer trajet →</button>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+        <h3>Le croisement intelligent</h3>
+        <p>L'option A est recommandée non pas parce qu'elle est la plus rapide, mais parce qu'elle <em>croise positivement</em> qualité d'air + sécurité + activité physique.</p>
+        <p>L'option C est dégradée car AX5-CitaFlow détecte un chantier sur Saint-Hubert. Les deux modules dialoguent.</p>
+        <div class="agent-thought">
+          <span class="agent-thought-label">Pensée agentique</span>
+          Sami a déjà 18 km cette semaine. Je propose modéré, pas intense. Empathie > performance.
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-3">
+    <div class="layout">
+      <div class="main-panel">
+        <div class="screen-header">
+          <div class="screen-title">
+            <h2>3 nudges pour aujourd'hui</h2>
+            <div class="subtitle">algorithme NudgeSafety · personnalisé selon ton profil</div>
+          </div>
+          <div class="screen-meta">
+            <div class="timestamp">08:02:45</div>
+            <div>respect autonomie</div>
+          </div>
+        </div>
+
+        <div class="nudge-card">
+          <div class="nudge-info">
+            <div class="nudge-title">Pause active à 14 h</div>
+            <div class="nudge-detail">5 min de marche entre 2 réunions · réduction sédentarité de 20 %</div>
+          </div>
+          <span class="nudge-impact">+ 4 score</span>
+        </div>
+
+        <div class="nudge-card">
+          <div class="nudge-info">
+            <div class="nudge-title">Nouveau parcours suggéré ce soir</div>
+            <div class="nudge-detail">parc La Fontaine · qualité air optimale 17h-19h · découverte d'un café-halte partenaire</div>
+          </div>
+          <span class="nudge-impact">+ 6 score</span>
+        </div>
+
+        <div class="nudge-card">
+          <div class="nudge-info">
+            <div class="nudge-title">Conseil arrondissement Rosemont · 19h</div>
+            <div class="nudge-detail">consultation publique sur réaménagement Beaubien · ton axe Gouvernance est bas</div>
+          </div>
+          <span class="nudge-impact">+ 9 score</span>
+        </div>
+
+        <div class="privacy-card" style="margin-top: 24px;">
+          <div class="privacy-title">→ Sur les nudges</div>
+          <div class="privacy-text">Maximum 3 par jour. Tu peux en désactiver à tout moment. Aucune notification après 21 h. Pas de gamification compétitive — pas de classement, pas de streak punitif. <strong>Ton bien-être passe avant ton score.</strong></div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: space-between; align-items: center;">
+          <button class="btn">Désactiver tous les nudges</button>
+          <button class="btn btn-primary" onclick="goToScreen(4)">Voir mes récompenses →</button>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+        <h3>Inviter, pas pousser</h3>
+        <p>Les nudges classiques exploitent la culpabilité (« tu n'as fait que 7 000 pas »). Ici, chaque nudge est <em>positif et opt-out</em>.</p>
+        <p>Le 3e nudge croise santé + gouvernance citoyenne (Gap 1 stratégique AgenticX5-City).</p>
+        <div class="agent-thought">
+          <span class="agent-thought-label">Pensée agentique</span>
+          Sami a tendance à oublier les pauses. Je propose, je n'impose pas. Conformité Loi 25 : opt-out total possible.
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-4">
+    <div class="layout">
+      <div class="main-panel">
+        <div class="screen-header">
+          <div class="screen-title">
+            <h2>Mes récompenses</h2>
+            <div class="subtitle">programme partenaires commerce transport actif</div>
+          </div>
+          <div class="screen-meta">
+            <div class="timestamp">08:11:09</div>
+            <div>3 récompenses débloquées</div>
+          </div>
+        </div>
+
+        <div class="section-title">Récompenses débloquées cette semaine</div>
+        <div class="partner-grid">
+          <div class="partner-card">
+            <div class="partner-name">Vélo Boutique Cycle Néron</div>
+            <div class="partner-type">Atelier réparation · Plateau</div>
+            <div class="partner-reward">- 15 % sur ton prochain entretien</div>
+          </div>
+          <div class="partner-card">
+            <div class="partner-name">Café Olimpico</div>
+            <div class="partner-type">Café-halte · Mile End</div>
+            <div class="partner-reward">Espresso offert après 5 trajets vélo</div>
+          </div>
+          <div class="partner-card">
+            <div class="partner-name">Marché Jean-Talon</div>
+            <div class="partner-type">Épicerie locale · Petite-Italie</div>
+            <div class="partner-reward">Panier de saison à - 10 $</div>
+          </div>
+        </div>
+
+        <div class="privacy-card">
+          <div class="privacy-title">→ Modèle économique transparent</div>
+          <div class="privacy-text">Les partenaires reçoivent uniquement <strong>des données agrégées et anonymisées</strong> (volume de trajets, heures de pointe). Aucune information individuelle n'est partagée. Les récompenses sont financées par la municipalité dans le cadre de son objectif transport actif.</div>
+        </div>
+
+        <div class="section-title">Programme dans ton arrondissement</div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-label">Partenaires actifs</div><div class="stat-value">47</div><div class="stat-trend">+ 12 ce mois-ci</div></div>
+          <div class="stat-card"><div class="stat-label">Récompenses utilisées</div><div class="stat-value">2 318</div><div class="stat-trend">par les Rosemontois</div></div>
+          <div class="stat-card good"><div class="stat-label">CO₂ évité collectif</div><div class="stat-value">8,4 t</div><div class="stat-trend">cette semaine</div></div>
+          <div class="stat-card"><div class="stat-label">Économie partenaires</div><div class="stat-value">14 k$</div><div class="stat-trend">CA moyen / mois</div></div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+          <button class="btn">Voir tous les partenaires</button>
+          <button class="btn btn-primary" onclick="goToScreen(5)">Gérer mes données →</button>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+        <h3>L'écosystème Gap 3 incarné</h3>
+        <p>C'est ici que se matérialise concrètement la stratégie Gap 3 : les vélo-boutiques, cafés-haltes et épiceries locales <em>monétisent</em> indirectement le module CitaVital.</p>
+        <p>Sami gagne, les partenaires commerciaux gagnent, la ville atteint ses objectifs CO₂. Pas de surveillance individuelle.</p>
+        <div class="agent-thought">
+          <span class="agent-thought-label">Pensée agentique</span>
+          47 partenaires Rosemont. Programme financé par la ville, pas par la vente de données.
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-5">
+    <div class="layout">
+      <div class="main-panel">
+        <div class="screen-header">
+          <div class="screen-title">
+            <h2>Mes données, mes règles</h2>
+            <div class="subtitle">conformité Loi 25 Québec · contrôle granulaire</div>
+          </div>
+          <div class="screen-meta">
+            <div class="timestamp">08:18:54</div>
+            <div>dernière révision : 12 mars</div>
+          </div>
+        </div>
+
+        <div class="privacy-card">
+          <div class="privacy-title">→ Ce que CitaVital sait sur toi</div>
+          <div class="privacy-text">
+            Tes <strong>trajets cyclistes</strong> (Garmin), ton <strong>code postal</strong> et ton <strong>arrondissement</strong>. Rien d'autre. Pas de nom complet, pas de numéro d'assurance maladie, pas de revenus, pas de profil santé détaillé.
+          </div>
+        </div>
+
+        <div class="section-title">Mes consentements actifs</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;">
+          <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; justify-content: space-between; align-items: center;">
+            <div><div style="color: var(--text); font-weight: 500; font-size: 14px;">Synchronisation Garmin Connect</div><div style="color: var(--text-muted); font-size: 12px; font-family: 'JetBrains Mono', monospace; margin-top: 4px;">trajets vélo et marche</div></div>
+            <span style="background: var(--success-dim); color: var(--success); padding: 6px 14px; border-radius: 6px; font-size: 11px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em;">activé</span>
+          </div>
+          <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; justify-content: space-between; align-items: center;">
+            <div><div style="color: var(--text); font-weight: 500; font-size: 14px;">Données agrégées au programme partenaires</div><div style="color: var(--text-muted); font-size: 12px; font-family: 'JetBrains Mono', monospace; margin-top: 4px;">anonymisées · jamais individuelles</div></div>
+            <span style="background: var(--success-dim); color: var(--success); padding: 6px 14px; border-radius: 6px; font-size: 11px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em;">activé</span>
+          </div>
+          <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; justify-content: space-between; align-items: center;">
+            <div><div style="color: var(--text); font-weight: 500; font-size: 14px;">Notifications push</div><div style="color: var(--text-muted); font-size: 12px; font-family: 'JetBrains Mono', monospace; margin-top: 4px;">3 nudges max / jour · pas après 21 h</div></div>
+            <span style="background: var(--success-dim); color: var(--success); padding: 6px 14px; border-radius: 6px; font-size: 11px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em;">activé</span>
+          </div>
+          <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; justify-content: space-between; align-items: center;">
+            <div><div style="color: var(--text); font-weight: 500; font-size: 14px;">Recherche académique anonymisée</div><div style="color: var(--text-muted); font-size: 12px; font-family: 'JetBrains Mono', monospace; margin-top: 4px;">UdeM · études santé urbaine</div></div>
+            <span style="background: var(--bg); color: var(--text-muted); padding: 6px 14px; border-radius: 6px; font-size: 11px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em;">désactivé</span>
+          </div>
+        </div>
+
+        <div class="section-title">Inscrit dans l'AI Register Montréal</div>
+        <div style="background: var(--bg-card); border: 1px solid var(--accent); border-radius: 10px; padding: 16px 20px; margin-bottom: 24px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">→ Transparence publique Gap 2</div>
+          <div style="color: var(--text); font-size: 13px; line-height: 1.6;">Tous les algorithmes utilisés par CitaVital — recommandation d'itinéraire, scoring santé, sélection de nudges — sont publiés sur l'AI Register de la Ville de Montréal. Tu peux consulter leur finalité, leurs entrées, leurs limites.</div>
+          <a href="#" style="color: var(--accent); font-size: 12px; font-family: 'JetBrains Mono', monospace; text-decoration: none; margin-top: 12px; display: inline-block;">→ ai-register.montreal.ca/citavital</a>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: space-between;">
+          <button class="btn" style="border-color: var(--danger); color: var(--danger);">Effacer toutes mes données</button>
+          <button class="btn">Télécharger mes données (.json)</button>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+        <h3>Loi 25 vécue, pas affichée</h3>
+        <p>La plupart des apps « mettent un lien vers leurs CGU ». CitaVital fait l'inverse : <em>les contrôles sont l'écran</em>.</p>
+        <p>Le lien AI Register matérialise concrètement le Gap 2 stratégique. Sami peut auditer ce que l'agent fait avec ses données.</p>
+        <div class="agent-thought">
+          <span class="agent-thought-label">Pensée agentique</span>
+          Mes décisions sont auditables. Sami peut me désactiver à tout moment. C'est le contrat.
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <div class="footer-bar">
+    AX5-CitaVital · maquette utilisateur v1.0 · 17 avril 2026 · <a href="https://github.com/Preventera">github.com/Preventera</a>
+  </div>
+
+</div>
+
+<script>
+  function goToScreen(n) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('screen-' + n).classList.add('active');
+    document.querySelector('.nav-btn[data-screen="' + n + '"]').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => goToScreen(btn.dataset.screen));
+  });
+</script>
+
+</body>
+</html>

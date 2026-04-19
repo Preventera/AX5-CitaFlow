@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AX5-CitaFlow — Maître d'œuvre (Persona C.3 · LSST)</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0e1a;
+    --bg-elev: #121829;
+    --bg-card: #1a2138;
+    --bg-input: #0f1422;
+    --border: rgba(232, 236, 240, 0.08);
+    --border-strong: rgba(232, 236, 240, 0.18);
+    --text: #e8ecf0;
+    --text-muted: #8b95a7;
+    --text-dim: #6b7688;
+    --accent: #00d4ff;
+    --accent-dim: rgba(0, 212, 255, 0.15);
+    --warn: #ff6b35;
+    --warn-dim: rgba(255, 107, 53, 0.15);
+    --success: #4ade80;
+    --success-dim: rgba(74, 222, 128, 0.15);
+    --danger: #f87171;
+    --danger-dim: rgba(248, 113, 113, 0.15);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .container { max-width: 1400px; margin: 0 auto; }
+
+  .meta-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .meta-bar .meta-title { color: var(--accent); }
+  .meta-bar .meta-persona { color: var(--text); }
+  .meta-bar .meta-workflow { color: var(--warn); }
+
+  .nav-screens {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .nav-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-align: left;
+    transition: all 0.15s ease;
+    line-height: 1.4;
+  }
+
+  .nav-btn:hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+    background: var(--bg-card);
+  }
+
+  .nav-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .nav-btn .nav-num { display: block; font-size: 10px; margin-bottom: 4px; opacity: 0.7; }
+  .nav-btn .nav-label { display: block; font-weight: 500; }
+
+  .screen { display: none; animation: fadeIn 0.3s ease; }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .portal-shell {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .portal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .portal-title h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .portal-title .breadcrumb {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .portal-title .breadcrumb .crumb-active { color: var(--accent); }
+
+  .portal-meta {
+    text-align: right;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.7;
+  }
+
+  .portal-meta .user { color: var(--text); }
+  .portal-meta .conform { color: var(--success); font-weight: 500; }
+
+  .portal-body {
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
+  }
+
+  @media (max-width: 1100px) {
+    .portal-body { grid-template-columns: 1fr; }
+  }
+
+  .compliance-banner {
+    background: linear-gradient(135deg, var(--success-dim) 0%, transparent 100%);
+    border: 1px solid var(--success);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .compliance-banner.warn {
+    background: linear-gradient(135deg, var(--warn-dim) 0%, transparent 100%);
+    border-color: var(--warn);
+  }
+
+  .compliance-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--success);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg);
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .compliance-icon.warn { background: var(--warn); }
+
+  .compliance-content { flex: 1; }
+  .compliance-content .comp-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+  .compliance-content .comp-detail {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .compliance-content .comp-detail strong { color: var(--success); font-weight: 500; }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 768px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .stat-card .stat-label {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  .stat-card .stat-value {
+    color: var(--text);
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  .stat-card .stat-trend {
+    color: var(--text-dim);
+    font-size: 11px;
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .stat-card .stat-value.success { color: var(--success); }
+  .stat-card .stat-value.warn { color: var(--warn); }
+  .stat-card .stat-value.danger { color: var(--danger); }
+
+  .section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin: 24px 0 12px;
+  }
+
+  .obligation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .obligation-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--success);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .obligation-item.warn { border-left-color: var(--warn); }
+  .obligation-item.danger { border-left-color: var(--danger); }
+
+  .obligation-status {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--success);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .obligation-status.warn { background: var(--warn); }
+  .obligation-status.danger { background: var(--danger); }
+
+  .obligation-content { flex: 1; }
+  .obligation-title { color: var(--text); font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .obligation-detail {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .obligation-meta {
+    text-align: right;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .obligation-meta .ref { color: var(--accent); }
+
+  .evidence-pack {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+
+  .pack-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pack-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+
+  .pack-subtitle {
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .pack-status {
+    background: var(--success-dim);
+    color: var(--success);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+  }
+
+  .pack-items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 768px) { .pack-items { grid-template-columns: 1fr; } }
+
+  .pack-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg-elev);
+    border-radius: 8px;
+  }
+
+  .pack-check {
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--success);
+    border-radius: 4px;
+    background: var(--success-dim);
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .pack-check::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 6px;
+    width: 4px;
+    height: 9px;
+    border-right: 2px solid var(--success);
+    border-bottom: 2px solid var(--success);
+    transform: rotate(45deg);
+  }
+
+  .pack-item-text {
+    color: var(--text);
+    font-size: 12px;
+    flex: 1;
+  }
+
+  .pack-item-ref {
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+  }
+
+  .alert-art198 {
+    background: var(--warn-dim);
+    border: 1px solid var(--warn);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+  }
+
+  .alert-art198 .alert-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--warn);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .alert-art198 .alert-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .alert-art198 .alert-detail {
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .alert-art198 .alert-detail strong { color: var(--warn); }
+
+  .alert-cta {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn {
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+  }
+
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  .btn-primary:hover { background: transparent; color: var(--accent); }
+
+  .btn-warn {
+    background: var(--warn);
+    color: var(--bg);
+    border-color: var(--warn);
+  }
+
+  .standards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 768px) { .standards-grid { grid-template-columns: 1fr; } }
+
+  .standard-pill {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+  }
+
+  .standard-name {
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+  }
+
+  .standard-status {
+    color: var(--success);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .standard-status.warn { color: var(--warn); }
+
+  .audit-trail {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .audit-trail .audit-line { margin-bottom: 4px; }
+  .audit-trail .audit-key { color: var(--accent); }
+  .audit-trail .audit-val { color: var(--text); }
+
+  .impact-banner {
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 20px 24px;
+  }
+
+  .impact-banner .imp-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .impact-banner .imp-text {
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .impact-banner .imp-text strong { color: var(--accent); font-weight: 500; }
+
+  .side-panel {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    align-self: start;
+    position: sticky;
+    top: 20px;
+  }
+
+  .side-panel-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .side-panel h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .side-panel p {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .legal-quote {
+    background: var(--bg-card);
+    border-left: 3px solid var(--warn);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    font-family: 'Instrument Serif', serif;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+    font-style: italic;
+    margin-top: 14px;
+  }
+
+  .legal-quote .quote-source {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--warn);
+    margin-top: 8px;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .agent-list {
+    background: var(--bg-card);
+    border-left: 2px solid var(--accent);
+    padding: 12px 14px;
+    border-radius: 0 8px 8px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text);
+    margin-top: 14px;
+    line-height: 1.7;
+  }
+
+  .agent-list .agent-line { display: flex; justify-content: space-between; }
+  .agent-list .agent-name { color: var(--accent); }
+  .agent-list .agent-status { color: var(--text-muted); }
+
+  .footer-bar {
+    margin-top: 24px;
+    padding: 16px 20px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-align: center;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .footer-bar a { color: var(--accent); text-decoration: none; }
+  .footer-bar .roi-callout { color: var(--success); margin: 0 12px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="meta-bar">
+    <span><span class="meta-title">AX5-CitaFlow</span> · maquette persona maître d'œuvre</span>
+    <span>Persona <span class="meta-persona">C.3 — Maître d'œuvre · LSST art. 198</span></span>
+    <span>Workflow <span class="meta-workflow">EvidenceBuilder + QHSECopilot + SafetyAgentic</span></span>
+  </div>
+
+  <nav class="nav-screens">
+    <button class="nav-btn active" data-screen="1">
+      <span class="nav-num">01 / 03 — vue conformité</span>
+      <span class="nav-label">Tableau de bord obligations</span>
+    </button>
+    <button class="nav-btn" data-screen="2">
+      <span class="nav-num">02 / 03 — alerte critique</span>
+      <span class="nav-label">Programme prévention expiré</span>
+    </button>
+    <button class="nav-btn" data-screen="3">
+      <span class="nav-num">03 / 03 — pack évidence</span>
+      <span class="nav-label">Audit-ready 1 clic</span>
+    </button>
+  </nav>
+
+  <section class="screen active" id="screen-1">
+    <div class="portal-shell">
+      <div class="portal-header">
+        <div class="portal-title">
+          <h1>Pomerleau · maître d'œuvre · 12 chantiers actifs MTL</h1>
+          <div class="breadcrumb">AX5-CitaFlow · <span class="crumb-active">portail conformité maître d'œuvre</span></div>
+        </div>
+        <div class="portal-meta">
+          <div class="user">Patrick Lavoie · directeur SST</div>
+          <div>Pomerleau Construction · Montréal</div>
+          <div class="conform">conformité globale 96 %</div>
+        </div>
+      </div>
+
+      <div class="portal-body">
+        <div>
+          <div class="compliance-banner">
+            <div class="compliance-icon">✓</div>
+            <div class="compliance-content">
+              <div class="comp-title">Conformité multi-juridictionnelle maintenue</div>
+              <div class="comp-detail">
+                <strong>Tous les programmes de prévention LSST art. 198 en règle</strong> sur 11 des 12 chantiers actifs.
+                Comité SST multi-employeurs documenté. Inspections à jour. Aucune amende CNESST en cours.
+              </div>
+            </div>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-label">Chantiers actifs</div>
+              <div class="stat-value">12</div>
+              <div class="stat-trend">11 conformes · 1 attention</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Programmes prévention</div>
+              <div class="stat-value success">11 / 12</div>
+              <div class="stat-trend">LSST art. 198</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Comités SST</div>
+              <div class="stat-value success">12 / 12</div>
+              <div class="stat-trend">multi-employeurs</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Packs audit prêts</div>
+              <div class="stat-value">147</div>
+              <div class="stat-trend">générés ce mois</div>
+            </div>
+          </div>
+
+          <div class="section-title">Obligations LSST · suivi en temps réel</div>
+
+          <div class="obligation-list">
+            <div class="obligation-item">
+              <div class="obligation-status">✓</div>
+              <div class="obligation-content">
+                <div class="obligation-title">Programme de prévention actif (art. 198)</div>
+                <div class="obligation-detail">11 / 12 chantiers · révision annuelle obligatoire</div>
+              </div>
+              <div class="obligation-meta">
+                <div class="ref">LSST art. 198</div>
+                <div>renouvelé 2026-01-15</div>
+              </div>
+            </div>
+
+            <div class="obligation-item">
+              <div class="obligation-status">✓</div>
+              <div class="obligation-content">
+                <div class="obligation-title">Comité SST multi-employeurs constitué</div>
+                <div class="obligation-detail">Réunions mensuelles documentées · procès-verbaux signés</div>
+              </div>
+              <div class="obligation-meta">
+                <div class="ref">LSST art. 209</div>
+                <div>dernière réunion 2026-04-12</div>
+              </div>
+            </div>
+
+            <div class="obligation-item warn">
+              <div class="obligation-status warn">!</div>
+              <div class="obligation-content">
+                <div class="obligation-title">Programme prévention chantier Saint-Denis</div>
+                <div class="obligation-detail">Expiration imminente · à renouveler avant 2026-04-25</div>
+              </div>
+              <div class="obligation-meta">
+                <div class="ref">LSST art. 198</div>
+                <div style="color: var(--warn);">7 jours restants</div>
+              </div>
+            </div>
+
+            <div class="obligation-item">
+              <div class="obligation-status">✓</div>
+              <div class="obligation-content">
+                <div class="obligation-title">Inspections périodiques chantier (art. 215)</div>
+                <div class="obligation-detail">12 / 12 chantiers · fréquence hebdomadaire respectée</div>
+              </div>
+              <div class="obligation-meta">
+                <div class="ref">LSST art. 215</div>
+                <div>dernier rapport 2026-04-16</div>
+              </div>
+            </div>
+
+            <div class="obligation-item">
+              <div class="obligation-status">✓</div>
+              <div class="obligation-content">
+                <div class="obligation-title">Surveillance qualifiée chantiers > 25 travailleurs</div>
+                <div class="obligation-detail">8 chantiers concernés · surveillants accrédités CNESST</div>
+              </div>
+              <div class="obligation-meta">
+                <div class="ref">LSST art. 217</div>
+                <div>accréditations valides</div>
+              </div>
+            </div>
+
+            <div class="obligation-item">
+              <div class="obligation-status">✓</div>
+              <div class="obligation-content">
+                <div class="obligation-title">Plans signalisation Tome V MTQ</div>
+                <div class="obligation-detail">12 / 12 chantiers · validation automatique PrudenceAI</div>
+              </div>
+              <div class="obligation-meta">
+                <div class="ref">Tome V MTQ</div>
+                <div>conformité 100 %</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title">Standards et normes intégrés</div>
+
+          <div class="standards-grid">
+            <div class="standard-pill"><span class="standard-name">LSST</span><span class="standard-status">conforme</span></div>
+            <div class="standard-pill"><span class="standard-name">CSTC</span><span class="standard-status">conforme</span></div>
+            <div class="standard-pill"><span class="standard-name">RSST</span><span class="standard-status">conforme</span></div>
+            <div class="standard-pill"><span class="standard-name">LMRSST</span><span class="standard-status">conforme</span></div>
+            <div class="standard-pill"><span class="standard-name">CSA Z797 (chutes)</span><span class="standard-status">conforme</span></div>
+            <div class="standard-pill"><span class="standard-name">CSA Z150 (grues)</span><span class="standard-status">conforme</span></div>
+            <div class="standard-pill"><span class="standard-name">ASME B30</span><span class="standard-status">conforme</span></div>
+            <div class="standard-pill"><span class="standard-name">Tome V MTQ</span><span class="standard-status">conforme</span></div>
+            <div class="standard-pill"><span class="standard-name">ISO 45001</span><span class="standard-status">conforme</span></div>
+          </div>
+        </div>
+
+        <aside class="side-panel">
+          <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+          <h3>Le maître d'œuvre, ligne de défense légale</h3>
+          <p>Patrick est responsable juridiquement et pénalement de la conformité SST sur ses 12 chantiers. Une amende CNESST peut atteindre 600 000 $ par infraction, et engage la responsabilité personnelle des dirigeants.</p>
+          <p>AX5-CitaFlow surveille 24/7 les obligations et alerte avant les expirations.</p>
+          <div class="legal-quote">
+            « Le maître d'œuvre élabore et met en application un programme de prévention propre au chantier. »
+            <span class="quote-source">LSST · article 198</span>
+          </div>
+          <div class="agent-list">
+            <div class="agent-line"><span class="agent-name">EvidenceBuilder</span><span class="agent-status">collecte preuves</span></div>
+            <div class="agent-line"><span class="agent-name">QHSECopilot</span><span class="agent-status">conformité</span></div>
+            <div class="agent-line"><span class="agent-name">SafetyAgentic</span><span class="agent-status">analyse culture</span></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-2">
+    <div class="portal-shell">
+      <div class="portal-header">
+        <div class="portal-title">
+          <h1>Alerte conformité critique</h1>
+          <div class="breadcrumb">EvidenceBuilder · <span class="crumb-active">notification automatique LSST art. 198</span></div>
+        </div>
+        <div class="portal-meta">
+          <div class="user">détecté il y a 2 h</div>
+          <div>SafetyGraph · trace PROV-O</div>
+          <div style="color: var(--warn);">action requise &lt; 7 j</div>
+        </div>
+      </div>
+
+      <div class="portal-body">
+        <div>
+          <div class="compliance-banner warn">
+            <div class="compliance-icon warn">!</div>
+            <div class="compliance-content">
+              <div class="comp-title">Programme de prévention chantier Saint-Denis · expiration imminente</div>
+              <div class="comp-detail">
+                Le programme arrive à échéance le <strong style="color: var(--warn);">25 avril 2026</strong>. Sans renouvellement, le chantier
+                tombe en non-conformité LSST art. 198 et SafetyGraph flagera automatiquement la zone urbaine adjacente comme « risque élevé ».
+              </div>
+            </div>
+          </div>
+
+          <div class="alert-art198">
+            <div class="alert-eyebrow">— action recommandée par EvidenceBuilder —</div>
+            <div class="alert-title">Renouvellement 1 clic disponible</div>
+            <div class="alert-detail">
+              EvidenceBuilder a pré-rempli un nouveau programme de prévention basé sur les <strong>11 inspections antérieures</strong>,
+              les <strong>4 risques résiduels identifiés</strong>, et les <strong>conditions du permis 2026-MTL-58291</strong>. Patrick doit valider et signer électroniquement.
+            </div>
+            <div class="alert-cta">
+              <button class="btn">Voir détails risques</button>
+              <button class="btn-warn">Renouveler maintenant →</button>
+            </div>
+          </div>
+
+          <div class="section-title">Composantes du programme pré-rempli (LSST art. 198)</div>
+
+          <div class="evidence-pack">
+            <div class="pack-header">
+              <div>
+                <div class="pack-title">Programme de prévention chantier · Saint-Denis aqueduc</div>
+                <div class="pack-subtitle">v2.0 · généré automatiquement · 18 avril 2026</div>
+              </div>
+              <span class="pack-status">prêt à signer</span>
+            </div>
+
+            <div class="pack-items">
+              <div class="pack-item">
+                <div class="pack-check"></div>
+                <div class="pack-item-text">Identification risques (chutes, électricité, gaz)</div>
+                <div class="pack-item-ref">art. 198.1</div>
+              </div>
+              <div class="pack-item">
+                <div class="pack-check"></div>
+                <div class="pack-item-text">Mesures correctives par type de risque</div>
+                <div class="pack-item-ref">art. 198.2</div>
+              </div>
+              <div class="pack-item">
+                <div class="pack-check"></div>
+                <div class="pack-item-text">Programme formation travailleurs</div>
+                <div class="pack-item-ref">art. 198.3</div>
+              </div>
+              <div class="pack-item">
+                <div class="pack-check"></div>
+                <div class="pack-item-text">Procédures inspection périodique</div>
+                <div class="pack-item-ref">art. 215</div>
+              </div>
+              <div class="pack-item">
+                <div class="pack-check"></div>
+                <div class="pack-item-text">Liste équipements protection individuelle</div>
+                <div class="pack-item-ref">RSST</div>
+              </div>
+              <div class="pack-item">
+                <div class="pack-check"></div>
+                <div class="pack-item-text">Plan d'intervention urgence (chimique, électrique)</div>
+                <div class="pack-item-ref">CSTC</div>
+              </div>
+              <div class="pack-item">
+                <div class="pack-check"></div>
+                <div class="pack-item-text">Comité SST multi-employeurs · constitution</div>
+                <div class="pack-item-ref">art. 209</div>
+              </div>
+              <div class="pack-item">
+                <div class="pack-check"></div>
+                <div class="pack-item-text">Surveillance qualifiée · accréditations</div>
+                <div class="pack-item-ref">art. 217</div>
+              </div>
+            </div>
+
+            <div style="background: var(--bg-elev); border-radius: 8px; padding: 12px 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); line-height: 1.6;">
+              <strong style="color: var(--accent);">Génération automatique :</strong> données extraites de 47 inspections antérieures, 12 procès-verbaux comité SST, base CNESST 793 k incidents, normes LSST/RSST/CSTC à jour 2026.
+            </div>
+          </div>
+
+          <div class="impact-banner">
+            <div class="imp-eyebrow">— impact évité par AX5-CitaFlow —</div>
+            <div class="imp-text">
+              Sans cette alerte, Pomerleau aurait découvert l'expiration <strong>après le 25 avril</strong>, exposant l'entreprise à
+              <strong>une amende CNESST jusqu'à 600 000 $</strong> et à la responsabilité personnelle des dirigeants. Coût d'AX5-CitaFlow : zéro effort de la part du maître d'œuvre.
+            </div>
+          </div>
+        </div>
+
+        <aside class="side-panel">
+          <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+          <h3>L'invisible rendu visible</h3>
+          <p>Les programmes de prévention expirent silencieusement. Personne ne reçoit une enveloppe rouge le jour de l'expiration. C'est lors d'un audit ou d'un incident que la non-conformité éclate.</p>
+          <p>EvidenceBuilder rend ces obligations visibles, avec assez de marge pour agir.</p>
+          <div class="legal-quote">
+            « Le programme est révisé chaque année et chaque fois qu'un changement modifie de manière significative le contenu. »
+            <span class="quote-source">LSST · article 198 al. 4</span>
+          </div>
+          <div class="agent-list">
+            <div class="agent-line"><span class="agent-name">EvidenceBuilder</span><span class="agent-status">détection auto</span></div>
+            <div class="agent-line"><span class="agent-name">SafetyGraph</span><span class="agent-status">flag risque</span></div>
+            <div class="agent-line"><span class="agent-name">Pré-remplissage</span><span class="agent-status">11 inspections</span></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-3">
+    <div class="portal-shell">
+      <div class="portal-header">
+        <div class="portal-title">
+          <h1>Pack d'évidence audit-ready</h1>
+          <div class="breadcrumb">EvidenceBuilder · <span class="crumb-active">export audit CNESST · ISO 45001</span></div>
+        </div>
+        <div class="portal-meta">
+          <div class="user">généré 2026-04-18T14:23:08</div>
+          <div>signature électronique Patrick Lavoie</div>
+          <div class="conform">trace PROV-O archivée</div>
+        </div>
+      </div>
+
+      <div class="portal-body">
+        <div>
+          <div class="compliance-banner">
+            <div class="compliance-icon">📋</div>
+            <div class="compliance-content">
+              <div class="comp-title">Pack d'évidence complet · 147 documents</div>
+              <div class="comp-detail">
+                Tous les documents requis pour un audit CNESST surprise sont disponibles en <strong>1 clic</strong>.
+                Les liens PROV-O permettent de remonter à la source de chaque évidence (inspection, procès-verbal, formation, équipement).
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title">Composition du pack (147 documents)</div>
+
+          <div class="evidence-pack">
+            <div class="pack-header">
+              <div>
+                <div class="pack-title">Audit CNESST · 12 chantiers Pomerleau</div>
+                <div class="pack-subtitle">période janvier - avril 2026 · 147 documents · 312 Mo</div>
+              </div>
+              <span class="pack-status">prêt à exporter</span>
+            </div>
+
+            <div class="pack-items">
+              <div class="pack-item">
+                <div class="pack-check"></div>
+                <div class="pack-item-text">12 programmes de prévention signés</div>
+                <div class="pack-item-ref">art. 198</div>
+              </div>
+              <div class="pack-item">
+                <div class="pack-check"></div>
+                <div class="pack-item-text">48 procès-verbaux comité SST</div>
+                <div class="pack-item-ref">art. 209</div>
+              </div>
+              <div class="pack-item">
+                <div class="pack-check"></div>
+                <div class="pack-item-text">156 rapports inspection hebdo</div>
+                <div class="pack-item-ref">art. 215</div>
+              </div>
+              <div class="pack-item">
+                <div class="pack-check"></div>
+                <div class="pack-item-text">8 accréditations surveillance qualifiée</div>
+                <div class="pack-item-ref">art. 217</div>
+              </div>
+              <div class="pack-item">
+                <div class="pack-check"></div>
+                <div class="pack-item-text">23 attestations formation EPI</div>
+                <div class="pack-item-ref">RSST</div>
+              </div>
+              <div class="pack-item">
+                <div class="pack-check"></div>
+                <div class="pack-item-text">12 plans signalisation Tome V validés</div>
+                <div class="pack-item-ref">MTQ</div>
+              </div>
+              <div class="pack-item">
+                <div class="pack-check"></div>
+                <div class="pack-item-text">34 rapports incidents et quasi-accidents</div>
+                <div class="pack-item-ref">CNESST</div>
+              </div>
+              <div class="pack-item">
+                <div class="pack-check"></div>
+                <div class="pack-item-text">9 audits internes ISO 45001</div>
+                <div class="pack-item-ref">ISO 45001</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title">Trace PROV-O par chantier (1 exemple)</div>
+
+          <div class="audit-trail">
+            <div class="audit-line"><span class="audit-key">activity:</span> <span class="audit-val">prevention-program-renewal</span></div>
+            <div class="audit-line"><span class="audit-key">chantier:</span> <span class="audit-val">2026-MTL-58291 · Saint-Denis aqueduc</span></div>
+            <div class="audit-line"><span class="audit-key">wasGeneratedBy:</span> <span class="audit-val">EvidenceBuilder + QHSECopilot v2.4</span></div>
+            <div class="audit-line"><span class="audit-key">wasDerivedFrom:</span> <span class="audit-val">47_inspections, 12_pv_comite_sst, CNESST_RAG, normes_LSST_2026</span></div>
+            <div class="audit-line"><span class="audit-key">attributedTo:</span> <span class="audit-val">patrick.lavoie · Pomerleau · directeur SST</span></div>
+            <div class="audit-line"><span class="audit-key">atTime:</span> <span class="audit-val">2026-04-18T14:23:08-04:00</span></div>
+            <div class="audit-line"><span class="audit-key">signature:</span> <span class="audit-val">électronique certifiée AX5 · checksum SHA-256</span></div>
+            <div class="audit-line"><span class="audit-key">conformité:</span> <span class="audit-val">LSST art. 198, 209, 215, 217 · CSTC · ISO 45001 · Tome V MTQ</span></div>
+          </div>
+
+          <div style="display: flex; gap: 12px; justify-content: flex-end; margin-bottom: 24px;">
+            <button class="btn">Aperçu PDF</button>
+            <button class="btn">Envoyer à CNESST</button>
+            <button class="btn-primary">Télécharger pack complet</button>
+          </div>
+
+          <div class="impact-banner">
+            <div class="imp-eyebrow">— argument pitch IVÉO · critère #4 conformité/sécurité —</div>
+            <div class="imp-text">
+              AX5-CitaFlow ne se contente pas de surveiller la circulation urbaine. Il ferme la <strong>chaîne de responsabilité civile et pénale</strong>
+              en intégrant les obligations LSST des maîtres d'œuvre. Aucun autre soumissionnaire ne propose cette intégration urbaine ↔ chantier.
+              <strong>C'est de la prévention à la source.</strong>
+            </div>
+          </div>
+        </div>
+
+        <aside class="side-panel">
+          <div class="side-panel-eyebrow">Pourquoi cet écran</div>
+          <h3>Audit-ready en 0 effort</h3>
+          <p>Les inspecteurs CNESST peuvent débarquer sans préavis. Préparer un audit prend habituellement 2 à 5 jours-personne. Avec AX5-CitaFlow, c'est 1 clic.</p>
+          <p>Le pack contient toutes les évidences signées électroniquement, avec leurs traces PROV-O complètes. Aucun document à reconstituer.</p>
+          <div class="legal-quote">
+            « Le maître d'œuvre tient à la disposition de la Commission, sur les lieux du chantier, le programme de prévention et tous les documents s'y rapportant. »
+            <span class="quote-source">LSST · article 198 al. 5</span>
+          </div>
+          <div class="agent-list">
+            <div class="agent-line"><span class="agent-name">Pack</span><span class="agent-status">147 docs</span></div>
+            <div class="agent-line"><span class="agent-name">Génération</span><span class="agent-status">1 clic</span></div>
+            <div class="agent-line"><span class="agent-name">Risque évité</span><span class="agent-status">600 k$ amende</span></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-bar">
+    AX5-CitaFlow · maquette persona C.3 · LSST art. 198 EvidenceBuilder + QHSECopilot
+    <span class="roi-callout">· ROI : 0 non-conformité LSST · packs audit-ready 1 clic · risque évité 600 k$ amende ·</span>
+    <a href="https://github.com/Preventera/AX5-UrbanIA">github.com/Preventera/AX5-UrbanIA</a>
+  </div>
+
+</div>
+
+<script>
+  function goToScreen(n) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('screen-' + n).classList.add('active');
+    document.querySelector('.nav-btn[data-screen="' + n + '"]').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => goToScreen(btn.dataset.screen));
+  });
+</script>
+
+</body>
+</html>
