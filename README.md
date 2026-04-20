@@ -1,7 +1,7 @@
 # AX5-CitaFlow — Dossier de positionnement commercial
 
 **Dépôt privé** · Innoventera Inc. · AgenticX5
-**Version actuelle** : v1.10 · 19 avril 2026
+**Version actuelle** : v1.11 · 20 avril 2026
 
 ---
 
@@ -57,6 +57,9 @@ AX5-CitaFlow/
 ├── 07-archives-versions/                 # Versions antérieures conservées
 │   └── AX5-CitaFlow_5Questions_Webinaire_IVEO.md (v1 avant ajout Q3)
 │
+├── 08-budget/                            # Budget IVÉO (gabarit officiel)
+│   └── AX5-CitaFlow_Budget_IVEO_v1.xlsx (47 139,75 $ TTC)
+│
 ├── README.md                             # Ce fichier
 ├── LICENSE.md                            # Droits d'auteur canadiens
 ├── .gitignore                            # Exclusions Git
@@ -71,9 +74,10 @@ AX5-CitaFlow/
 |---|---|
 | **Samedi 19 avril 2026** | Dossier v1.10 finalisé (3 documents × 3 formats) |
 | **Week-end 19-20 avril** | Envoi LinkedIn à Alexandre Teodoresco (Conseiller Ville MTL) |
+| **Dimanche 20 avril 2026** | Dossier v1.11 produit (ancrage chantiers officiels IVÉO + budget Excel) |
 | **Lundi 21 avril matin** | Envoi email formel à Teodoresco |
 | **Lundi 21 avril 10h-11h** | Webinaire IVÉO (6 questions préparées) |
-| **Lundi 21 avril après-midi** | Intégration réponses webinaire dans v1.11 |
+| **Lundi 21 avril après-midi** | Intégration réponses webinaire dans version suivante |
 | **Jeudi 1er mai 2026** | **Soumission officielle du dossier IVÉO** |
 | **Jeudi 8 mai 2026** | Annonce de présélection par IVÉO |
 | **15-19 mai 2026** | Pitch au jury (si présélectionné) |
@@ -83,7 +87,7 @@ AX5-CitaFlow/
 
 ## 📈 Historique des versions
 
-Le one-pager a traversé **10 itérations majeures** avec un total de **31 corrections substantielles** intégrées :
+Le one-pager a traversé **11 itérations majeures** :
 
 | Version | Date | Changements principaux |
 |---|---|---|
@@ -97,7 +101,8 @@ Le one-pager a traversé **10 itérations majeures** avec un total de **31 corre
 | v1.7 | 19 avril | Écosystème 3 produits (PREDIAG/SafeTwin/GATES) + droits d'auteur canadiens |
 | v1.8 | 19 avril | Positionnement plateforme + annexe données + scope PREDIAG-X5 |
 | v1.9 | 19 avril | Cita + voix citoyenne 311 + modèle 5 sources + roadmap trimestrielle |
-| **v1.10** | **19 avril** | **17 corrections sur 3 vagues + annexe spécifications techniques** |
+| v1.10 | 19 avril | 17 corrections sur 3 vagues + annexe spécifications techniques |
+| **v1.11** | **20 avril** | **Ancrage chantiers officiels IVÉO (4 chantiers réels) + CSEM + budget Excel 47 139,75 $ TTC** |
 
 Voir `CHANGELOG.md` pour le détail complet.
 

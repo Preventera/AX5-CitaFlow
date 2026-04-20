@@ -1,7 +1,7 @@
 # AX5-CitaFlow · Annexe données — Périmètre Laboratoire centre-ville
 
 **Document complémentaire au one-pager IVÉO Défi #5**
-**Version** : 1.1 · 19 avril 2026 *(ajout §9 Scénarios PREDIAG-X5)*
+**Version** : 1.2 · 19 avril 2026 *(intersections critiques basées sur chantiers officiels IVÉO + scénario réel coactivité 4 chantiers)*
 **Soumissionnaire** : Innoventera Inc. — AgenticX5
 
 ---
@@ -35,18 +35,20 @@ Les exemples de payloads ci-dessous sont **représentatifs** : ils sont construi
 | **Stations de métro** | 8 stations (lignes verte et orange) |
 | **Grands axes de circulation** | Saint-Laurent · Sainte-Catherine · René-Lévesque · Université · Peel · Crescent |
 
-### 1.2 Intersections critiques identifiées (exemples)
+### 1.2 Intersections critiques identifiées (basées sur les chantiers officiels IVÉO)
 
-Les intersections suivantes sont classées **critiques** pour notre pipeline en raison de la densité de flux et de l'historique d'incidents :
+Les intersections suivantes sont classées **critiques** pour notre pipeline, basées sur le document officiel IVÉO « Projets planifiés dans le secteur relevant du Laboratoire Centre-Ville » qui identifie les chantiers actifs pendant la période du pilote (juin-septembre 2026) :
 
-1. Saint-Laurent × Sainte-Catherine
-2. Saint-Laurent × René-Lévesque
-3. Université × Sainte-Catherine
-4. Peel × Sherbrooke
-5. Guy × Sherbrooke
-6. Crescent × Sainte-Catherine
+| Priorité | Intersection | Chantier(s) déclencheur(s) | Période |
+|:---:|---|---|---|
+| 🔴 **1** | **Peel × Sainte-Catherine** | Projet 503001 · Sainte-Catherine de Saint-Marc à Peel | Actif jusqu'au 13 nov 2026 |
+| 🔴 **2** | **Guy × Notre-Dame et Guy × Saint-Antoine** | Projet 22A27 · DRE Guy — réfection aqueduc | Mai à novembre 2026 |
+| 🔴 **3** | **Sainte-Catherine × Metcalfe** | Projet 20A10 · DRE Metcalfe — conduite en tunnel | En cours jusqu'à décembre 2026 |
+| 🔴 **4** | **Saint-Laurent × René-Lévesque** | Réhabilitation d'égouts René-Lévesque (Saint-Laurent à Saint-Dominique) | Été 2026 |
+| 🔴 **5** | **Robert-Bourassa × Saint-Jacques** | Réfection infrastructures souterraines Saint-Jacques | En cours jusqu'à décembre 2026 |
+| 🔴 **6** | **Pont Saint-Urbain** (Saint-Urbain × Viger / Saint-Antoine) | Réfection du pont Saint-Urbain | En cours jusqu'à novembre 2026 |
 
-Ces intersections servent de **points d'ancrage** pour l'instrumentation Phase 0 (caméras + compteurs IoT).
+Ces intersections servent de **points d'ancrage prioritaires** pour l'instrumentation Phase 0 (caméras + compteurs IoT) et sont alignées directement avec les chantiers officiellement planifiés par la Ville de Montréal. **Au moins 4 de ces 6 intersections accueilleront des chantiers actifs en continu pendant tout le pilote**, maximisant la pertinence du dispositif.
 
 ---
 
@@ -379,16 +381,20 @@ Les réponses obtenues lors du webinaire seront intégrées dans la version 2.0 
 
 Cette section détaille le scénario prototypé dans PREDIAG-X5 pour démontrer les capacités de simulation multi-agents et de transposition Alphaville. Elle illustre concrètement comment une situation urbaine à multiples parties prenantes est convertie en recommandation actionnable, puis normalisée pour les 75 villes du réseau IVÉO.
 
-### 9.1 Scénario prototypé — bris de conduite Saint-Laurent × coactivité grue tour
+### 9.1 Scénario prototypé — coactivité majeure centre-ville juillet-août 2026
+
+Scénario basé sur des **chantiers officiellement planifiés** par la Ville de Montréal dans le périmètre IVÉO (source : document officiel « Projets planifiés dans le secteur relevant du Laboratoire Centre-Ville »).
 
 | Dimension | Détail |
 |---|---|
-| **Contexte simulé** | Bris de conduite pluviale sur Saint-Laurent entre de la Gauchetière et Sainte-Catherine, simultané à l'érection d'une grue tour pour un chantier de tour résidentielle à 200 m |
-| **Périmètre géographique** | Saint-Laurent entre de la Gauchetière et Sainte-Catherine + périmètre chantier voisin (rayon 300 m) |
-| **Parties prenantes modélisées (11)** | Ville (voirie, permis, communication) · résidents du secteur · commerçants corridor Sainte-Catherine · commerçants Saint-Laurent · SPVM · SIM · Urgences-santé · livreurs commerciaux · BIXI (2 stations impactées) · usagers Waze · piétons/cyclistes réguliers |
-| **Entrées PREDIAG-X5** | 14 facteurs synergiques (A1-A7 + B1-B7) · historique SAAQ sur le périmètre (2019-2024) · incidents CNESST secteur construction récents · calendrier événementiel MTL (3 mois roulants) · météo prévue 7 jours · activité réseaux sociaux quartier |
-| **Sorties générées** | Probabilités par scénario décisionnel (statu quo vs fermeture coordonnée vs rerouting partiel vs report travaux) · recommandation d'action avec XAI · seuil HITL déclenché automatiquement · plan de communication multi-canaux pré-rédigé · matrice de risques par partie prenante |
-| **Valeur pour la Ville** | Temps de décision du Bureau des permis réduit de jours à minutes · anticipation des appels citoyens 311 · coordination préemptive SPVM/SIM/voirie · réduction des plaintes a posteriori |
+| **Contexte simulé (100 % réel)** | **Coactivité majeure juillet-août 2026** : 4 chantiers actifs simultanément à moins de 800 m les uns des autres — Sainte-Catherine de Saint-Marc à Peel (projet 503001 · réfection infrastructures souterraines et réaménagement), Guy entre Notre-Dame et Saint-Antoine (projet 22A27 · réfection aqueduc), Metcalfe de Sainte-Catherine à René-Lévesque (projet 20A10 · conduite en tunnel), Pont Saint-Urbain (réfection) |
+| **Périmètre géographique** | Quadrilatère Peel · Saint-Antoine · Saint-Urbain · Sainte-Catherine (~1,2 km²) |
+| **Parties prenantes modélisées (11)** | Ville (voirie, permis, communication, arrondissement Ville-Marie) · résidents du secteur · commerçants des 4 artères impactées · SPVM · SIM · Urgences-santé · livreurs commerciaux (restaurants du quartier) · BIXI (≥ 4 stations impactées) · usagers Waze · piétons et cyclistes réguliers · équipes entrepreneuses des 4 chantiers |
+| **Entrées PREDIAG-X5** | 14 facteurs synergiques (A1-A7 + B1-B7) · données AGIR officielles pour les 4 permis · historique SAAQ sur le périmètre (2019-2024) · incidents CNESST secteur construction (SCIAN 23) · calendrier événementiel MTL (Grand Prix juin, festivals été, rentrée scolaire) · météo prévue 7 jours · activité 311 citoyenne des 90 derniers jours |
+| **Sorties générées** | Probabilités par scénario décisionnel (statu quo vs fermeture coordonnée vs rerouting partiel vs report d'un des 4 chantiers) · recommandation d'action avec XAI · seuil HITL déclenché automatiquement · plan de communication multi-canaux pré-rédigé · matrice de risques par partie prenante · impact estimé sur temps de parcours STM/REM/automobile |
+| **Valeur pour la Ville** | Temps de décision du Bureau des permis réduit de jours à minutes · anticipation des appels citoyens 311 (estimation : réduction 40 %) · coordination préemptive SPVM/SIM/voirie/CSEM · réduction des plaintes a posteriori · argumentaire structuré pour communication politique |
+
+**Ancrage réel** : les 4 chantiers cités sont **officiellement documentés** par la Ville de Montréal dans le document fourni par IVÉO. Cela donne au scénario une crédibilité immédiate et démontre que notre approche est **directement applicable** dès le 1er juin 2026 sans attendre des événements hypothétiques.
 
 ### 9.2 Cheminement de transposition Alphaville
 

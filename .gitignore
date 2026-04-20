@@ -191,3 +191,8 @@ yarn-error.log*
 !02-annexe-donnees-perimetre/*.html
 !03-annexe-specifications-techniques/*.html
 !06-personas/*.html
+
+# =====================================
+# CLAUDE CODE — config locale
+# =====================================
+.claude/

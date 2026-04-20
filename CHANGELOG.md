@@ -7,6 +7,59 @@ Versions : numéros croissants sur le document principal (one-pager).
 
 ---
 
+## [1.11] — 2026-04-20 (Version post-analyse documents IVÉO officiels)
+
+### Vue d'ensemble
+
+Version enrichie suite à l'analyse des documents officiels IVÉO du 19 avril 2026. Le dossier est maintenant ancré à 100% sur les chantiers réels documentés par la Ville de Montréal pour le Laboratoire Centre-Ville.
+
+### Ajouté
+
+- **Scénario prototypé 100% réel** basé sur les chantiers officiels documentés par la Ville de Montréal dans le document IVÉO :
+  - Coactivité Sainte-Catherine (projet 503001) × Guy (projet 22A27) × Metcalfe (projet 20A10) × Pont Saint-Urbain
+  - 4 chantiers actifs simultanément juillet-août 2026
+  - Remplace le scénario fictif « bris de conduite × grue tour » de la v1.10
+
+- **6 intersections critiques repriorisées** selon les chantiers officiels :
+  1. Peel × Sainte-Catherine (chantier 503001, actif jusqu'à nov 2026)
+  2. Guy × Notre-Dame / Guy × Saint-Antoine (chantier 22A27 aqueduc, mai-nov 2026)
+  3. Sainte-Catherine × Metcalfe (chantier 20A10 conduite en tunnel, jusqu'à déc 2026)
+  4. Saint-Laurent × René-Lévesque (réhabilitation égouts, été 2026)
+  5. Robert-Bourassa × Saint-Jacques (jusqu'à décembre 2026)
+  6. Pont Saint-Urbain (jusqu'à novembre 2026)
+
+- **CSEM** (Commission des services électriques de Montréal) ajoutée à l'écosystème mobilité MTL dans §2 Impacts du one-pager.
+
+- **Preuve terrain ≥ 9 chantiers simultanés** pendant le pilote juin-septembre 2026 (source : document officiel IVÉO « Projets planifiés dans le secteur »).
+
+- **Budget Excel IVÉO** conforme au gabarit officiel :
+  - Total HT : 41 000,00 $
+  - TPS (5%) : 2 050,00 $
+  - TVQ (9,975%) : 4 089,75 $
+  - TOTAL TTC : 47 139,75 $ (sous plafond 50 000 $, marge sécurité 6%)
+  - 5 postes de dépenses imposés par IVÉO respectés
+  - 6 formules Excel dynamiques, 0 erreur de calcul
+  - Nouveau sous-dossier 08-budget/ dans le dépôt
+
+### Modifié
+
+- **One-pager** : phrase d'ouverture du bloc PREDIAG-X5 remplacée par référence au scénario réel 4 chantiers (au lieu de scénario fictif grue tour)
+- **Annexe 1 §1.2** : les 6 intersections critiques sont maintenant basées sur les chantiers officiels IVÉO (au lieu d'intersections hypothétiques)
+- **Annexe 1 §9.1** : tableau complet du scénario prototypé mis à jour avec les 4 chantiers réels
+- **Annexe 1 version** : v1.1 → v1.2
+- **One-pager version** : v1.10 → v1.11
+
+### Sources
+
+Documents officiels IVÉO consultés le 19 avril 2026 :
+- « Projets planifiés dans le secteur relevant du laboratoire Centre-Ville (Ville-Marie).pdf »
+- « Collecter en temps réel les données liées aux fermetures.docx » (FAQ vide à ce jour, sera alimentée pendant le webinaire du 21 avril)
+- « Gabarit montage financier.xlsx »
+
+Note : l'Annexe 2 (Spécifications techniques v1.0) reste inchangée en v1.11 — pas de modification nécessaire.
+
+---
+
 ## [1.10] — 2026-04-19 (Version finale pour soumission)
 
 ### Vue d'ensemble

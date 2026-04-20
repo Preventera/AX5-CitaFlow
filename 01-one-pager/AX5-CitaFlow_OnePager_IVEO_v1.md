@@ -3,7 +3,7 @@
 **One-pager recto-verso · Laboratoire centre-ville Montréal**
 **Soumissionnaire** : Innoventera Inc. — AgenticX5 · Montréal (CMM)
 **Date de soumission** : 1er mai 2026
-**Version** : 1.10 *(version finale · 3 vagues complétées · 17 corrections intégrées)*
+**Version** : 1.11 *(enrichissement docs IVÉO officiels : scénario réel + CSEM + coactivité 9 chantiers documentés)*
 
 ---
 
@@ -167,7 +167,7 @@ PREDIAG-X5 va bien au-delà de la détection d'incidents. Il outille la Ville et
 
 ### Exemple de scénario IVÉO modélisé — aperçu
 
-Un scénario a été prototypé : **bris de conduite Saint-Laurent × coactivité grue tour** sur le périmètre du Laboratoire centre-ville. Il démontre concrètement comment PREDIAG-X5 transforme une situation à multiples parties prenantes en recommandation actionnable, puis comment cette sortie **se normalise vers Alphaville** pour évaluer la transposabilité aux autres villes IVÉO.
+Un scénario a été prototypé à partir des **chantiers officiellement planifiés par la Ville de Montréal** dans le périmètre IVÉO : **coactivité réelle Sainte-Catherine (503001) × Guy (22A27) × Metcalfe (20A10) × Pont Saint-Urbain** — 4 chantiers à fort impact actifs simultanément pendant juillet-août 2026. Le scénario démontre concrètement comment PREDIAG-X5 transforme cette situation réelle en recommandation actionnable, puis comment cette sortie **se normalise vers Alphaville** pour évaluer la transposabilité aux autres villes IVÉO.
 
 *Tableau détaillé du scénario, entrées, sorties, et cheminement de transposition Alphaville : voir **annexe AX5-CitaFlow_Annexe_Donnees_Perimetre_v1**, section Scénarios PREDIAG-X5.*
 
@@ -197,7 +197,9 @@ Un scénario a été prototypé : **bris de conduite Saint-Laurent × coactivit�
 
 ### 2️⃣ Impacts — pour la Ville et pour les usagers
 
-**Insertion dans l'écosystème mobilité de la Ville de Montréal** : AX5-CitaFlow ne remplace pas les acteurs établis, il **s'insère dans l'écosystème mobilité existant** et en amplifie l'intelligence collective. Les interlocuteurs institutionnels concernés par le pilote incluent le **STM** (réseau de métro et bus), le **REM** (Réseau express métropolitain), l'**ARTM** (Autorité régionale de transport métropolitain), le **MTQ** (Ministère des Transports du Québec — axes provinciaux en centre-ville), la **Division mobilité du SPVM**, ainsi que les opérateurs de **taxis**, **micromobilité** (trottinettes, Lime, Bird) et **mobilité partagée** (BIXI, Communauto, Uber, Lyft). Chacun de ces acteurs est un **consommateur potentiel des sorties temps réel** d'AX5-CitaFlow (via GTFS-RT, GBFS, Waze CIFS ou API municipales).
+**Insertion dans l'écosystème mobilité de la Ville de Montréal** : AX5-CitaFlow ne remplace pas les acteurs établis, il **s'insère dans l'écosystème mobilité existant** et en amplifie l'intelligence collective. Les interlocuteurs institutionnels concernés par le pilote incluent le **STM** (réseau de métro et bus), le **REM** (Réseau express métropolitain), l'**ARTM** (Autorité régionale de transport métropolitain), le **MTQ** (Ministère des Transports du Québec — axes provinciaux en centre-ville), la **CSEM** (Commission des services électriques de Montréal — coordination éclairage et infrastructures souterraines), la **Division mobilité du SPVM**, ainsi que les opérateurs de **taxis**, **micromobilité** (trottinettes, Lime, Bird) et **mobilité partagée** (BIXI, Communauto, Uber, Lyft). Chacun de ces acteurs est un **consommateur potentiel des sorties temps réel** d'AX5-CitaFlow (via GTFS-RT, GBFS, Waze CIFS ou API municipales).
+
+**Contexte terrain validé** : selon le document officiel IVÉO « Projets planifiés dans le secteur relevant du Laboratoire Centre-Ville », le périmètre accueillera **au moins 9 chantiers actifs simultanément** pendant le pilote juin-septembre 2026 (réfections infrastructures souterraines, aqueduc, conduites en tunnel, réhabilitations d'égouts, pont Saint-Urbain, etc.). Cette coactivité majeure valide la pertinence opérationnelle immédiate d'un orchestrateur agentique comme AX5-CitaFlow.
 
 **Bénéfices pour la Ville (opérationnels)** :
 
