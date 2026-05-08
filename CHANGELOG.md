@@ -1,252 +1,134 @@
-# CHANGELOG — AX5-CitaFlow
+# 📋 CHANGELOG — CityFlow-X5
 
-Toutes les modifications notables de ce dossier de positionnement sont documentées dans ce fichier.
-
-Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/)
-Versions : numéros croissants sur le document principal (one-pager).
-
----
-
-## [1.11] — 2026-04-20 (Version post-analyse documents IVÉO officiels)
-
-### Vue d'ensemble
-
-Version enrichie suite à l'analyse des documents officiels IVÉO du 19 avril 2026. Le dossier est maintenant ancré à 100% sur les chantiers réels documentés par la Ville de Montréal pour le Laboratoire Centre-Ville.
-
-### Ajouté
-
-- **Scénario prototypé 100% réel** basé sur les chantiers officiels documentés par la Ville de Montréal dans le document IVÉO :
-  - Coactivité Sainte-Catherine (projet 503001) × Guy (projet 22A27) × Metcalfe (projet 20A10) × Pont Saint-Urbain
-  - 4 chantiers actifs simultanément juillet-août 2026
-  - Remplace le scénario fictif « bris de conduite × grue tour » de la v1.10
-
-- **6 intersections critiques repriorisées** selon les chantiers officiels :
-  1. Peel × Sainte-Catherine (chantier 503001, actif jusqu'à nov 2026)
-  2. Guy × Notre-Dame / Guy × Saint-Antoine (chantier 22A27 aqueduc, mai-nov 2026)
-  3. Sainte-Catherine × Metcalfe (chantier 20A10 conduite en tunnel, jusqu'à déc 2026)
-  4. Saint-Laurent × René-Lévesque (réhabilitation égouts, été 2026)
-  5. Robert-Bourassa × Saint-Jacques (jusqu'à décembre 2026)
-  6. Pont Saint-Urbain (jusqu'à novembre 2026)
-
-- **CSEM** (Commission des services électriques de Montréal) ajoutée à l'écosystème mobilité MTL dans §2 Impacts du one-pager.
-
-- **Preuve terrain ≥ 9 chantiers simultanés** pendant le pilote juin-septembre 2026 (source : document officiel IVÉO « Projets planifiés dans le secteur »).
-
-- **Budget Excel IVÉO** conforme au gabarit officiel :
-  - Total HT : 41 000,00 $
-  - TPS (5%) : 2 050,00 $
-  - TVQ (9,975%) : 4 089,75 $
-  - TOTAL TTC : 47 139,75 $ (sous plafond 50 000 $, marge sécurité 6%)
-  - 5 postes de dépenses imposés par IVÉO respectés
-  - 6 formules Excel dynamiques, 0 erreur de calcul
-  - Nouveau sous-dossier 08-budget/ dans le dépôt
-
-### Modifié
-
-- **One-pager** : phrase d'ouverture du bloc PREDIAG-X5 remplacée par référence au scénario réel 4 chantiers (au lieu de scénario fictif grue tour)
-- **Annexe 1 §1.2** : les 6 intersections critiques sont maintenant basées sur les chantiers officiels IVÉO (au lieu d'intersections hypothétiques)
-- **Annexe 1 §9.1** : tableau complet du scénario prototypé mis à jour avec les 4 chantiers réels
-- **Annexe 1 version** : v1.1 → v1.2
-- **One-pager version** : v1.10 → v1.11
-
-### Sources
-
-Documents officiels IVÉO consultés le 19 avril 2026 :
-- « Projets planifiés dans le secteur relevant du laboratoire Centre-Ville (Ville-Marie).pdf »
-- « Collecter en temps réel les données liées aux fermetures.docx » (FAQ vide à ce jour, sera alimentée pendant le webinaire du 21 avril)
-- « Gabarit montage financier.xlsx »
-
-Note : l'Annexe 2 (Spécifications techniques v1.0) reste inchangée en v1.11 — pas de modification nécessaire.
+Tous les changements notables de ce projet sont documentés dans ce fichier.
+Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
+Versionnage [SemVer](https://semver.org/lang/fr/).
 
 ---
 
-## [1.10] — 2026-04-19 (Version finale pour soumission)
+## [4.0.0] — 2026-05-07 · "Interactive Demo Edition"
 
-### Vue d'ensemble
+### 🎉 Vague 1 d'améliorations UX/UI — 6 patches Vague 1
 
-Version la plus aboutie du dossier, structurée comme un **livrable en 3 documents** complémentaires :
+#### Ajouté
+- **PATCH V4-1 · ScrollSpy nav indicator** — Le lien actif dans la nav s'éclaire automatiquement (cyan + barre dégradée cyan/violet) en fonction de la section visible au scroll. Throttling via `requestAnimationFrame` pour 60fps stables.
+- **PATCH V4-2 · Animation Monte Carlo** — Le SVG des 8 trajectoires se dessine en cascade au scroll (déclenché via IntersectionObserver, threshold 0.4). Médiane + aire IC 95% + 3 dots de jalons animés progressivement. Durée totale ~2.5s, exécution unique.
+- **PATCH V4-3 · Tableau comparatif synthèse** — Nouveau bloc dans la section #positioning : 7 critères × 4 colonnes (Cisco / IBM / Sidewalk / CityFlow-X5). Marqueurs ✓ / ✗ / ~ codés en couleurs sémantiques. Colonne "NOUS" mise en évidence en permanence avec gradient cyan/violet.
+- **PATCH V4-4 · Simulateur leviers interactif** — Encadré sticky avant la grille des 4 leviers : valeur géante 61% en cyan/violet + barre de progression animée + formule explicative en temps réel. Les 4 cards de leviers sont cliquables (avec animation toggle visuelle), gestion saturation à 85%, raccourcis clavier (Espace/Entrée), aria-pressed/aria-live complets.
+- **PATCH V4-5 · Catalogue 100 seeds filtrable** — Barre de filtres avant les 8 catégories : search full-text avec debounce 80ms + 9 boutons de filtre par catégorie (A-H + Toutes). Compteur live "X / 100 seeds affichés". Empty state si aucun résultat. Touche Escape efface la search. Cache automatiquement les groupes de catégories vides.
+- **PATCH V4-6 · JS unifié vanilla** — Tous les nouveaux comportements regroupés dans un second bloc `<script>` autonome. 0 dépendance externe. ~11 KB de JS minifiable.
 
-- **One-pager** (10 pages PDF) — vitrine stratégique
-- **Annexe 1** (7 pages PDF) — données du périmètre
-- **Annexe 2** (6 pages PDF) — spécifications techniques (NDA)
+#### Modifié
+- **Title HTML** : déjà mis à jour en v3.1, conservé.
+- **Bloc script existant v3.2** (filtre archétypes) : préservé tel quel, indépendant des nouveaux blocs.
 
-### Ajouté — Vague 3 (9 corrections finales)
+#### Stats fichier
+| Métrique | v3.2 | v4.0 | Δ |
+|---|---|---|---|
+| Taille | 263 KB | 300 KB | +37 KB (+14%) |
+| Lignes | 4 914 | 5 906 | +992 lignes |
+| Sections | 16 | 16 | = |
+| Scripts JS | 1 | 2 | +1 (vanilla pur) |
+| Styles inline | 8 | 9 | +1 |
 
-- **Nouvelle Annexe 2 complète** — Spécifications techniques structurées en 7 sections (stack, pipeline ML/DL, architecture 5 niveaux SSMM5, métadonnées PROV-O avec exemple d'audit concret, blueprint Défi #5, sécurité/conformité, roadmap technique)
-- Chiffres preuves enrichis : **5 000+ agents AgenticX5 actifs** en production + **100+ scénarios** modélisés dans PREDIAG-X5 toutes industries + 12 scénarios IVÉO (1 prototypé + 11 cadrés)
-- **Équipe projet détaillée** : 3 rôles dédiés (Ingénieur Physical AI + Ingénieur IA + Data Scientist) + 500 agents AgenticX5 mobilisables
-- **Transparence tarifaire** : 3 composantes documentées (setup + licence annuelle + coûts unitaires), aucun frais caché
-- **Différenciateur sources croisées** : passé de 4 sources à **12+ sources** explicitement nommées
-- **Souveraineté des modèles IA** : LLM open-source locaux (Llama, Mistral) pour données sensibles, option 100% local
-- **Blueprint d'architecture** comme livrable Phase 0 + **stress-tests 100+ scénarios** dans roadmap
-- Nouveau **bénéfice n°2** : intelligence spécifique AgenticX5 sur chantiers de construction et facteurs de coactivité urbaine (point stratégique pour le jury)
-
-### Modifié — Vague 3
-
-- Certification ISO 27001/45001 : reformulation en posture positive « aligné dès aujourd'hui · certification engagée 2027 » (au lieu de « planifiée »)
-
-### Ajouté — Vague 2 (4 corrections)
-
-- **Tableau 6 catégories d'événements** enrichi avec colonne « Sources de données mobilisées » (lien explicite avec §Sources)
-- **Critère Pertinence** élargi à **3 dimensions** : technique (6 catégories, latences) + stratégique (vision MTL, mandat IVÉO) + humaine (voix citoyenne, 11 parties prenantes, HITL)
-- **Paragraphe écosystème mobilité MTL** en ouverture de section Impacts : STM, REM, ARTM, MTQ, Division mobilité SPVM, taxis, micromobilité, mobilité partagée
-- Nouveau **7e bénéfice usager** : usagers transport collectif (alertes GTFS-RT, correspondances préservées)
-- **Méthodologie Alphaville** liée aux technologies AgenticX5 : scaling bayésiens hiérarchiques, Deep Learning + embeddings SCIAN, Graph Neural Networks sur SafetyGraph Neo4j, simulations multi-agents PREDIAG-X5, pipeline ETL + XAI
-
-### Ajouté — Vague 1 (4 corrections)
-
-- **Phrase d'ouverture agnostique** : « fermetures de voies et perturbations urbaines **des cités modernes** » (au lieu de « du Laboratoire centre-ville »)
-- Positionnement clair : « Le Défi #5 d'IVÉO pour le Laboratoire centre-ville de Montréal est la **première application opérationnelle** de cette solution »
-- **Sous-titre stratégique** pour PREDIAG-X5 : « Un produit stratégique, pas un simple moteur technique · produit phare de l'écosystème AgenticX5 pour la phase *Avant* »
-- **Entente de revente internationale tripartite** : AgenticX5 (Innoventera Inc.) + Ville de Montréal + IVÉO en co-propriété, chacun avec un rôle clair
-
-### Modifié — Vague 1
-
-- **Scénario bris de conduite Saint-Laurent × coactivité grue tour** : tableau détaillé **déplacé en annexe §9**, remplacé dans le recto par un **résumé court** faisant le pont avec la transposition Alphaville
-
-### Ajouté — Annexe 1 (v1.1)
-
-- **Nouvelle section §9 « Scénarios PREDIAG-X5 »** :
-  - §9.1 · Scénario prototypé détaillé (11 parties prenantes, entrées, sorties, valeur pour la Ville)
-  - §9.2 · Cheminement de transposition Alphaville (6 étapes techniques : extraction, normalisation démographique, géographique, sectorielle, simulation contrefactuelle, export IVÉO)
-  - §9.3 · 11 scénarios additionnels cadrés pour modélisation Phase 0
+#### Conformité préservée
+- ✅ Architecture ombrelle AgenticX5-City → CityFlow-X5 intacte (18 mentions)
+- ✅ Tagline "voit, comprend, agit" préservée (4 occurrences)
+- ✅ 0 mention IVÉO résiduelle
+- ✅ 0 lien Netlify cassé (lien `agenticx5-city` désactivé en `<span>` depuis v3.2)
+- ✅ 100% des scripts JS validés syntaxiquement (Node `new Function()` test)
 
 ---
 
-## [1.9] — 2026-04-19
+## [3.2.0] — 2026-05-07 · "Filtres Archétypes"
 
-### Ajouté
+#### Ajouté
+- Filtres interactifs sur la heatmap des 15 archétypes : 6 boutons (Tout afficher + 5 zones comportementales). Animation grayscale pour les non-matchants (préserve la stabilité visuelle de la grille). Compteur live, ARIA complet, raccourcis clavier 1-6.
 
-- **Phrase d'ouverture enrichie** avec lien *Cita* (cité, citoyens), humain au centre, vision Montréal
-- **Voix citoyenne 311 MTL** dans Catégorie A + nouveau bloc dédié « Catégorie A-bis · 🗣️ Voix citoyenne » avec 3 canaux (311, signalements app, veille réseaux sociaux officiels)
-- **2 sources de revenus additionnelles** dans le modèle SaaS :
-  - Secteur privé étendu : promoteurs immobiliers (Devimco, Cogir, Canderel), gestionnaires d'actifs (Ivanhoé Cambridge, Broccolini), assureurs (Intact, Desjardins, Beneva), grandes entreprises infrastructurelles (Bell, Hydro, Vidéotron, Énergir)
-  - Entente de revente internationale avec la Ville de Montréal
-- **Tableau roadmap 2026-2027 trimestriel structuré** avec livrables précis et métriques de succès par période (6 périodes : mai 2026 → Q3-Q4 2027)
-- Note de conservatisme : « modèle à risque maîtrisé · si le pilote ne convainc pas, AX5-CitaFlow reste exploitable pour les autres modules AgenticX5 »
+#### Modifié
+- Désactivation du lien `https://agenticx5-city.netlify.app` dans le breadcrumb nav (remplacé par `<span>`) et dans le footer (remplacé par `<span>` stylé). Évite les 404 jusqu'au lancement du hub ombrelle.
 
 ---
 
-## [1.8] — 2026-04-19
+## [3.1.0] — 2026-05-07 · "Architecture Ombrelle AgenticX5-City"
 
-### Ajouté
+#### Ajouté
+- **Breadcrumb ombrelle** dans la nav : `AgenticX5-City ▸ CityFlow-X5` (masqué <900px).
+- **Tag ombrelle pulsant** dans le hero : "Gamme AgenticX5-City · v3.1 · Démonstrateur B2G"
+- **Tagline ombrelle** : *"La ville qui voit, comprend et agit."*
+- **6 pilules conformité** dans le hero : Loi 25 QC · EU AI Act · NIST AI RMF · ISO 42001 · PROV-O W3C · HITL natif
+- **Bloc différenciation ombrelle** dans la section #positioning : 4 cards numérotées comparant la gamme AgenticX5-City vs Cisco Kinetic / Sidewalk Quayside / IBM IOC / produits isolés. Footer éditeur Innoventera Inc.
+- **Footer 3 colonnes ombrelle** : brand + roadmap gamme (CityFlow-X5 live, WasteFlow-X5 / WaterFlow-X5 soon, CitizenFlow-X5 / EnergyFlow-X5 / PermitFlow-X5 roadmap) + conformité native + bottom strip Innoventera NEQ.
 
-- **Positionnement plateforme** en 2 phrases : plateforme agentique + capacités PREDIAG-X5
-- **Sources de données en 2 catégories distinctes** :
-  - Catégorie A : données ouvertes consommées (9 datasets : SAAQ rapports accidents, zones scolaires, comportements, accidents vélos, zones travaux, CNESST lésions, AGIR, Hydro-Québec, Vélo Québec, Environnement Canada)
-  - Catégorie B : sources terrain à instrumenter Phase 0 (caméras ONVIF/RTSP, compteurs IoT LoRaWAN, API CAD SPVM/SIM, SCG feux)
-- **3 volets scientifiques** : analytique (Reason, Heinrich, ISO 31000) + prédictif (bayésiens hiérarchiques, anomalies, ML) + spécifique projet (AQTr, PJCCI, Tome V MTQ, LSST, SCIAN)
-- **Encadré PREDIAG-X5** avec 4 rôles (dé-risque, Alphaville, rehearsal, what-if) et scénario exemple
-- **Nouveau document séparé** : Annexe 1 · Données du périmètre (AX5-CitaFlow_Annexe_Donnees_Perimetre_v1) — 7 sections, matrice couverture, exemples de payloads JSON
-- Mention « 50+ plateformes livrées depuis 2024 » dans preuves de faisabilité
-
-### Retiré
-
-- Toute mention explicite de MiroFish-OASIS, Monte Carlo, bounded confidence, AGPL-3.0 dans le public — relégués sous NDA
-
----
-
-## [1.7] — 2026-04-19
-
-### Ajouté
-
-- **Écosystème 3 produits** (verso) : PREDIAG-X5 (Avant) + SafeTwinX5 (Pendant) + GATES-X5 (Après) — cycle de vie IA complet
-- Mention « moteur commun MiroFish-OASIS » comme fondation technologique des 3 produits
-- Positionnement AX5-CitaFlow comme module SafeTwinX5 avec activation PREDIAG-X5 en Phase 0
-
-### Modifié
-
-- Retrait de tous les marqueurs ™/MC/MD sur les noms de produits — régime canadien de droit d'auteur (L.R.C. (1985), ch. C-42)
-- Mention uniforme « © 2026 Innoventera Inc. » dans les pieds de page
+#### Modifié
+- `<title>` HTML mis à jour : "CityFlow-X5 · AgenticX5-City — La ville qui voit, comprend et agit"
+- 9 meta tags ajoutés (description, keywords, Open Graph)
+- Sous-titre du logo nav modifié : "Premier produit de la gamme AgenticX5-City"
+- Hero eyebrow modifié : "Premier produit de la gamme AgenticX5-City · Solutions B2G Villes Québec & Canada"
 
 ---
 
-## [1.6] — 2026-04-19
+## [3.0.0] — Avril 2026 · "Pivot B2G"
 
-### Ajouté
+#### Ajouté
+- Pivot stratégique : abandon de la soumission IVÉO Défi #5 (Ville-Marie), pivot vers produit B2G éditeur "AgenticX5 Solutions · CityFlow" destiné aux Villes du Québec/Canada.
+- 16 sections HTML structurées (nav, état des lieux, hero, piliers, Monte Carlo pédago, transparence, positionnement, dashboard, acteurs, graphe, leviers, workflow, blueprint, risques, variables, catalog, sources, footer).
+- 6 métriques sourcées Montréal : 55K permis/an, 100+ décès piétons, 30K lésions construction, 4500 collisions cyclistes, 200K plaintes 311, 3.2 G$ coût mobilité.
+- Heatmap 15 archétypes urbains avec verbatim et zones comportementales (vert/bleu/ambre/rouge/violet).
+- Graphe d'influence SVG (148 lignes) avec convergence critique J+30-J+60.
+- 4 leviers d'intervention quantifiés (+18, +14, +11, +8 pts) + scénario contrefactuel 61%→85%.
+- Workflow Décideur 5 étapes + Blueprint 12 étapes / 4 phases.
+- Section Modélisation Monte Carlo avec 8 catégories (A-H) + 10 étapes méthodologiques + 3 scénarios A/B/C.
+- Catalogue 100 seeds par 8 catégories.
+- 9 sources publiques documentées (SAAQ, CNESST, MTL Open Data, BIXI, MTQ Tome V, RSQA, EnvCanada, STM, Hydro-Québec).
+- Style Dark HUD AgenticX5 : cyan (#14B8A6) + violet (#7C3AED), Orbitron + Rajdhani + JetBrains Mono.
+- Conformité native : Loi 25 QC, EU AI Act, NIST AI RMF, ISO 42001, PROV-O W3C, HITL omniprésent.
 
-- **PREDIAG-X5 mentionné à 3 emplacements** : pipeline, impacts Ville, stratégie de dé-risque
-- **Datasets SAAQ détaillés** : 5 jeux de données ouvertes (rapports accidents, zones scolaires, zones travaux, accidents vélos, comportements risque)
-- **6 profils usagers** (vs 4 précédents) : ajout de **livreurs/transporteurs** et **services d'urgence** (SPVM/SIM/Urgences-santé)
-- **Vélo Québec** comme source (données, corridors) **ET** partenaire (endossement mobilité active)
-
----
-
-## [1.5] — 2026-04-19
-
-### Ajouté (7 corrections)
-
-- **Impacts structurés en 2 tableaux** : bénéfices Ville (opérationnels) + bénéfices usagers (tangibles)
-- **Modèle SaaS B2B récurrent** avec 3 sources de revenus (Ville + entrepreneurs + partenaires mobilité)
-- **Coordonnées Innoventera Inc.** ajoutées (204 rue du Saint-Sacrement, espace 300, Montréal H2Y 1W8 · 514-622-3128 · team@agenticx5.com)
-
-### Modifié
-
-- **Cadre réglementaire** : QC/CA uniquement (Loi 25, Énoncé MCN, Déclaration Montréal, Stratégie IA Québec, Directive canadienne PDA) — retrait de l'EU AI Act inapplicable à ce contexte
-- Mentions GitHub retirées du public
-- Repositionnement « démonstrateur sur NDA uniquement »
+#### Supprimé
+- Toute mention IVÉO / Défi #5 / Ville-Marie / Laboratoire Centre-Ville
+- Catalogue JSON détaillé des 100 seeds (remplacé par catalogue par catégories pour protection IP)
 
 ---
 
-## [1.4] — 2026-04-19
+## 🔮 Roadmap
 
-### Ajouté
+### v5.0 (Vague 2 — Visualisations avancées) · prévue Q3 2026
+- Courbe d'adoption interactive avec scrubbing (D3.js ou vanilla SVG + JS)
+- Toggle "Sans intervention" vs "Avec 4 leviers" sur la courbe principale
+- Graphe d'influence interactif avec drag-and-drop (Cytoscape.js)
+- Heatmap matricielle des 15 variables réglementaires × 15 archétypes
+- Sparklines sous chaque KPI Dashboard
+- Détail au clic sur les archétypes (modale enrichie)
 
-- **3 axes d'interprétation** du libellé officiel IVÉO (collecter domaine public / coïncider données internes / plateformes planification déplacements)
-- **4 écosystèmes cibles** nommés explicitement : Automobile (Waze/Google/Apple/511), Transport collectif (Transit/Chrono/Moovit), Mobilité active (BIXI/Transit/Communauto), Portails municipaux (montreal.ca/Mobilité Montréal/AGIR)
-- Formats de sortie standards : Waze CIFS, GTFS-RT, GBFS, Open511
+### v6.0 (Vague 3 — Polish enterprise) · prévue Q4 2026
+- Stepper interactif Workflow Décideur (5 étapes cliquables)
+- Vue Gantt simplifiée pour le Blueprint (12 étapes / 4 phases)
+- Matrice 2D probabilité × impact pour les risques structurels
+- Logos officiels des sources (SAAQ, CNESST, etc.) avec statut de fraîcheur
+- Tooltips sources sur les KPIs Montréal
+- Audit accessibilité WCAG 2.1 AA complet
 
----
-
-## [1.3] — 2026-04-19
-
-### Ajouté
-
-- **Chantiers urbains structurés en 2 familles de facteurs** :
-  - Famille A · Structurels (externes, mesurables en amont) : A1-A7 (emprise, coactivité, signalisation, flux vulnérables, accès commerces/urgences, coordination sous-traitants, temporalité)
-  - Famille B · Organiques (internes, émergents dans le temps) : B1-B7 (retards livraison, accidents SST, contraintes imprévues, gestion/absentéisme, événements externes, conflits, dépassement échéancier)
-- **14 facteurs synergiques** au total — différenciateur unique vs concurrents qui ne regardent que la famille A
-
----
-
-## [1.2] — 2026-04-18
-
-### Ajouté
-
-- **5 critères IVÉO structurés** : Pertinence, Impacts, Faisabilité/Maturité, Conformité/Cybersécurité, Pérennité/Scalabilité
-- Profondeur SST-HSE via SafetyGraph et croisement CNESST × permis
+### Hub ombrelle `agenticx5-city.netlify.app` · prévu Q3 2026
+- Landing minimale 5 sections : vision + roadmap gamme + conformité + contact
+- Activation des liens ombrelle (breadcrumb nav + footer)
+- Première démo de WasteFlow-X5 ou WaterFlow-X5 (selon traction marché)
 
 ---
 
-## [1.1] — 2026-04-18
+## 📌 Conventions de versioning
 
-### Modifié
+- **MAJOR** (X.0.0) : pivot stratégique, refonte structurelle, breaking changes
+- **MINOR** (x.X.0) : nouvelle fonctionnalité, vague d'améliorations cohérente
+- **PATCH** (x.x.X) : correction de bug, ajustement mineur, optimisation
 
-- **Citation littérale** de la formulation officielle IVÉO du défi (depuis iveo.ca)
-- Périmètre explicite : 3,7 km² · Saint-Laurent / de la Commune / Guy / Sherbrooke
+## 🏷️ Tags Git suggérés
 
----
-
-## [1.0] — 2026-04-18
-
-### Ajouté
-
-- Version initiale du one-pager de soumission IVÉO Défi #5
-- Structure recto-verso : AX5-CitaFlow Défi #5 (recto) + AgenticX5-City vision écosystème (verso)
-- 6 catégories d'événements identifiées
-- Premières mentions PREDIAG-X5 et SafetyGraph Neo4j
+```bash
+git tag -a v4.0.0 -m "Interactive Demo Edition - 6 patches Vague 1 (ScrollSpy, MC anim, tableau comparatif, simulateur leviers, catalogue filtrable)"
+git push origin v4.0.0
+```
 
 ---
 
-## Bilan global — v1.0 à v1.10
-
-**31 corrections substantielles** intégrées au total sur 10 itérations en moins de 48 heures.
-
-**3 documents finaux** produits (one-pager + 2 annexes) × **3 formats** (markdown + HTML + PDF) = **9 livrables**.
-
-**23 pages PDF** totales · **599 ko** pour le dossier complet.
-
----
-
-**© 2026 Innoventera Inc. — Tous droits réservés.**
-*Document protégé en vertu de la Loi sur le droit d'auteur du Canada (L.R.C. (1985), ch. C-42).*
+**Innoventera Inc. · CityFlow-X5 · Repo GitHub : `Preventera/AX5-CitaFlow`**
+*Versionner ce fichier à la racine du repo · Mettre à jour à chaque release*
