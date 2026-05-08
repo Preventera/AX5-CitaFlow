@@ -1,146 +1,153 @@
-# AX5-CitaFlow — Dossier de positionnement commercial
+# 🌆 CityFlow-X5
 
-**Dépôt privé** · Innoventera Inc. · AgenticX5
-**Version actuelle** : v1.11 · 20 avril 2026
+> **La ville qui voit, comprend et agit.**
 
----
+**Premier produit de la gamme [AgenticX5-City](#-la-gamme-agenticx5-city).**
+Démonstrateur B2G de simulation d'adoption pour la mobilité urbaine, édité par **Innoventera Inc.** (Montréal, Québec).
 
-## 🎯 Objet du dépôt
-
-Ce dépôt centralise le **positionnement commercial et stratégique** d'**AX5-CitaFlow**, plateforme agentique de planification, coordination et anticipation des fermetures et perturbations urbaines pour les cités modernes.
-
-Il est **distinct du dépôt technique** `github.com/Preventera/UrbanIA` qui contient le code de production (pipeline, connecteurs, agents IA, tests pytest). Ce dépôt-ci contient uniquement les documents de **positionnement, soumission, personas et outreach**.
-
----
-
-## 📋 Contexte — Défi #5 IVÉO
-
-AX5-CitaFlow est en cours de soumission pour le **Défi #5 IVÉO** du Laboratoire centre-ville de la Ville de Montréal :
-
-> *« Comment pourrions-nous collecter en temps réel les données liées aux fermetures complètes de voies et à la mobilité sur le domaine public afin qu'elles coïncident avec les données disponibles à l'interne pour permettre leur mise à jour sur les plateformes de planification des déplacements ? »*
-
-**Périmètre** : 3,7 km² · Saint-Laurent / de la Commune / Guy / Sherbrooke
-**Pilote** : juin à septembre 2026 · **Budget plafond** : 50 000 $ (taxes incluses)
+[![Latest Release](https://img.shields.io/badge/release-v4.0.0-cyan)](https://github.com/Preventera/AX5-CitaFlow/releases/tag/v4.0.0)
+[![Status](https://img.shields.io/badge/status-active-green)]()
+[![License](https://img.shields.io/badge/license-Proprietary-red)](LICENSE.md)
+[![Conformity](https://img.shields.io/badge/Loi%2025-✓-blue)]()
+[![Conformity](https://img.shields.io/badge/EU%20AI%20Act-✓-blue)]()
+[![Conformity](https://img.shields.io/badge/ISO%2042001-✓-blue)]()
 
 ---
 
-## 🗂️ Structure du dépôt
+## 🎯 Qu'est-ce que CityFlow-X5
 
-```
-AX5-CitaFlow/
-├── 01-one-pager/                         # Document principal de soumission
-│   ├── AX5-CitaFlow_OnePager_IVEO_v1.md
-│   ├── AX5-CitaFlow_OnePager_IVEO_v1.html
-│   └── AX5-CitaFlow_OnePager_IVEO_v1.pdf (10 pages)
-│
-├── 02-annexe-donnees-perimetre/          # Annexe 1 · Données du périmètre
-│   ├── AX5-CitaFlow_Annexe_Donnees_Perimetre_v1.md
-│   ├── AX5-CitaFlow_Annexe_Donnees_Perimetre_v1.html
-│   └── AX5-CitaFlow_Annexe_Donnees_Perimetre_v1.pdf (7 pages)
-│
-├── 03-annexe-specifications-techniques/  # Annexe 2 · Spécifications techniques (NDA)
-│   ├── AX5-CitaFlow_Annexe_Specifications_Techniques_v1.md
-│   ├── AX5-CitaFlow_Annexe_Specifications_Techniques_v1.html
-│   └── AX5-CitaFlow_Annexe_Specifications_Techniques_v1.pdf (6 pages)
-│
-├── 04-questions-webinaire/               # Questions préparées pour webinaire IVÉO
-│   └── AX5-CitaFlow_6Questions_Webinaire_IVEO.md (lundi 21 avril 10h)
-│
-├── 05-email-outreach/                    # Communications partenaires
-│   └── AX5-CitaFlow_Email_Teodoresco_v1.md (Conseiller IA Ville MTL)
-│
-├── 06-personas/                          # Maquettes click-through + personas
-│   ├── AX5-CitaFlow_Personas_Complets_v1.md (26 rôles documentés)
-│   ├── AX5-Demos_Index.html
-│   └── AX5-CitaFlow_Mockup_*.html (9 maquettes)
-│
-├── 07-archives-versions/                 # Versions antérieures conservées
-│   └── AX5-CitaFlow_5Questions_Webinaire_IVEO.md (v1 avant ajout Q3)
-│
-├── 08-budget/                            # Budget IVÉO (gabarit officiel)
-│   └── AX5-CitaFlow_Budget_IVEO_v1.xlsx (47 139,75 $ TTC)
-│
-├── README.md                             # Ce fichier
-├── LICENSE.md                            # Droits d'auteur canadiens
-├── .gitignore                            # Exclusions Git
-└── CHANGELOG.md                          # Historique des versions
-```
+**CityFlow-X5** est un démonstrateur stratégique destiné aux Villes du Québec et du Canada qui doivent gérer la **coactivité chantiers** sur leur territoire.
+
+Plutôt que d'imposer une plateforme opérationnelle, CityFlow-X5 **simule sur 180 jours** comment 15 archétypes d'usagers urbains (coordinateurs Ville, entrepreneurs construction, cyclistes, piétons, automobilistes, services d'urgence, etc.) vont réagir à un système de gestion de coactivité — **avant son déploiement opérationnel**.
+
+Cette approche **PREDIAG-X5** réduit le risque d'échec d'adoption d'un projet d'IA municipale et permet aux décideurs de :
+
+- 🎯 Tester 4 leviers d'intervention **avant d'investir**
+- 📊 Voir l'évolution probable de l'adoption sur 180 jours (10 000 simulations Monte Carlo)
+- 🛡️ Anticiper les risques structurels et organiques
+- 🤝 Garder la main grâce au **Human-in-the-Loop natif**
 
 ---
 
-## 📅 Timeline critique
+## 🎬 Démonstrateur
 
-| Date | Action |
+| Lien | Description |
 |---|---|
-| **Samedi 19 avril 2026** | Dossier v1.10 finalisé (3 documents × 3 formats) |
-| **Week-end 19-20 avril** | Envoi LinkedIn à Alexandre Teodoresco (Conseiller Ville MTL) |
-| **Dimanche 20 avril 2026** | Dossier v1.11 produit (ancrage chantiers officiels IVÉO + budget Excel) |
-| **Lundi 21 avril matin** | Envoi email formel à Teodoresco |
-| **Lundi 21 avril 10h-11h** | Webinaire IVÉO (6 questions préparées) |
-| **Lundi 21 avril après-midi** | Intégration réponses webinaire dans version suivante |
-| **Jeudi 1er mai 2026** | **Soumission officielle du dossier IVÉO** |
-| **Jeudi 8 mai 2026** | Annonce de présélection par IVÉO |
-| **15-19 mai 2026** | Pitch au jury (si présélectionné) |
-| **Juin-septembre 2026** | Déploiement pilote Laboratoire centre-ville |
+| 🌐 [cityflow-x5.netlify.app](https://cityflow-x5.netlify.app) | Démo live (déploiement en cours) |
+| 📦 [Release v4.0.0](https://github.com/Preventera/AX5-CitaFlow/releases/tag/v4.0.0) | Asset HTML téléchargeable (300 KB) |
+| 📂 [`cityflow-x5.html`](cityflow-x5.html) | Code source du démonstrateur dans ce repo |
+
+**Spécifications techniques** : 100% vanilla HTML/CSS/JS, 0 dépendance externe, déployable n'importe où (Netlify, intranet Ville, USB, hors-ligne).
 
 ---
 
-## 📈 Historique des versions
+## 🌐 La gamme AgenticX5-City
 
-Le one-pager a traversé **11 itérations majeures** :
+CityFlow-X5 est le premier produit déployé d'une gamme de plateformes municipales agentiques couvrant **6 domaines urbains interconnectés** :
 
-| Version | Date | Changements principaux |
+```
+🌆 AgenticX5-City — La ville qui voit, comprend et agit.
+│
+├── ✅ CityFlow-X5    → Mobilité urbaine [LIVRÉ v4.0.0]
+├── 🔜 [Module Santé urbaine]              [Q3 2026]
+├── 🔜 [Module Économie circulaire]        [Q4 2026]
+├── 🔜 [Module Énergie urbaine]            [Q1-Q2 2027]
+├── 🔜 [Module Résilience climatique]      [Q1-Q2 2027]
+└── 🔜 [Module Gouvernance & Citoyenneté]  [Q3 2026]
+```
+
+📜 Voir la [Convention de Naming v2.0](docs/CONVENTION_NAMING_v2.0.md) pour la stratégie complète.
+
+---
+
+## 🛡️ Conformité native multi-juridictionnelle
+
+CityFlow-X5 est conçu *by design* pour respecter :
+
+| Standard | Statut |
+|---|:---:|
+| **Loi 25** (Québec — protection des renseignements personnels) | ✅ Native |
+| **EU AI Act** (UE — obligations systèmes IA) | ✅ Native |
+| **ISO 42001:2023** (gestion des systèmes IA) | ✅ Native |
+| **NIST AI Risk Management Framework** (USA) | ✅ Native |
+| **PROV-O** (W3C — traçabilité provenance) | ✅ Native |
+| **Human-in-the-Loop (HITL)** | ✅ Native |
+
+---
+
+## 📁 Structure du repo
+
+```
+Preventera/AX5-CitaFlow/
+├── cityflow-x5.html              # Démonstrateur principal v4.0
+├── CHANGELOG.md                  # Historique B2G CityFlow-X5
+├── CHANGELOG_IVEO.md             # Mémoire IVÉO préservée (v1.0-v1.11)
+├── docs/
+│   ├── AUDIT_UXUI_v1.0.md        # Audit UX/UI 22 éléments
+│   ├── CONVENTION_NAMING_v2.0.md # Convention de naming gamme
+│   ├── GEMINI_SYSTEM_PROMPT_v1.0.md
+│   ├── GIT_PLAYBOOK_v4.0.md      # Workflow Git versionné
+│   └── TEST_CHECKLIST_v4.0.md    # QA 5 minutes
+├── 01-one-pager/                 # Archives IVÉO
+├── 02-annexe-donnees-perimetre/  # Archives IVÉO
+├── 03-annexe-specifications-techniques/
+├── 04-questions-webinaire/
+├── 05-email-outreach/
+├── 06-personas/                  # 26 personas documentés
+├── 07-archives-versions/
+├── 08-budget/
+└── proposals/iveo-montreal/      # Soumission IVÉO archivée
+```
+
+---
+
+## 🏷️ Note sur le nom du repo
+
+> Ce repo s'appelle `AX5-CitaFlow` mais héberge **CityFlow-X5**.
+>
+> Pourquoi ? Le nom `AX5-CitaFlow` est l'**identifiant historique** utilisé lors de la phase IVÉO Défi #5 (avril-mai 2026). Lors du **pivot stratégique B2G** du 7 mai 2026, le produit a été renommé **CityFlow-X5** pour la communication commerciale, mais le nom du repo a été **conservé** pour stabilité des liens publics, des releases et de l'historique Git.
+>
+> **Lignée** : `UrbanIA` (codename interne 2024-2025) → `AX5-CitaFlow` (Phase IVÉO) → `CityFlow-X5` (Phase B2G actuelle).
+>
+> Voir la [Convention de Naming v2.0](docs/CONVENTION_NAMING_v2.0.md) pour le détail complet.
+
+---
+
+## 📦 Versions
+
+| Version | Date | Highlights |
 |---|---|---|
-| v1.0 | 18 avril | Version initiale |
-| v1.1 | 18 avril | Correction formulation officielle IVÉO |
-| v1.2 | 18 avril | Profondeur SST, 5 critères structurés |
-| v1.3 | 18 avril | Chantiers en 2 familles (A structurelle + B organique) |
-| v1.4 | 19 avril | 3 axes d'interprétation + 4 écosystèmes cibles nommés |
-| v1.5 | 19 avril | 7 corrections (impacts Ville/usagers, cadre QC/CA, modèle SaaS, etc.) |
-| v1.6 | 19 avril | PREDIAG-X5 (3 emplacements) + datasets SAAQ + 6 profils usagers |
-| v1.7 | 19 avril | Écosystème 3 produits (PREDIAG/SafeTwin/GATES) + droits d'auteur canadiens |
-| v1.8 | 19 avril | Positionnement plateforme + annexe données + scope PREDIAG-X5 |
-| v1.9 | 19 avril | Cita + voix citoyenne 311 + modèle 5 sources + roadmap trimestrielle |
-| v1.10 | 19 avril | 17 corrections sur 3 vagues + annexe spécifications techniques |
-| **v1.11** | **20 avril** | **Ancrage chantiers officiels IVÉO (4 chantiers réels) + CSEM + budget Excel 47 139,75 $ TTC** |
-
-Voir `CHANGELOG.md` pour le détail complet.
+| **v4.0.0** | 7 mai 2026 | Interactive Demo Edition · 6 patches UX/UI Vague 1 · Pivot B2G complet |
+| v3.2.0 | 7 mai 2026 | Filtres archétypes interactifs |
+| v3.1.0 | 7 mai 2026 | Architecture ombrelle AgenticX5-City |
+| v3.0.0 | 5 mai 2026 | Pivot B2G (refonte 16 sections éditoriales) |
+| v1.x (archive) | 17 avril - 1er mai 2026 | Phase IVÉO (voir [`CHANGELOG_IVEO.md`](CHANGELOG_IVEO.md)) |
 
 ---
 
-## 🔐 Confidentialité
-
-Ce dépôt contient des **informations stratégiques et commerciales sensibles** :
-
-- **Dépôt strictement privé** — accès limité aux personnes autorisées par Innoventera Inc.
-- L'**Annexe 2 (spécifications techniques)** est classée « NDA requis » — ne jamais partager hors d'une entente de confidentialité signée
-- Les **maquettes personas** (`06-personas/`) sont protégées par droits d'auteur et ne doivent pas être diffusées publiquement
-- Les **stratégies commerciales** (modèle SaaS 5 sources, entente tripartite internationale) sont confidentielles
-
----
-
-## 📞 Coordonnées
+## 🏛️ Éditeur
 
 **Innoventera Inc.**
-204, rue du Saint-Sacrement, espace 300
-Montréal (Québec) H2Y 1W8
-Téléphone : (514) 622-3128
-Courriel : **team@agenticx5.com**
+204 rue du Saint-Sacrement, espace 300
+Montréal, Québec, H2Y 1W8
+NEQ : 1178346806
 
-**Mario Deshaies** · VP AI · CTO · Fondateur AgenticX5
+📧 [team@agenticx5.com](mailto:team@agenticx5.com)
+📱 514-622-3128
+🌐 [agenticx5.com](https://agenticx5.com)
 
----
-
-## 🔗 Dépôts liés
-
-| Dépôt | URL | Rôle |
-|---|---|---|
-| **UrbanIA** | `github.com/Preventera/UrbanIA` | Code de production AX5-CitaFlow |
-| **PREDIAG-X5** | `github.com/Preventera/PREDIAG-X5` | Moteur de simulation multi-agents |
-| **ArteriX5** | `github.com/Preventera/-ArteriX5-` | Santé/prévention (hors scope IVÉO) |
-| **AgenticX5-SafeFleet-Hub** | `github.com/Preventera/AgenticX5-SafeFleet-Hub` | Fleet safety + dataset SAAQ |
+**Mario Deshaies** — VP AI / CTO / Fondateur
+[LinkedIn](https://www.linkedin.com/in/mariodeshaies/)
 
 ---
 
-**© 2026 Innoventera Inc. — Tous droits réservés.**
-Document, logiciels et œuvres associées protégés en vertu de la **Loi sur le droit d'auteur du Canada** (L.R.C. (1985), ch. C-42).
+## 📜 Licence
+
+© 2026 Innoventera Inc. — Tous droits réservés.
+Document protégé en vertu de la Loi sur le droit d'auteur du Canada (L.R.C. (1985), ch. C-42).
+
+Voir [`LICENSE.md`](LICENSE.md) pour les détails.
+
+---
+
+*Dernière mise à jour : 8 mai 2026 · Version README : 2.0 · Aligné Convention de Naming v2.0*
