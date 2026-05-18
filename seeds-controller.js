@@ -1,7 +1,7 @@
 /**
  * CityFlow-X5 · seeds-controller.js
  * Contrôleur de switch dynamique entre seeds
- * Version : V1.0 minimaliste · 17 mai 2026
+ * Version : V1.1 (fix sélecteurs DOM) · 18 mai 2026
  * Éditeur : AgenticX5
  *
  * Dépendances : seeds-data.js doit être chargé AVANT ce fichier
@@ -10,25 +10,18 @@
 (function() {
   'use strict';
 
-  // ==========================================================================
-  // 1. ATTENDRE LE DOM PRÊT
-  // ==========================================================================
   document.addEventListener('DOMContentLoaded', function() {
 
-    console.log('🚀 seeds-controller.js · Initialisation...');
+    console.log('🚀 seeds-controller.js v1.1 · Initialisation...');
 
-    // Vérifier que seeds-data.js est chargé
     if (typeof window.SEEDS_DATA === 'undefined') {
-      console.error('❌ ERREUR : seeds-data.js non chargé. Le sélecteur multi-seed ne fonctionnera pas.');
+      console.error('❌ ERREUR : seeds-data.js non chargé.');
       return;
     }
 
-    // ========================================================================
-    // 2. DÉTECTER LE SEED INITIAL DEPUIS L'URL
-    // ========================================================================
     const urlParams = new URLSearchParams(window.location.search);
     const seedFromUrl = urlParams.get('seed');
-    let currentSeed = 'A01'; // Par défaut
+    let currentSeed = 'A01';
 
     if (seedFromUrl && window.SEEDS_DATA[seedFromUrl]) {
       currentSeed = seedFromUrl;
@@ -37,23 +30,14 @@
       console.log('✓ Seed par défaut : A01');
     }
 
-    // ========================================================================
-    // 3. RÉCUPÉRER LE DROPDOWN
-    // ========================================================================
     const selector = document.getElementById('seed-selector');
-
     if (!selector) {
-      console.error('❌ ERREUR : élément #seed-selector introuvable dans le DOM.');
+      console.error('❌ ERREUR : #seed-selector introuvable.');
       return;
     }
-
-    // Synchroniser la valeur du dropdown avec le seed actuel
     selector.value = currentSeed;
     window.CURRENT_SEED = currentSeed;
 
-    // ========================================================================
-    // 4. FONCTION PRINCIPALE : APPLIQUER UN SEED
-    // ========================================================================
     function applySeed(seedKey) {
       const seed = window.SEEDS_DATA[seedKey];
 
@@ -64,88 +48,76 @@
 
       console.log('🔄 Application du seed : ' + seedKey + ' (' + seed.title + ')');
 
-      // ----------------------------------------------------------------------
-      // 4.1. Mettre à jour le SOUS-TITRE HERO (s'il existe)
-      // ----------------------------------------------------------------------
+      let updated = 0;
+
+      // 1. Sous-titre Hero
       const heroSubtitle = document.querySelector('.hero-subtitle');
       if (heroSubtitle) {
         heroSubtitle.textContent = '« ' + seed.subtitle + ' »';
+        updated++;
+      } else {
+        console.warn('⚠️ .hero-subtitle introuvable');
       }
 
-      // ----------------------------------------------------------------------
-      // 4.2. Mettre à jour le BANDEAU CONTEXTE (lignes "Cas · Pilote · Acteurs · Horizon · Moteur · Généré le")
-      // ----------------------------------------------------------------------
-      const contextItems = document.querySelectorAll('.context-bar .context-item');
-      // L'ordre dans le HTML est : Cas, Pilote, Acteurs simulés, Horizon, Moteur, IC, Généré le
-      if (contextItems.length >= 6) {
-        // Cas (index 0)
-        const casValue = contextItems[0].querySelector('.context-value');
-        if (casValue) casValue.textContent = seed.title;
+      // 2. Bandeau contexte
+      // Structure : .context-bar > .context-inner > span (items) avec <strong> à l'intérieur
+      // Les séparateurs .context-sep sont exclus
+      const contextItems = document.querySelectorAll(
+        '.context-bar .context-inner > span:not(.context-sep)'
+      );
 
-        // Pilote (index 1)
-        const piloteValue = contextItems[1].querySelector('.context-value');
-        if (piloteValue) piloteValue.textContent = seed.pilote;
+      if (contextItems.length < 6) {
+        console.warn(
+          '⚠️ Bandeau contexte : ' + contextItems.length +
+          ' items trouvés (attendu : 6). Sélecteur à revoir.'
+        );
+      } else {
+        const mapping = [
+          { idx: 0, value: seed.title,                label: 'Cas' },
+          { idx: 1, value: seed.pilote,               label: 'Pilote' },
+          { idx: 2, value: seed.archetypes,           label: 'Acteurs' },
+          { idx: 3, value: seed.horizon + ' jours',   label: 'Horizon' },
+          // idx 4 : Moteur (reste statique)
+          { idx: 5, value: seed.generatedDate,        label: 'Généré le' }
+        ];
 
-        // Acteurs simulés (index 2)
-        const acteursValue = contextItems[2].querySelector('.context-value');
-        if (acteursValue) acteursValue.textContent = seed.archetypes;
-
-        // Horizon (index 3)
-        const horizonValue = contextItems[3].querySelector('.context-value');
-        if (horizonValue) horizonValue.textContent = seed.horizon + ' jours';
-
-        // Moteur (index 4) - reste statique
-        // IC 95% (index 5) - reste statique
-
-        // Généré le (index 6)
-        if (contextItems[6]) {
-          const genereeValue = contextItems[6].querySelector('.context-value');
-          if (genereeValue) genereeValue.textContent = seed.generatedDate;
-        }
+        mapping.forEach(function(m) {
+          const strong = contextItems[m.idx] && contextItems[m.idx].querySelector('strong');
+          if (strong && m.value !== undefined) {
+            strong.textContent = m.value;
+            updated++;
+          } else if (!strong) {
+            console.warn('⚠️ <strong> manquant a index ' + m.idx + ' (' + m.label + ')');
+          } else {
+            console.warn('⚠️ Valeur undefined pour ' + m.label);
+          }
+        });
       }
 
-      // ----------------------------------------------------------------------
-      // 4.3. Mettre à jour le SEED ID dans la metadata bar
-      // ----------------------------------------------------------------------
-      // (Le dropdown lui-même affiche déjà le seed sélectionné)
+      // 3. Synchroniser l'URL
+      window.history.replaceState({}, '', window.location.pathname + '?seed=' + seedKey);
 
-      // ----------------------------------------------------------------------
-      // 4.4. Synchroniser l'URL (sans recharger la page)
-      // ----------------------------------------------------------------------
-      const newUrl = window.location.pathname + '?seed=' + seedKey;
-      window.history.replaceState({}, '', newUrl);
-
-      // ----------------------------------------------------------------------
-      // 4.5. Mettre à jour la variable globale
-      // ----------------------------------------------------------------------
+      // 4. Variable globale
       window.CURRENT_SEED = seedKey;
 
-      // ----------------------------------------------------------------------
-      // 4.6. Notification visuelle (toast)
-      // ----------------------------------------------------------------------
-      showToast('Seed actif : ' + seed.shortId);
+      // 5. Toast
+      showToast('Seed actif : ' + (seed.shortId || seedKey));
 
-      console.log('✓ Seed ' + seedKey + ' appliqué avec succès.');
+      // 6. Log final HONNÊTE
+      if (updated === 0) {
+        console.error('❌ Seed ' + seedKey + ' : aucun élément DOM modifié.');
+      } else {
+        console.log('✓ Seed ' + seedKey + ' applique (' + updated + ' champs DOM modifies).');
+      }
     }
 
-    // ========================================================================
-    // 5. ÉCOUTER LE CHANGEMENT DE DROPDOWN
-    // ========================================================================
     selector.addEventListener('change', function(event) {
-      const newSeed = event.target.value;
-      applySeed(newSeed);
+      applySeed(event.target.value);
     });
 
-    // ========================================================================
-    // 6. APPLIQUER LE SEED INITIAL AU CHARGEMENT
-    // ========================================================================
     applySeed(currentSeed);
 
-    // ========================================================================
-    // 7. FONCTION TOAST (notification visuelle)
-    // ========================================================================
     function showToast(message) {
-      // Créer le toast s'il n'existe pas
       let toast = document.getElementById('seed-toast');
       if (!toast) {
         toast = document.createElement('div');
@@ -175,7 +147,6 @@
       toast.style.opacity = '1';
       toast.style.transform = 'translateY(0)';
 
-      // Auto-hide après 3 secondes
       clearTimeout(window._toastTimeout);
       window._toastTimeout = setTimeout(function() {
         toast.style.opacity = '0';
@@ -183,7 +154,7 @@
       }, 3000);
     }
 
-    console.log('✓ seeds-controller.js · Prêt. Seed actif : ' + currentSeed);
+    console.log('✓ seeds-controller.js v1.1 · Pret. Seed actif : ' + currentSeed);
 
   });
 
