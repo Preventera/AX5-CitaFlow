@@ -1,7 +1,8 @@
 /**
  * CityFlow-X5 · seeds-controller.js
  * Controleur de switch dynamique entre seeds
- * Version : V1.3 (V2.0 courbe + V2.1 KPI + V2.3 narratives) · 18 mai 2026
+ *
+ * Version : V1.4 (V2.0 + V2.1 + V2.3 + V2.2-LITE convergence) · 18 mai 2026
  * Editeur : AgenticX5
  *
  * Dependances : seeds-data.js doit etre charge AVANT ce fichier
@@ -12,7 +13,7 @@
 
   document.addEventListener('DOMContentLoaded', function() {
 
-    console.log('🚀 seeds-controller.js v1.3 · Initialisation...');
+    console.log('🚀 seeds-controller.js v1.4 · Initialisation...');
 
     if (typeof window.SEEDS_DATA === 'undefined') {
       console.error('❌ ERREUR : seeds-data.js non charge.');
@@ -126,9 +127,7 @@
 
       let updated = 0;
 
-  
-
-      // 2. Bandeau contexte
+      // 1. Bandeau contexte
       const contextItems = document.querySelectorAll(
         '.context-bar .context-inner > span:not(.context-sep)'
       );
@@ -152,7 +151,7 @@
         });
       }
 
-      // 3. Courbe d'adoption SVG (V2.0)
+      // 2. Courbe d'adoption SVG (V2.0)
       const curveSvg = document.querySelector('.curve-svg');
       if (curveSvg && seed.adoptionCurve && seed.adoptionCurve.length > 0) {
         try {
@@ -164,7 +163,7 @@
         }
       }
 
-      // 4. KPI cards (V2.1) - 4 cards dans #dashboard .kpi-grid
+      // 3. KPI cards (V2.1) - 4 cards dans #dashboard .kpi-grid
       const kpiCards = document.querySelectorAll('#dashboard .kpi-card');
       if (kpiCards.length !== 4) {
         console.warn('⚠️ KPI cards : ' + kpiCards.length + ' trouvees (attendu 4).');
@@ -249,7 +248,7 @@
         console.log('✓ KPI cards mises a jour (4 cards)');
       }
 
-      // 5. Titre dashboard h2 - span.gradient "sur N jours" (V2.3)
+      // 4. Titre dashboard h2 - span.gradient "sur N jours" (V2.3)
       const dashboardTitleSpan = document.querySelector('#dashboard h2 span.gradient');
       if (dashboardTitleSpan) {
         dashboardTitleSpan.textContent = 'sur ' + seed.horizon + ' jours';
@@ -258,14 +257,14 @@
         console.warn('⚠️ #dashboard h2 span.gradient introuvable');
       }
 
-      // 6. Section intro dashboard (V2.3)
+      // 5. Section intro dashboard (V2.3)
       const sectionIntro = document.querySelector('#dashboard .section-intro');
       if (sectionIntro && seed.blueprintLabel) {
         sectionIntro.innerHTML = "Le moteur CityFlow-X5 simule 10 000 trajectoires d'adoption et d'impact sur " + seed.horizon + " jours, avec intervalle de confiance 95%. Chaque seed est ancre sur un Blueprint AgenticX5 — pour ce cas, l'<strong>" + seed.blueprintLabel + "</strong>.";
         updated++;
       }
 
-      // 7. Légende cible dans .curve-legend (V2.3)
+      // 6. Légende cible dans .curve-legend (V2.3)
       const legendItems = document.querySelectorAll('.curve-legend .legend-item');
       if (legendItems.length >= 3) {
         const targetLegend = legendItems[2];
@@ -273,18 +272,48 @@
         updated++;
       }
 
-      // 8. curve-narrative (V2.3)
+      // 7. curve-narrative (V2.3)
       const curveNarrative = document.querySelector('.curve-narrative');
       if (curveNarrative && seed.curveNarrative) {
         curveNarrative.innerHTML = seed.curveNarrative;
         updated++;
       }
 
-      // 9. graph-warning (V2.3)
+      // 8. graph-warning (V2.3)
       const graphWarning = document.querySelector('.graph-warning');
       if (graphWarning && seed.graphWarning) {
         graphWarning.innerHTML = seed.graphWarning;
         updated++;
+      }
+
+      // 9. Ellipse convergence — textes graphe d'influence (V2.2 B-LITE)
+      if (seed.convergence) {
+        const graphTexts = document.querySelectorAll('.graph-svg text');
+        if (graphTexts.length > 0) {
+          let convergenceCount = 0;
+          Array.from(graphTexts).forEach(function(t) {
+            const x = t.getAttribute('x');
+            const y = t.getAttribute('y');
+            // Titre convergence : (540, 180) "⚠ CONVERGENCE CRITIQUE J+XX-J+YY"
+            if (x === '540' && y === '180') {
+              t.textContent = '⚠ CONVERGENCE CRITIQUE ' + seed.convergence.timing;
+              convergenceCount++;
+            }
+            // Label convergence : (540, 195) "Acteur1 × Acteur2 × ..."
+            if (x === '540' && y === '195') {
+              t.textContent = seed.convergence.label;
+              convergenceCount++;
+            }
+          });
+          if (convergenceCount > 0) {
+            updated += convergenceCount;
+            console.log('✓ Convergence graphe : ' + convergenceCount + ' textes mis a jour');
+          } else {
+            console.warn('⚠️ Textes convergence (.graph-svg) introuvables aux coordonnees attendues');
+          }
+        } else {
+          console.warn('⚠️ .graph-svg text introuvable');
+        }
       }
 
       // 10. Synchroniser l'URL
@@ -348,7 +377,7 @@
       }, 3000);
     }
 
-    console.log('✓ seeds-controller.js v1.3 · Pret. Seed actif : ' + currentSeed);
+    console.log('✓ seeds-controller.js v1.4 · Pret. Seed actif : ' + currentSeed);
 
   });
 
