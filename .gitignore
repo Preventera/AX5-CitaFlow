@@ -109,6 +109,7 @@ logs/
 # Sauvegardes
 *.backup
 *.bak
+*.bak.*
 *.old
 *_backup.*
 *_old.*
