@@ -126,12 +126,7 @@
 
       let updated = 0;
 
-      // 1. Sous-titre Hero (optionnel)
-      const heroSubtitle = document.querySelector('.hero-subtitle');
-      if (heroSubtitle) {
-        heroSubtitle.textContent = '« ' + seed.subtitle + ' »';
-        updated++;
-      }
+  
 
       // 2. Bandeau contexte
       const contextItems = document.querySelectorAll(
